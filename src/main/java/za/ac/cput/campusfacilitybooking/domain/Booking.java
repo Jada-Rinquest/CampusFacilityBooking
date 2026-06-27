@@ -59,37 +59,37 @@ public class Booking {
         private String purpose;
         private String status;
 
-        public Builder bookingId(String bookingId) {
+        public Builder setBookingId(String bookingId) {
             this.bookingId = bookingId;
             return this;
         }
 
-        public Builder facilityId(String facilityId) {
+        public Builder setFacilityId(String facilityId) {
             this.facilityId = facilityId;
             return this;
         }
 
-        public Builder timeSlotId(String timeSlotId) {
+        public Builder setTimeSlotId(String timeSlotId) {
             this.timeSlotId = timeSlotId;
             return this;
         }
 
-        public Builder requesterId(String requesterId) {
+        public Builder setRequesterId(String requesterId) {
             this.requesterId = requesterId;
             return this;
         }
 
-        public Builder requesterType(String requesterType) {
+        public Builder setRequesterType(String requesterType) {
             this.requesterType = requesterType;
             return this;
         }
 
-        public Builder purpose(String purpose) {
+        public Builder setPurpose(String purpose) {
             this.purpose = purpose;
             return this;
         }
 
-        public Builder status(String status) {
+        public Builder setStatus(String status) {
             this.status = status;
             return this;
         }
