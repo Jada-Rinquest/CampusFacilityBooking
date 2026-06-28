@@ -52,32 +52,32 @@ public class Notification {
         private String sentDate;
         private boolean isRead;
 
-        public Builder notificationId(String notificationId) {
+        public Builder setNotificationId(String notificationId) {
             this.notificationId = notificationId;
             return this;
         }
 
-        public Builder recipientId(String recipientId) {
+        public Builder setRecipientId(String recipientId) {
             this.recipientId = recipientId;
             return this;
         }
 
-        public Builder message(String message) {
+        public Builder setMessage(String message) {
             this.message = message;
             return this;
         }
 
-        public Builder type(String type) {
+        public Builder setType(String type) {
             this.type = type;
             return this;
         }
 
-        public Builder sentDate(String sentDate) {
+        public Builder setSentDate(String sentDate) {
             this.sentDate = sentDate;
             return this;
         }
 
-        public Builder isRead(boolean isRead) {
+        public Builder setIsRead(boolean isRead) {
             this.isRead = isRead;
             return this;
         }
