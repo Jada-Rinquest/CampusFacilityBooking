@@ -5,17 +5,31 @@
 */
 package za.ac.cput.campusfacilitybooking.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "department")
 public class Department {
 
+    @Id
     private String departmentId;
+
     private String name;
     private String building;
     private String headOfDepartment;
 
-    // Private constructor
-    private Department() {}
+    protected Department() {
+    }
 
-    // Getters
+    private Department(Builder builder) {
+        this.departmentId = builder.departmentId;
+        this.name = builder.name;
+        this.building = builder.building;
+        this.headOfDepartment = builder.headOfDepartment;
+    }
+
     public String getDepartmentId() {
         return departmentId;
     }
@@ -32,7 +46,6 @@ public class Department {
         return headOfDepartment;
     }
 
-    // Builder Class
     public static class Builder {
 
         private String departmentId;
@@ -61,14 +74,7 @@ public class Department {
         }
 
         public Department build() {
-            Department department = new Department();
-
-            department.departmentId = this.departmentId;
-            department.name = this.name;
-            department.building = this.building;
-            department.headOfDepartment = this.headOfDepartment;
-
-            return department;
+            return new Department(this);
         }
     }
 

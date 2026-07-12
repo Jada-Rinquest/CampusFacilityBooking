@@ -5,19 +5,36 @@
 */
 package za.ac.cput.campusfacilitybooking.domain;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "student")
 public class Student {
 
+    @Id
     private String studentId;
+
     private String firstName;
     private String lastName;
     private String email;
     private String studentNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
     private Department department;
 
-    // Private constructor
-    private Student() {}
+    protected Student() {
+    }
 
-    // Getters
+    private Student(Builder builder) {
+        this.studentId = builder.studentId;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.studentNumber = builder.studentNumber;
+        this.department = builder.department;
+    }
+
     public String getStudentId() {
         return studentId;
     }
@@ -42,7 +59,6 @@ public class Student {
         return department;
     }
 
-    // Builder
     public static class Builder {
 
         private String studentId;
@@ -83,16 +99,7 @@ public class Student {
         }
 
         public Student build() {
-            Student student = new Student();
-
-            student.studentId = this.studentId;
-            student.firstName = this.firstName;
-            student.lastName = this.lastName;
-            student.email = this.email;
-            student.studentNumber = this.studentNumber;
-            student.department = this.department;
-
-            return student;
+            return new Student(this);
         }
     }
 
@@ -104,7 +111,6 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", studentNumber='" + studentNumber + '\'' +
-                ", department=" + department +
                 '}';
     }
 }
