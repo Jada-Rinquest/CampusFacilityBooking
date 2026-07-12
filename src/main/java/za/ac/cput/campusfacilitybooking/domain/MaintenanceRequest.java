@@ -1,21 +1,47 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
+/*Author: Milani Sani(230371574)
+Date: 21 June 2026
+ */
 
+import jakarta.persistence.*;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
-import za.ac.cput.campusfacilitybooking.domain.Equipment;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
+@Table(name = "maintenance_requests")
 public class MaintenanceRequest {
 
-    private final String requestId;
-    private final Equipment equipment;
-    private final String reportedById;
-    private final String description;
-    private final MaintenancePriority priority;
-    private final MaintenanceStatus status;
-    private final LocalDate dateReported;
+    @Id
+    @Column(name = "request_id")
+    private String requestId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipment_id")
+    private Equipment equipment;
+
+    @Column(name = "reported_by_id")
+    private String reportedById;
+
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority")
+    private MaintenancePriority priority;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MaintenanceStatus status;
+
+    @Column(name = "date_reported")
+    private LocalDate dateReported;
+
+    protected MaintenanceRequest() {
+    }
 
     private MaintenanceRequest(Builder builder) {
         this.requestId = builder.requestId;
@@ -84,6 +110,7 @@ public class MaintenanceRequest {
 
     @Override
     public String toString() {
-        return String.format("MaintenanceRequest(requestId=%s, equipment=%s, priority=%s, status=%s)", requestId, equipment, priority, status);
+        String equipmentId = (equipment != null) ? equipment.getEquipmentId() : null;
+        return String.format("MaintenanceRequest(requestId=%s, equipmentId=%s, priority=%s, status=%s)", requestId, equipmentId, priority, status);
     }
 }

@@ -1,10 +1,11 @@
-package za.ac.cput.campusfacilitybooking.factory;
+package za.ac.cput.campusfacilitybooking.factoryTest;
 
 /*Author: Milani Sani(230371574)
 Date: 28 June 2026
  */
 
 import za.ac.cput.campusfacilitybooking.domain.Equipment;
+import za.ac.cput.campusfacilitybooking.factory.MaintenanceRequestFactory;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;

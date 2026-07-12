@@ -1,0 +1,9 @@
+package za.ac.cput.campusfacilitybooking.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import za.ac.cput.campusfacilitybooking.domain.Equipment;
+
+@Repository
+public interface EquipmentRepository extends JpaRepository<Equipment, String> {
+}

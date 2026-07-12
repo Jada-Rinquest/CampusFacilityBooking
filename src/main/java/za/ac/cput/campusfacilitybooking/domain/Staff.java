@@ -3,17 +3,37 @@ package za.ac.cput.campusfacilitybooking.domain;
 /*Author: Milani Sani(230371574)
 Date: 21 June 2026
  */
+import jakarta.persistence.*;
 import za.ac.cput.campusfacilitybooking.domain.enums.StaffRole;
 import java.util.Objects;
 
+@Entity
+@Table(name = "staff")
 public class Staff {
 
-    private final String staffId;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final StaffRole role;
-    private final Department department;
+    @Id
+    @Column(name = "staff_id")
+    private String staffId;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "email", unique = true)
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private StaffRole role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    protected Staff() {
+    }
 
     private Staff(Builder builder) {
         this.staffId = builder.staffId;

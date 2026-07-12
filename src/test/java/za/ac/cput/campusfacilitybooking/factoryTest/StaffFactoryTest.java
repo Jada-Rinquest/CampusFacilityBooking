@@ -1,10 +1,11 @@
-package za.ac.cput.campusfacilitybooking.factory;
+package za.ac.cput.campusfacilitybooking.factoryTest;
 
 /*Author: Milani Sani(230371574)
 Date: 28 June 2026
  */
 
 import za.ac.cput.campusfacilitybooking.domain.Department;
+import za.ac.cput.campusfacilitybooking.factory.StaffFactory;
 import za.ac.cput.campusfacilitybooking.domain.Staff;
 import za.ac.cput.campusfacilitybooking.domain.enums.StaffRole;
 import org.junit.jupiter.api.Test;
