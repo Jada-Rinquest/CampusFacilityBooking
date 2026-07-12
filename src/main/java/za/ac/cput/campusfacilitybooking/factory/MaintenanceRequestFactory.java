@@ -4,7 +4,6 @@ package za.ac.cput.campusfacilitybooking.factory;
 Date: 28 June 2026
  */
 
-import za.ac.cput.campusfacilitybooking.domain.Equipment;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
@@ -15,7 +14,7 @@ public class MaintenanceRequestFactory {
 
     public static MaintenanceRequest createMaintenanceRequest(
             String requestId,
-            Equipment equipment,
+            String equipmentId,
             String reportedById,
             String description,
             MaintenancePriority priority,
@@ -25,7 +24,7 @@ public class MaintenanceRequestFactory {
 
         return new MaintenanceRequest.Builder()
                 .requestId(requestId)
-                .equipment(equipment)
+                .equipmentId(equipmentId)
                 .reportedById(reportedById)
                 .description(description)
                 .priority(priority)

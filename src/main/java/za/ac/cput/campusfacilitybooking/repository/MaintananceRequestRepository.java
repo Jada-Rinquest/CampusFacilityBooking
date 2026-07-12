@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface MaintananceRequestRepository extends JpaRepository<MaintenanceRequest, String> {
+public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, String> {
 
     List<MaintenanceRequest> findByStatus(MaintenanceStatus status);
 
@@ -22,7 +22,7 @@ public interface MaintananceRequestRepository extends JpaRepository<MaintenanceR
 
     List<MaintenanceRequest> findByReportedById(String reportedById);
 
-    List<MaintenanceRequest> findByEquipmentEquipmentId(String equipmentId);
+    List<MaintenanceRequest> findByEquipmentId(String equipmentId);
 
     List<MaintenanceRequest> findByDateReported(LocalDate dateReported);
 }

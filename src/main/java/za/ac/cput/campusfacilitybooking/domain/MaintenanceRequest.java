@@ -9,8 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
@@ -25,9 +23,8 @@ public class MaintenanceRequest {
     @Column(name = "request_id", nullable = false, unique = true)
     private String requestId;
 
-    @ManyToOne
-    @JoinColumn(name = "equipment_id", referencedColumnName = "equipmentId")
-    private Equipment equipment;
+    @Column(name = "equipment_id", nullable = false)
+    private String equipmentId;
 
     @Column(name = "reported_by_id", nullable = false)
     private String reportedById;
@@ -50,7 +47,7 @@ public class MaintenanceRequest {
 
     private MaintenanceRequest(Builder builder) {
         this.requestId = builder.requestId;
-        this.equipment = builder.equipment;
+        this.equipmentId = builder.equipmentId;
         this.reportedById = builder.reportedById;
         this.description = builder.description;
         this.priority = builder.priority;
@@ -60,7 +57,7 @@ public class MaintenanceRequest {
 
     public static class Builder {
         private String requestId;
-        private Equipment equipment;
+        private String equipmentId;
         private String reportedById;
         private String description;
         private MaintenancePriority priority = MaintenancePriority.MEDIUM;
@@ -71,8 +68,8 @@ public class MaintenanceRequest {
             this.requestId = requestId;
             return this;
         }
-        public Builder equipment(Equipment equipment) {
-            this.equipment = equipment;
+        public Builder equipmentId(String equipmentId) {
+            this.equipmentId = equipmentId;
             return this;
         }
         public Builder reportedById(String reportedById) {
@@ -98,7 +95,7 @@ public class MaintenanceRequest {
 
         public MaintenanceRequest build() {
             Objects.requireNonNull(requestId, "requestId is required");
-            Objects.requireNonNull(equipment, "equipment is required");
+            Objects.requireNonNull(equipmentId, "equipmentId is required");
             Objects.requireNonNull(reportedById, "reportedById is required");
             Objects.requireNonNull(description, "description is required");
             return new MaintenanceRequest(this);
@@ -108,8 +105,8 @@ public class MaintenanceRequest {
     public String getRequestId() {
         return requestId;
     }
-    public Equipment getEquipment() {
-        return equipment;
+    public String getEquipmentId() {
+        return equipmentId;
     }
     public String getReportedById() {
         return reportedById;
@@ -129,7 +126,7 @@ public class MaintenanceRequest {
 
     @Override
     public String toString() {
-        return String.format("MaintenanceRequest(requestId=%s, equipment=%s, priority=%s, status=%s)",
-                requestId, equipment, priority, status);
+        return String.format("MaintenanceRequest(requestId=%s, equipmentId=%s, priority=%s, status=%s)",
+                requestId, equipmentId, priority, status);
     }
 }

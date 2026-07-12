@@ -7,11 +7,10 @@ Date: 12 July 2026
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import za.ac.cput.campusfacilitybooking.domain.Equipment;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
-import za.ac.cput.campusfacilitybooking.repository.MaintananceRequestRepository;
+import za.ac.cput.campusfacilitybooking.repository.MaintenanceRequestRepository;
 import za.ac.cput.campusfacilitybooking.service.MaintenanceRequestService;
 import za.ac.cput.campusfacilitybooking.service.impl.MaintenanceRequestServiceImpl;
 
@@ -23,28 +22,21 @@ import static org.mockito.Mockito.*;
 
 class MaintenanceRequestServiceTest {
 
-    private MaintananceRequestRepository repository;
+    private MaintenanceRequestRepository repository;
     private MaintenanceRequestService service;
 
     private MaintenanceRequest maintenanceRequest;
-    private Equipment equipment;
 
     @BeforeEach
     void setUp() {
 
-        repository = Mockito.mock(MaintananceRequestRepository.class);
+        repository = Mockito.mock(MaintenanceRequestRepository.class);
 
         service = new MaintenanceRequestServiceImpl(repository);
 
-        equipment = new Equipment.Builder()
-                .setEquipmentId("E001")
-                .setName("Projector")
-                .setSerialNumber("SN-12345")
-                .build();
-
         maintenanceRequest = new MaintenanceRequest.Builder()
                 .requestId("MR001")
-                .equipment(equipment)
+                .equipmentId("E001")
                 .reportedById("S001")
                 .description("Projector bulb is burnt out")
                 .priority(MaintenancePriority.HIGH)

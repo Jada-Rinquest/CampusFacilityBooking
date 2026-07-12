@@ -7,6 +7,7 @@ Date: 12 July 2026
 import org.springframework.stereotype.Service;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.repository.MaintananceRequestRepository;
+import za.ac.cput.campusfacilitybooking.repository.MaintenanceRequestRepository;
 import za.ac.cput.campusfacilitybooking.service.MaintenanceRequestService;
 
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class MaintenanceRequestServiceImpl implements MaintenanceRequestService 
 
     private final MaintananceRequestRepository repository;
 
-    public MaintenanceRequestServiceImpl(MaintananceRequestRepository repository) {
+    public MaintenanceRequestServiceImpl(MaintenanceRequestRepository repository) {
         this.repository = repository;
     }
 
