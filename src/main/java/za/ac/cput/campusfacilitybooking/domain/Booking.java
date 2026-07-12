@@ -3,7 +3,15 @@ package za.ac.cput.campusfacilitybooking.domain;
 /* Author: Nuyra Swanson (221290524)
      Date: 21 June 2026 */
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "booking")
 public class Booking {
+
+    @Id
     private String bookingId;
     private String facilityId;
     private String timeSlotId;
@@ -11,6 +19,10 @@ public class Booking {
     private String requesterType;
     private String purpose;
     private String status;
+
+    protected Booking() {
+
+    }
 
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;
