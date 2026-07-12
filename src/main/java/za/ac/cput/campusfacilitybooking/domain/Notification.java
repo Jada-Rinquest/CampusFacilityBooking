@@ -3,13 +3,24 @@ package za.ac.cput.campusfacilitybooking.domain;
 /* Author: Nuyra Swanson (221290524)
      Date: 21 June 2026 */
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "notification")
 public class Notification {
+
+    @Id
     private String notificationId;
     private String recipientId;
     private String message;
     private String type;
     private String sentDate;
     private boolean isRead;
+
+    protected Notification() {
+    }
 
     private Notification(Builder builder) {
         this.notificationId = builder.notificationId;
