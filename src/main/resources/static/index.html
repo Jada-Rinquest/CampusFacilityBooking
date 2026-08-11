@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Campus Facility Booking</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <h1>Campus Facility Booking</h1>
+        <p>Student & Department Management</p>
+    </div>
+</header>
+
+<main>
+
+    <!-- DASHBOARD -->
+    <section class="dashboard">
+
+        <div class="dashboard-card">
+            <h2>Departments</h2>
+            <p>Manage campus departments.</p>
+            <button onclick="showSection('departmentSection')">
+                Manage Departments
+            </button>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Students</h2>
+            <p>Manage registered students.</p>
+            <button onclick="showSection('studentSection')">
+                Manage Students
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- DEPARTMENT SECTION -->
+    <!-- ============================= -->
+
+    <section id="departmentSection" class="management-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Department Management</h2>
+                <p>Create, search, update and delete departments.</p>
+            </div>
+
+            <button class="back-button"
+                    onclick="hideSection('departmentSection')">
+                Back
+            </button>
+        </div>
+
+
+        <form id="departmentForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="departmentId">
+                        Department ID
+                    </label>
+
+                    <input
+                            type="text"
+                            id="departmentId"
+                            placeholder="e.g. D001"
+                            required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="departmentName">
+                        Department Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="departmentName"
+                            placeholder="e.g. Information Technology"
+                            required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="building">
+                        Building
+                    </label>
+
+                    <input
+                            type="text"
+                            id="building"
+                            placeholder="e.g. Block A"
+                            required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="headOfDepartment">
+                        Head of Department
+                    </label>
+
+                    <input
+                            type="text"
+                            id="headOfDepartment"
+                            placeholder="e.g. Mr Adams"
+                            required>
+                </div>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                        type="button"
+                        class="primary-button"
+                        onclick="createDepartment()">
+                    Create Department
+                </button>
+
+                <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="readDepartment()">
+                    Search Department
+                </button>
+
+                <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="updateDepartment()">
+                    Update Department
+                </button>
+
+                <button
+                        type="button"
+                        class="delete-button"
+                        onclick="deleteDepartment()">
+                    Delete Department
+                </button>
+
+                <button
+                        type="reset"
+                        class="clear-button">
+                    Clear
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div id="departmentMessage"
+             class="message">
+        </div>
+
+
+        <div class="result-card">
+
+            <h3>Department Information</h3>
+
+            <div id="departmentResult">
+                No department selected.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- STUDENT SECTION -->
+    <!-- ============================= -->
+
+    <section id="studentSection" class="management-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Student Management</h2>
+                <p>Create, search, update and delete students.</p>
+            </div>
+
+            <button
+                    class="back-button"
+                    onclick="hideSection('studentSection')">
+                Back
+            </button>
+
+        </div>
+
+
+        <form id="studentForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="studentId">
+                        Student ID
+                    </label>
+
+                    <input
+                            type="text"
+                            id="studentId"
+                            placeholder="e.g. S001"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="studentNumber">
+                        Student Number
+                    </label>
+
+                    <input
+                            type="text"
+                            id="studentNumber"
+                            placeholder="e.g. 222871296"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="firstName">
+                        First Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="firstName"
+                            placeholder="e.g. Jada"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="lastName">
+                        Last Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="lastName"
+                            placeholder="e.g. Rinquest"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                            type="email"
+                            id="email"
+                            placeholder="e.g. student@email.com"
+                            required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="studentDepartment">
+                        Department ID
+                    </label>
+
+                    <input
+                            type="text"
+                            id="studentDepartment"
+                            placeholder="e.g. D001"
+                            required>
+
+                </div>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                        type="button"
+                        class="primary-button"
+                        onclick="createStudent()">
+                    Create Student
+                </button>
+
+                <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="readStudent()">
+                    Search Student
+                </button>
+
+                <button
+                        type="button"
+                        class="secondary-button"
+                        onclick="updateStudent()">
+                    Update Student
+                </button>
+
+                <button
+                        type="button"
+                        class="delete-button"
+                        onclick="deleteStudent()">
+                    Delete Student
+                </button>
+
+                <button
+                        type="reset"
+                        class="clear-button">
+                    Clear
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div id="studentMessage"
+             class="message">
+        </div>
+
+
+        <div class="result-card">
+
+            <h3>Student Information</h3>
+
+            <div id="studentResult">
+                No student selected.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        Campus Facility Booking System
+    </p>
+
+    <p>
+        Student & Department Management
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
