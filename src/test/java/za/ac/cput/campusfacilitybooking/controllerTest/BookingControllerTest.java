@@ -3,6 +3,7 @@ package za.ac.cput.campusfacilitybooking.controllerTest;
 /* Author: Nuyra Swanson (221290524)
      Date: 19 July 2026 */
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,10 +34,9 @@ public class BookingControllerTest {
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                "BS001"
         );
 
         when(service.create(booking)).thenReturn(booking);
@@ -54,19 +54,20 @@ public class BookingControllerTest {
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                "BS001"
         );
 
         when(service.read(booking.getBookingId())).thenReturn(booking);
 
-        ResponseEntity<Booking> response = controller.read(booking.getBookingId());
+        ResponseEntity<Booking> response =
+                controller.read(booking.getBookingId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(booking.getBookingId(), response.getBody().getBookingId());
+        assertEquals(booking.getBookingId(),
+                response.getBody().getBookingId());
     }
 
     @Test
@@ -75,10 +76,9 @@ public class BookingControllerTest {
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Workshop",
-                "Approved"
+                "BS002"
         );
 
         when(service.update(booking)).thenReturn(booking);
@@ -87,7 +87,8 @@ public class BookingControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Approved", response.getBody().getStatus());
+        assertEquals("BS002",
+                response.getBody().getBookingStatusId());
     }
 
     @Test
@@ -95,7 +96,8 @@ public class BookingControllerTest {
 
         when(service.delete("B001")).thenReturn(true);
 
-        ResponseEntity<Boolean> response = controller.delete("B001");
+        ResponseEntity<Boolean> response =
+                controller.delete("B001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());

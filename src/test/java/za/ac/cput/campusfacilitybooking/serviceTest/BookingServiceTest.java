@@ -29,13 +29,13 @@ public class BookingServiceTest {
 
     @Test
     void testCreate() {
+
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                "BS001"
         );
 
         when(repository.save(booking)).thenReturn(booking);
@@ -48,13 +48,13 @@ public class BookingServiceTest {
 
     @Test
     void testRead() {
+
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                "BS001"
         );
 
         when(repository.findById(booking.getBookingId()))
@@ -68,24 +68,26 @@ public class BookingServiceTest {
 
     @Test
     void testUpdate() {
+
         Booking booking = BookingFactory.createBooking(
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Workshop",
-                "Approved"
+                "BS002"
         );
 
         when(repository.save(booking)).thenReturn(booking);
 
         Booking updated = service.update(booking);
 
-        assertEquals("Approved", updated.getStatus());
+        assertNotNull(updated);
+        assertEquals("BS002", updated.getBookingStatusId());
     }
 
     @Test
     void testDelete() {
+
         String id = "B001";
 
         when(repository.existsById(id)).thenReturn(true);

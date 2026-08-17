@@ -3,11 +3,11 @@ package za.ac.cput.campusfacilitybooking.factoryTest;
 /* Author: Nuyra Swanson (221290524)
      Date: 28 June 2026 */
 
-import za.ac.cput.campusfacilitybooking.domain.Notification;
 import org.junit.jupiter.api.Test;
+import za.ac.cput.campusfacilitybooking.domain.Notification;
 import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 
-import java.util.UUID;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,28 +17,28 @@ public class NotificationFactoryTest {
     void testCreateNotification() {
 
         Notification notification = NotificationFactory.createNotification(
-                "S001",
+                "U001",
                 "Your booking has been approved",
-                "BOOKING",
-                "2026-08-20",
-                false
+                LocalDate.of(2026, 8, 20),
+                "NT001"
         );
 
         assertNotNull(notification);
-        assertNull(notification.getNotificationId());
-        assertEquals("S001", notification.getNotificationId());
-        assertEquals("BOOKING", notification.getType());
-        assertFalse(notification.isRead());
+        assertNotNull(notification.getNotificationId());
+        assertEquals("U001", notification.getUserId());
+        assertEquals("Your booking has been approved", notification.getMessage());
+        assertEquals(LocalDate.of(2026, 8, 20), notification.getSentDate());
+        assertEquals("NT001", notification.getNotificationTypeId());
     }
 
     @Test
     void testCreateNotificationFail() {
+
         Notification notification = NotificationFactory.createNotification(
                 "",
                 "Your booking has been approved",
-                "BOOKING",
-                "2026-08-20",
-                false
+                LocalDate.of(2026, 8, 20),
+                "NT001"
         );
 
         assertNull(notification);
