@@ -13,6 +13,8 @@ import za.ac.cput.campusfacilitybooking.domain.Notification;
 import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 import za.ac.cput.campusfacilitybooking.service.NotificationService;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -32,60 +34,74 @@ public class NotificationControllerTest {
     void testCreate() {
 
         Notification notification = NotificationFactory.createNotification(
-                "S001",
+                "U001",
                 "Booking Approved",
-                "BOOKING",
-                "2026-07-19",
-                false
+                LocalDate.of(2026, 7, 19),
+                "NT001"
         );
 
         when(service.create(notification)).thenReturn(notification);
 
-        ResponseEntity<Notification> response = controller.create(notification);
+        ResponseEntity<Notification> response =
+                controller.create(notification);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(notification.getNotificationId(), response.getBody().getNotificationId());
+        assertEquals(
+                notification.getNotificationId(),
+                response.getBody().getNotificationId()
+        );
     }
 
     @Test
     void testRead() {
 
         Notification notification = NotificationFactory.createNotification(
-                "S001",
+                "U001",
                 "Booking Approved",
-                "BOOKING",
-                "2026-07-19",
-                false
+                LocalDate.of(2026, 7, 19),
+                "NT001"
         );
 
-        when(service.read(notification.getNotificationId())).thenReturn(notification);
+        when(service.read(notification.getNotificationId()))
+                .thenReturn(notification);
 
-        ResponseEntity<Notification> response = controller.read(notification.getNotificationId());
+        ResponseEntity<Notification> response =
+                controller.read(notification.getNotificationId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(notification.getNotificationId(), response.getBody().getNotificationId());
+        assertEquals(
+                notification.getNotificationId(),
+                response.getBody().getNotificationId()
+        );
     }
 
     @Test
     void testUpdate() {
 
         Notification notification = NotificationFactory.createNotification(
-                "S001",
+                "U001",
                 "Booking Updated",
-                "BOOKING",
-                "2026-07-19",
-                true
+                LocalDate.of(2026, 7, 19),
+                "NT002"
         );
 
         when(service.update(notification)).thenReturn(notification);
 
-        ResponseEntity<Notification> response = controller.update(notification);
+        ResponseEntity<Notification> response =
+                controller.update(notification);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().isRead());
+        assertEquals(
+                "Booking Updated",
+                response.getBody().getMessage()
+        );
+        assertEquals(
+                "NT002",
+                response.getBody().getNotificationTypeId()
+        );
     }
 
     @Test
@@ -93,7 +109,8 @@ public class NotificationControllerTest {
 
         when(service.delete("N001")).thenReturn(true);
 
-        ResponseEntity<Boolean> response = controller.delete("N001");
+        ResponseEntity<Boolean> response =
+                controller.delete("N001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());

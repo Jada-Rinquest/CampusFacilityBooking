@@ -4,20 +4,23 @@ package za.ac.cput.campusfacilitybooking.factory;
      Date: 27 June 2026 */
 
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class NotificationFactory {
 
-    public static Notification createNotification(String recipientId,
-                                                  String message,
-                                                  String type,
-                                                  String sentDate,
-                                                  Boolean isRead) {
+    public static Notification createNotification(
+            String userId,
+            String message,
+            LocalDate sentDate,
+            String notificationTypeId) {
 
-        if (recipientId == null || recipientId.isEmpty()
-            || message == null || message.isEmpty()
-            || type == null || type.isEmpty()
-            || sentDate == null || sentDate.isEmpty()) {
+        if (userId == null || userId.isEmpty()
+                || message == null || message.isEmpty()
+                || sentDate == null
+                || notificationTypeId == null || notificationTypeId.isEmpty()) {
+
             return null;
         }
 
@@ -25,12 +28,10 @@ public class NotificationFactory {
 
         return new Notification.Builder()
                 .setNotificationId(notificationId)
-                .setRecipientId(recipientId)
+                .setUserId(userId)
                 .setMessage(message)
-                .setType(type)
                 .setSentDate(sentDate)
-                .setIsRead(isRead)
+                .setNotificationTypeId(notificationTypeId)
                 .build();
     }
-
 }

@@ -13,12 +13,12 @@ public class Booking {
 
     @Id
     private String bookingId;
+
     private String facilityId;
     private String timeSlotId;
-    private String requesterId;
-    private String requesterType;
+    private String userId;
     private String purpose;
-    private String status;
+    private String bookingStatusId;
 
     protected Booking() {
 
@@ -28,10 +28,9 @@ public class Booking {
         this.bookingId = builder.bookingId;
         this.facilityId = builder.facilityId;
         this.timeSlotId = builder.timeSlotId;
-        this.requesterId = builder.requesterId;
-        this.requesterType = builder.requesterType;
+        this.userId = builder.userId;
         this.purpose = builder.purpose;
-        this.status = builder.status;
+        this.bookingStatusId = builder.bookingStatusId;
     }
 
     public String getBookingId() {
@@ -46,30 +45,26 @@ public class Booking {
         return timeSlotId;
     }
 
-    public String getRequesterId() {
-        return requesterId;
-    }
-
-    public String getRequesterType() {
-        return requesterType;
+    public String getUserId() {
+        return userId;
     }
 
     public String getPurpose() {
         return purpose;
     }
 
-    public String getStatus() {
-        return status;
+    public String getBookingStatusId() {
+        return bookingStatusId;
     }
 
     public static class Builder {
+
         private String bookingId;
         private String facilityId;
         private String timeSlotId;
-        private String requesterId;
-        private String requesterType;
+        private String userId;
         private String purpose;
-        private String status;
+        private String bookingStatusId;
 
         public Builder setBookingId(String bookingId) {
             this.bookingId = bookingId;
@@ -86,13 +81,8 @@ public class Booking {
             return this;
         }
 
-        public Builder setRequesterId(String requesterId) {
-            this.requesterId = requesterId;
-            return this;
-        }
-
-        public Builder setRequesterType(String requesterType) {
-            this.requesterType = requesterType;
+        public Builder setUserId(String userId) {
+            this.userId = userId;
             return this;
         }
 
@@ -101,13 +91,25 @@ public class Booking {
             return this;
         }
 
-        public Builder setStatus(String status) {
-            this.status = status;
+        public Builder setBookingStatusId(String bookingStatusId) {
+            this.bookingStatusId = bookingStatusId;
             return this;
         }
 
         public Booking build() {
             return new Booking(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingId='" + bookingId + '\'' +
+                ", facilityId='" + facilityId + '\'' +
+                ", timeSlotId='" + timeSlotId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", bookingStatusId='" + bookingStatusId + '\'' +
+                '}';
     }
 }
