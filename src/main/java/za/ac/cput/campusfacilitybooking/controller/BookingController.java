@@ -53,7 +53,8 @@ public class BookingController {
     }
 }
 
-public class BookingRequest {
+// Remove 'public' keyword from this class
+class BookingRequest {
     private String bookingId;
     private String facilityId;
     private String timeSlotId;
