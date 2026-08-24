@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.campusfacilitybooking.domain.Contact;
 import za.ac.cput.campusfacilitybooking.factory.ContactFactory;
-import za.ac.cput.campusfacilitybooking.service.ContactService;
 
 @RestController
 @RequestMapping("/contact")
