@@ -12,26 +12,15 @@ public class MaintenanceRequest {
 
     @Id
     private String requestId;
-
     private String equipmentId;
     private String reportedBy;
     private String description;
     private LocalDate dateReported;
-    private String maintenancePriorityId;
-    private String maintenanceStatusId;
-
-    @ManyToOne
-    @JoinColumn(name = "equipment_id", insertable = false, updatable = false)
-    private Equipment equipment;
 
     @Enumerated(EnumType.STRING)
-    @ManyToOne
-    @JoinColumn(name = "maintenance_priority_id", insertable = false, updatable = false)
     private MaintenancePriority maintenancePriority;
 
     @Enumerated(EnumType.STRING)
-    @ManyToOne
-    @JoinColumn(name = "maintenance_status_id", insertable = false, updatable = false)
     private MaintenanceStatus maintenanceStatus;
 
     protected MaintenanceRequest() {
@@ -40,15 +29,15 @@ public class MaintenanceRequest {
     public MaintenanceRequest(String requestId, String equipmentId,
                               String reportedBy, String description,
                               LocalDate dateReported,
-                              String maintenancePriorityId,
-                              String maintenanceStatusId) {
+                              MaintenancePriority maintenancePriority,
+                              MaintenanceStatus maintenanceStatus) {
         this.requestId = requestId;
         this.equipmentId = equipmentId;
         this.reportedBy = reportedBy;
         this.description = description;
         this.dateReported = dateReported;
-        this.maintenancePriorityId = maintenancePriorityId;
-        this.maintenanceStatusId = maintenanceStatusId;
+        this.maintenancePriority = maintenancePriority;
+        this.maintenanceStatus = maintenanceStatus;
     }
 
     public String getRequestId() {
@@ -71,13 +60,14 @@ public class MaintenanceRequest {
         return dateReported;
     }
 
-    public String getMaintenancePriorityId() {
-        return maintenancePriorityId;
+    public MaintenancePriority getMaintenancePriority() {
+        return maintenancePriority;
     }
 
-    public String getMaintenanceStatusId() {
-        return maintenanceStatusId;
+    public MaintenanceStatus getMaintenanceStatus() {
+        return maintenanceStatus;
     }
+
     @Override
     public String toString() {
         return "MaintenanceRequest{" +
@@ -86,8 +76,8 @@ public class MaintenanceRequest {
                 ", reportedBy='" + reportedBy + '\'' +
                 ", description='" + description + '\'' +
                 ", dateReported=" + dateReported +
-                ", maintenancePriorityId='" + maintenancePriorityId + '\'' +
-                ", maintenanceStatusId='" + maintenanceStatusId + '\'' +
+                ", maintenancePriority=" + maintenancePriority +
+                ", maintenanceStatus=" + maintenanceStatus +
                 '}';
     }
 }

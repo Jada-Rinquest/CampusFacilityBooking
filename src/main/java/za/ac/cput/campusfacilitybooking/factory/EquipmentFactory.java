@@ -1,6 +1,7 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Equipment;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
 
 public class EquipmentFactory {
 
@@ -8,7 +9,7 @@ public class EquipmentFactory {
                                             String name,
                                             String serialNumber,
                                             String facilityId,
-                                            String equipmentStatusId) {
+                                            EquipmentStatus equipmentStatus) {
 
         if (equipmentId == null || equipmentId.isEmpty()) {
             throw new IllegalArgumentException("Equipment ID is required");
@@ -26,8 +27,8 @@ public class EquipmentFactory {
             throw new IllegalArgumentException("Facility ID is required");
         }
 
-        if (equipmentStatusId == null || equipmentStatusId.isEmpty()) {
-            throw new IllegalArgumentException("Equipment status ID is required");
+        if (equipmentStatus == null) {
+            throw new IllegalArgumentException("Equipment status is required");
         }
 
         return new Equipment(
@@ -35,7 +36,7 @@ public class EquipmentFactory {
                 name,
                 serialNumber,
                 facilityId,
-                equipmentStatusId
+                equipmentStatus
         );
     }
 }

@@ -8,24 +8,19 @@ public class Contact {
 
     @Id
     private String contactId;
-
     private String contact;
-
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userId;
 
     protected Contact() {
     }
 
     public Contact(String contactId, String contact,
-                   String description, User user) {
+                   String description, String userId) {
         this.contactId = contactId;
         this.contact = contact;
         this.description = description;
-        this.user = user;
+        this.userId = userId;
     }
 
     public String getContactId() {
@@ -40,8 +35,8 @@ public class Contact {
         return description;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     @Override
@@ -50,7 +45,7 @@ public class Contact {
                 "contactId='" + contactId + '\'' +
                 ", contact='" + contact + '\'' +
                 ", description='" + description + '\'' +
-                ", user=" + user +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

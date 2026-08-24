@@ -1,6 +1,7 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Facility;
+import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
 
 public class FacilityFactory {
 
@@ -9,7 +10,7 @@ public class FacilityFactory {
                                           int capacity,
                                           String location,
                                           String departmentId,
-                                          String facilityTypeId) {
+                                          FacilityType facilityType) {
 
         if (facilityId == null || facilityId.isEmpty()) {
             throw new IllegalArgumentException("Facility ID is required");
@@ -31,8 +32,8 @@ public class FacilityFactory {
             throw new IllegalArgumentException("Department ID is required");
         }
 
-        if (facilityTypeId == null || facilityTypeId.isEmpty()) {
-            throw new IllegalArgumentException("Facility Type ID is required");
+        if (facilityType == null) {
+            throw new IllegalArgumentException("Facility Type is required");
         }
 
         return new Facility(
@@ -41,7 +42,7 @@ public class FacilityFactory {
                 capacity,
                 location,
                 departmentId,
-                facilityTypeId
+                facilityType
         );
     }
 }

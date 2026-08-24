@@ -3,48 +3,32 @@ package za.ac.cput.campusfacilitybooking.domain;
 import jakarta.persistence.*;
 import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
 
-import java.util.List;
-
 @Entity
 @Table(name = "facility")
 public class Facility {
 
     @Id
     private String facilityId;
-
     private String name;
     private int capacity;
     private String location;
     private String departmentId;
-    private String facilityTypeId;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id", insertable = false, updatable = false)
-    private Department department;
 
     @Enumerated(EnumType.STRING)
-    @ManyToOne
-    @JoinColumn(name = "facility_type_id", insertable = false, updatable = false)
     private FacilityType facilityType;
-
-    @OneToMany(mappedBy = "facility")
-    private List<Equipment> equipment;
-
-    @OneToMany(mappedBy = "facility")
-    private List<Booking> bookings;
 
     protected Facility() {
     }
 
     public Facility(String facilityId, String name, int capacity,
                     String location, String departmentId,
-                    String facilityTypeId) {
+                    FacilityType facilityType) {
         this.facilityId = facilityId;
         this.name = name;
         this.capacity = capacity;
         this.location = location;
         this.departmentId = departmentId;
-        this.facilityTypeId = facilityTypeId;
+        this.facilityType = facilityType;
     }
 
     public String getFacilityId() {
@@ -67,9 +51,10 @@ public class Facility {
         return departmentId;
     }
 
-    public String getFacilityTypeId() {
-        return facilityTypeId;
+    public FacilityType getFacilityType() {
+        return facilityType;
     }
+
     @Override
     public String toString() {
         return "Facility{" +
@@ -78,7 +63,7 @@ public class Facility {
                 ", capacity=" + capacity +
                 ", location='" + location + '\'' +
                 ", departmentId='" + departmentId + '\'' +
-                ", facilityTypeId='" + facilityTypeId + '\'' +
+                ", facilityType=" + facilityType +
                 '}';
     }
 }

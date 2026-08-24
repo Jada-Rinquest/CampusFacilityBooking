@@ -1,14 +1,13 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Contact;
-import za.ac.cput.campusfacilitybooking.domain.User;
 
 public class ContactFactory {
 
     public static Contact createContact(String contactId,
                                         String contact,
                                         String description,
-                                        User user) {
+                                        String userId) {
 
         if (contactId == null || contactId.isEmpty()) {
             throw new IllegalArgumentException("Contact ID is required");
@@ -22,15 +21,15 @@ public class ContactFactory {
             throw new IllegalArgumentException("Description is required");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User is required");
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
         }
 
         return new Contact(
                 contactId,
                 contact,
                 description,
-                user
+                userId
         );
     }
 }

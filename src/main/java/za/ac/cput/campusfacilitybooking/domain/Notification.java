@@ -11,17 +11,11 @@ public class Notification {
 
     @Id
     private String notificationId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; // Changed from userId String
-
+    private String userId;
     private String message;
     private LocalDate sentDate;
 
     @Enumerated(EnumType.STRING)
-    @ManyToOne
-    @JoinColumn(name = "notification_type_id")
     private NotificationType notificationType;
 
     protected Notification() {
@@ -29,7 +23,7 @@ public class Notification {
 
     private Notification(Builder builder) {
         this.notificationId = builder.notificationId;
-        this.user = builder.user;
+        this.userId = builder.userId;
         this.message = builder.message;
         this.sentDate = builder.sentDate;
         this.notificationType = builder.notificationType;
@@ -39,8 +33,8 @@ public class Notification {
         return notificationId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     public String getMessage() {
@@ -56,9 +50,8 @@ public class Notification {
     }
 
     public static class Builder {
-
         private String notificationId;
-        private User user;
+        private String userId;
         private String message;
         private LocalDate sentDate;
         private NotificationType notificationType;
@@ -68,8 +61,8 @@ public class Notification {
             return this;
         }
 
-        public Builder setUser(User user) {
-            this.user = user;
+        public Builder setUserId(String userId) {
+            this.userId = userId;
             return this;
         }
 
@@ -97,7 +90,7 @@ public class Notification {
     public String toString() {
         return "Notification{" +
                 "notificationId='" + notificationId + '\'' +
-                ", user=" + user +
+                ", userId='" + userId + '\'' +
                 ", message='" + message + '\'' +
                 ", sentDate=" + sentDate +
                 ", notificationType=" + notificationType +

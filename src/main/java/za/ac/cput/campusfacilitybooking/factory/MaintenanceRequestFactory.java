@@ -1,4 +1,3 @@
-
 /*Author: Milani Sani(230371574)
 Date: 28 June 2026
  */
@@ -6,6 +5,8 @@ Date: 28 June 2026
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
 
 import java.time.LocalDate;
 
@@ -17,8 +18,8 @@ public class MaintenanceRequestFactory {
             String reportedBy,
             String description,
             LocalDate dateReported,
-            String maintenancePriorityId,
-            String maintenanceStatusId) {
+            MaintenancePriority maintenancePriority,
+            MaintenanceStatus maintenanceStatus) {
 
         if (requestId == null || requestId.isEmpty()) {
             throw new IllegalArgumentException("Request ID is required");
@@ -40,12 +41,12 @@ public class MaintenanceRequestFactory {
             throw new IllegalArgumentException("Date reported is required");
         }
 
-        if (maintenancePriorityId == null || maintenancePriorityId.isEmpty()) {
-            throw new IllegalArgumentException("Maintenance priority ID is required");
+        if (maintenancePriority == null) {
+            throw new IllegalArgumentException("Maintenance priority is required");
         }
 
-        if (maintenanceStatusId == null || maintenanceStatusId.isEmpty()) {
-            throw new IllegalArgumentException("Maintenance status ID is required");
+        if (maintenanceStatus == null) {
+            throw new IllegalArgumentException("Maintenance status is required");
         }
 
         return new MaintenanceRequest(
@@ -54,8 +55,8 @@ public class MaintenanceRequestFactory {
                 reportedBy,
                 description,
                 dateReported,
-                maintenancePriorityId,
-                maintenanceStatusId
+                maintenancePriority,
+                maintenanceStatus
         );
     }
 }

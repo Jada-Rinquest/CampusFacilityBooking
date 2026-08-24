@@ -6,13 +6,12 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Student;
-import za.ac.cput.campusfacilitybooking.domain.User;
 
 public class StudentFactory {
 
     public static Student createStudent(String studentId,
                                         String studentNumber,
-                                        User user) {
+                                        String userId) {
 
         if (studentId == null || studentId.isEmpty()) {
             throw new IllegalArgumentException("Student ID is required");
@@ -22,14 +21,14 @@ public class StudentFactory {
             throw new IllegalArgumentException("Student number is required");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User is required");
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
         }
 
         return new Student(
                 studentId,
                 studentNumber,
-                user
+                userId
         );
     }
 }

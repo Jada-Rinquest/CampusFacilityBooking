@@ -1,7 +1,6 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Notification;
-import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 
 import java.time.LocalDate;
@@ -10,7 +9,7 @@ public class NotificationFactory {
 
     public static Notification createNotification(
             String notificationId,
-            User user,
+            String userId,
             String message,
             LocalDate sentDate,
             NotificationType notificationType) {
@@ -19,8 +18,8 @@ public class NotificationFactory {
             throw new IllegalArgumentException("Notification ID is required");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User is required");
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
         }
 
         if (message == null || message.trim().isEmpty()) {
@@ -37,7 +36,7 @@ public class NotificationFactory {
 
         return new Notification.Builder()
                 .setNotificationId(notificationId)
-                .setUser(user)
+                .setUserId(userId)
                 .setMessage(message)
                 .setSentDate(sentDate)
                 .setNotificationType(notificationType)

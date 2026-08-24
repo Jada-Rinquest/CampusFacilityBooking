@@ -1,23 +1,22 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Staff;
-import za.ac.cput.campusfacilitybooking.domain.User;
 
 public class StaffFactory {
 
-    public static Staff createStaff(String staffId, User user) {
+    public static Staff createStaff(String staffId, String userId) {
 
         if (staffId == null || staffId.isEmpty()) {
             throw new IllegalArgumentException("Staff ID is required");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User is required");
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
         }
 
         return new Staff.Builder()
                 .setStaffId(staffId)
-                .setUser(user)
+                .setUserId(userId)
                 .build();
     }
 }

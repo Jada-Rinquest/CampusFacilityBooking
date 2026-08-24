@@ -10,23 +10,12 @@ public class Booking {
     @Id
     private String bookingId;
 
-    @ManyToOne
-    @JoinColumn(name = "facility_id")
-    private Facility facility; // Changed from facilityId String
-
-    @ManyToOne
-    @JoinColumn(name = "time_slot_id")
-    private TimeSlot timeSlot; // Changed from timeSlotId String
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; // Changed from userId String
-
+    private String facilityId;
+    private String timeSlotId;
+    private String userId;
     private String purpose;
 
-    @Enumerated(EnumType.STRING)  // Stores as "PENDING", "APPROVED", etc.
-    @ManyToOne
-    @JoinColumn(name = "booking_status_id")
+    @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
     protected Booking() {
@@ -34,9 +23,9 @@ public class Booking {
 
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;
-        this.facility = builder.facility;
-        this.timeSlot = builder.timeSlot;
-        this.user = builder.user;
+        this.facilityId = builder.facilityId;
+        this.timeSlotId = builder.timeSlotId;
+        this.userId = builder.userId;
         this.purpose = builder.purpose;
         this.bookingStatus = builder.bookingStatus;
     }
@@ -45,16 +34,16 @@ public class Booking {
         return bookingId;
     }
 
-    public Facility getFacility() {
-        return facility;
+    public String getFacilityId() {
+        return facilityId;
     }
 
-    public TimeSlot getTimeSlot() {
-        return timeSlot;
+    public String getTimeSlotId() {
+        return timeSlotId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
     public String getPurpose() {
@@ -66,11 +55,10 @@ public class Booking {
     }
 
     public static class Builder {
-
         private String bookingId;
-        private Facility facility;
-        private TimeSlot timeSlot;
-        private User user;
+        private String facilityId;
+        private String timeSlotId;
+        private String userId;
         private String purpose;
         private BookingStatus bookingStatus;
 
@@ -79,18 +67,18 @@ public class Booking {
             return this;
         }
 
-        public Builder setFacility(Facility facility) {
-            this.facility = facility;
+        public Builder setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
             return this;
         }
 
-        public Builder setTimeSlot(TimeSlot timeSlot) {
-            this.timeSlot = timeSlot;
+        public Builder setTimeSlotId(String timeSlotId) {
+            this.timeSlotId = timeSlotId;
             return this;
         }
 
-        public Builder setUser(User user) {
-            this.user = user;
+        public Builder setUserId(String userId) {
+            this.userId = userId;
             return this;
         }
 
@@ -113,9 +101,9 @@ public class Booking {
     public String toString() {
         return "Booking{" +
                 "bookingId='" + bookingId + '\'' +
-                ", facility=" + facility +
-                ", timeSlot=" + timeSlot +
-                ", user=" + user +
+                ", facilityId='" + facilityId + '\'' +
+                ", timeSlotId='" + timeSlotId + '\'' +
+                ", userId='" + userId + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", bookingStatus=" + bookingStatus +
                 '}';

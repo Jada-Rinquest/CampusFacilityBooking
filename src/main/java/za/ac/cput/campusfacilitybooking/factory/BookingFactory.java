@@ -1,17 +1,14 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Booking;
-import za.ac.cput.campusfacilitybooking.domain.Facility;
-import za.ac.cput.campusfacilitybooking.domain.TimeSlot;
-import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 
 public class BookingFactory {
 
     public static Booking createBooking(String bookingId,
-                                        Facility facility,
-                                        TimeSlot timeSlot,
-                                        User user,
+                                        String facilityId,
+                                        String timeSlotId,
+                                        String userId,
                                         String purpose,
                                         BookingStatus bookingStatus) {
 
@@ -19,16 +16,16 @@ public class BookingFactory {
             throw new IllegalArgumentException("Booking ID is required");
         }
 
-        if (facility == null) {
-            throw new IllegalArgumentException("Facility is required");
+        if (facilityId == null || facilityId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Facility ID is required");
         }
 
-        if (timeSlot == null) {
-            throw new IllegalArgumentException("Time Slot is required");
+        if (timeSlotId == null || timeSlotId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Time Slot ID is required");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User is required");
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
         }
 
         if (purpose == null || purpose.trim().isEmpty()) {
@@ -41,9 +38,9 @@ public class BookingFactory {
 
         return new Booking.Builder()
                 .setBookingId(bookingId)
-                .setFacility(facility)
-                .setTimeSlot(timeSlot)
-                .setUser(user)
+                .setFacilityId(facilityId)
+                .setTimeSlotId(timeSlotId)
+                .setUserId(userId)
                 .setPurpose(purpose)
                 .setBookingStatus(bookingStatus)
                 .build();
