@@ -1,7 +1,6 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 21 June 2026 */
+import jakarta.persistence.*;
 
 
 import jakarta.persistence.Entity;

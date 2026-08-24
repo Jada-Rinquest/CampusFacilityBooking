@@ -1,11 +1,6 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 21 June 2026 */
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "booking")
@@ -20,8 +15,24 @@ public class Booking {
     private String purpose;
     private String bookingStatusId;
 
-    protected Booking() {
+    @ManyToOne
+    @JoinColumn(name = "facility_id", insertable = false, updatable = false)
+    private Facility facility;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "time_slot_id", insertable = false, updatable = false)
+    private TimeSlot timeSlot;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_status_id",
+            insertable = false, updatable = false)
+    private BookingStatus bookingStatus;
+
+    protected Booking() {
     }
 
     private Booking(Builder builder) {
