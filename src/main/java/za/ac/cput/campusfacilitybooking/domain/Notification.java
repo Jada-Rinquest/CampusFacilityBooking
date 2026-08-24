@@ -1,11 +1,8 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 21 June 2026 */
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notification")
@@ -13,88 +10,51 @@ public class Notification {
 
     @Id
     private String notificationId;
-    private String recipientId;
+
+    private String userId;
     private String message;
-    private String type;
-    private String sentDate;
-    private boolean isRead;
+    private LocalDateTime sentDate;
+    private String notificationTypeId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "notification_type_id",
+            insertable = false, updatable = false)
+    private NotificationType notificationType;
 
     protected Notification() {
     }
 
-    private Notification(Builder builder) {
-        this.notificationId = builder.notificationId;
-        this.recipientId = builder.recipientId;
-        this.message = builder.message;
-        this.type = builder.type;
-        this.sentDate = builder.sentDate;
-        this.isRead = builder.isRead;
+    public Notification(String notificationId, String userId,
+                        String message, LocalDateTime sentDate,
+                        String notificationTypeId) {
+        this.notificationId = notificationId;
+        this.userId = userId;
+        this.message = message;
+        this.sentDate = sentDate;
+        this.notificationTypeId = notificationTypeId;
     }
 
     public String getNotificationId() {
         return notificationId;
     }
 
-    public String getRecipientId() {
-        return recipientId;
+    public String getUserId() {
+        return userId;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getSentDate() {
+    public LocalDateTime getSentDate() {
         return sentDate;
     }
 
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public static class Builder {
-        private String notificationId;
-        private String recipientId;
-        private String message;
-        private String type;
-        private String sentDate;
-        private boolean isRead;
-
-        public Builder setNotificationId(String notificationId) {
-            this.notificationId = notificationId;
-            return this;
-        }
-
-        public Builder setRecipientId(String recipientId) {
-            this.recipientId = recipientId;
-            return this;
-        }
-
-        public Builder setMessage(String message) {
-            this.message = message;
-            return this;
-        }
-
-        public Builder setType(String type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder setSentDate(String sentDate) {
-            this.sentDate = sentDate;
-            return this;
-        }
-
-        public Builder setIsRead(boolean isRead) {
-            this.isRead = isRead;
-            return this;
-        }
-
-        public Notification build() {
-            return new Notification(this);
-        }
+    public String getNotificationTypeId() {
+        return notificationTypeId;
     }
 }

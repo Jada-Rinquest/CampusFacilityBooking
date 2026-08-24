@@ -1,51 +1,71 @@
-package za.ac.cput.campusfacilitybooking.factory;
-/* Author: Ayren Villet (223120030)
-     Date: 28 June 2026 */
-import za.ac.cput.campusfacilitybooking.domain.Department;
-import za.ac.cput.campusfacilitybooking.domain.Facility;
+package za.ac.cput.campusfacilitybooking.domain;
 
-public class FacilityFactory {
+import jakarta.persistence.*;
 
-    public static Facility createFacility(String facilityId,
-                                          String name,
-                                          String type,
-                                          int capacity,
-                                          String location,
-                                          Department department) {
+import java.util.List;
 
-        if (facilityId == null || facilityId.isEmpty()) {
-            return null;
-        }
+@Entity
+@Table(name = "facility")
+public class Facility {
 
-        if (name == null || name.isEmpty()) {
-            return null;
-        }
+    @Id
+    private String facilityId;
 
-        if (type == null || type.isEmpty()) {
-            return null;
-        }
+    private String name;
+    private int capacity;
+    private String location;
+    private String departmentId;
+    private String facilityTypeId;
 
-        if (capacity <= 0) {
-            return null;
-        }
+    @ManyToOne
+    @JoinColumn(name = "department_id", insertable = false, updatable = false)
+    private Department department;
 
-        if (location == null || location.isEmpty()) {
-            return null;
-        }
+    @ManyToOne
+    @JoinColumn(name = "facility_type_id", insertable = false, updatable = false)
+    private FacilityType facilityType;
 
-        if (department == null) {
-            return null;
-        }
+    @OneToMany(mappedBy = "facility")
+    private List<Equipment> equipment;
 
-        return new Facility(
-                facilityId,
-                name,
-                type,
-                capacity,
-                location,
-                department
-        );
+    @OneToMany(mappedBy = "facility")
+    private List<Booking> bookings;
+
+    protected Facility() {
+    }
+
+    public Facility(String facilityId, String name, int capacity,
+                    String location, String departmentId,
+                    String facilityTypeId) {
+        this.facilityId = facilityId;
+        this.name = name;
+        this.capacity = capacity;
+        this.location = location;
+        this.departmentId = departmentId;
+        this.facilityTypeId = facilityTypeId;
+    }
+
+    public String getFacilityId() {
+        return facilityId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public String getFacilityTypeId() {
+        return facilityTypeId;
     }
 }
-
-

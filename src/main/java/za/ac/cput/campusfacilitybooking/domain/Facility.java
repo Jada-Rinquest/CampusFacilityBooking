@@ -1,86 +1,71 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "facility")
 public class Facility {
 
+    @Id
     private String facilityId;
+
     private String name;
-    private String type;
     private int capacity;
     private String location;
+    private String departmentId;
+    private String facilityTypeId;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", insertable = false, updatable = false)
     private Department department;
 
-    // Default Constructor
-    public Facility() {
+    @ManyToOne
+    @JoinColumn(name = "facility_type_id", insertable = false, updatable = false)
+    private FacilityType facilityType;
+
+    @OneToMany(mappedBy = "facility")
+    private List<Equipment> equipment;
+
+    @OneToMany(mappedBy = "facility")
+    private List<Booking> bookings;
+
+    protected Facility() {
     }
 
-    // Parameterized Constructor
-    public Facility(String facilityId, String name, String type, int capacity, String location, Department department) {
+    public Facility(String facilityId, String name, int capacity,
+                    String location, String departmentId,
+                    String facilityTypeId) {
         this.facilityId = facilityId;
         this.name = name;
-        this.type = type;
         this.capacity = capacity;
         this.location = location;
-        this.department = department;
+        this.departmentId = departmentId;
+        this.facilityTypeId = facilityTypeId;
     }
 
-    // Getters and Setters
     public String getFacilityId() {
         return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    @Override
-    public String toString() {
-        return "Facility{" +
-                "facilityId='" + facilityId + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", capacity=" + capacity +
-                ", location='" + location + '\'' +
-                ", department=" + department +
-                '}';
+    public String getFacilityTypeId() {
+        return facilityTypeId;
     }
 }

@@ -1,11 +1,6 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 21 June 2026 */
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "booking")
@@ -13,25 +8,42 @@ public class Booking {
 
     @Id
     private String bookingId;
+
     private String facilityId;
     private String timeSlotId;
-    private String requesterId;
-    private String requesterType;
+    private String userId;
     private String purpose;
-    private String status;
+    private String bookingStatusId;
+
+    @ManyToOne
+    @JoinColumn(name = "facility_id", insertable = false, updatable = false)
+    private Facility facility;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "time_slot_id", insertable = false, updatable = false)
+    private TimeSlot timeSlot;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_status_id",
+            insertable = false, updatable = false)
+    private BookingStatus bookingStatus;
 
     protected Booking() {
-
     }
 
-    private Booking(Builder builder) {
-        this.bookingId = builder.bookingId;
-        this.facilityId = builder.facilityId;
-        this.timeSlotId = builder.timeSlotId;
-        this.requesterId = builder.requesterId;
-        this.requesterType = builder.requesterType;
-        this.purpose = builder.purpose;
-        this.status = builder.status;
+    public Booking(String bookingId, String facilityId,
+                   String timeSlotId, String userId,
+                   String purpose, String bookingStatusId) {
+        this.bookingId = bookingId;
+        this.facilityId = facilityId;
+        this.timeSlotId = timeSlotId;
+        this.userId = userId;
+        this.purpose = purpose;
+        this.bookingStatusId = bookingStatusId;
     }
 
     public String getBookingId() {
@@ -46,68 +58,15 @@ public class Booking {
         return timeSlotId;
     }
 
-    public String getRequesterId() {
-        return requesterId;
-    }
-
-    public String getRequesterType() {
-        return requesterType;
+    public String getUserId() {
+        return userId;
     }
 
     public String getPurpose() {
         return purpose;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public static class Builder {
-        private String bookingId;
-        private String facilityId;
-        private String timeSlotId;
-        private String requesterId;
-        private String requesterType;
-        private String purpose;
-        private String status;
-
-        public Builder setBookingId(String bookingId) {
-            this.bookingId = bookingId;
-            return this;
-        }
-
-        public Builder setFacilityId(String facilityId) {
-            this.facilityId = facilityId;
-            return this;
-        }
-
-        public Builder setTimeSlotId(String timeSlotId) {
-            this.timeSlotId = timeSlotId;
-            return this;
-        }
-
-        public Builder setRequesterId(String requesterId) {
-            this.requesterId = requesterId;
-            return this;
-        }
-
-        public Builder setRequesterType(String requesterType) {
-            this.requesterType = requesterType;
-            return this;
-        }
-
-        public Builder setPurpose(String purpose) {
-            this.purpose = purpose;
-            return this;
-        }
-
-        public Builder setStatus(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Booking build() {
-            return new Booking(this);
-        }
+    public String getBookingStatusId() {
+        return bookingStatusId;
     }
 }
