@@ -1,31 +1,25 @@
-package za.ac.cput.campusfacilitybooking.factory;
 
 /*Author: Milani Sani(230371574)
 Date: 28 June 2026
  */
 
-import za.ac.cput.campusfacilitybooking.domain.Department;
+package za.ac.cput.campusfacilitybooking.factory;
+
 import za.ac.cput.campusfacilitybooking.domain.Staff;
-import za.ac.cput.campusfacilitybooking.domain.enums.StaffRole;
+import za.ac.cput.campusfacilitybooking.domain.User;
 
 public class StaffFactory {
 
-    public static Staff createStaff(
-            String staffId,
-            String firstName,
-            String lastName,
-            String email,
-            StaffRole role,
-            Department department
-    ) {
+    public static Staff createStaff(String staffId, User user) {
 
-        return new Staff.Builder()
-                .staffId(staffId)
-                .firstName(firstName)
-                .lastName(lastName)
-                .email(email)
-                .role(role)
-                .department(department)
-                .build();
+        if (staffId == null || staffId.isEmpty()) {
+            throw new IllegalArgumentException("Staff ID is required");
+        }
+
+        if (user == null) {
+            throw new IllegalArgumentException("User is required");
+        }
+
+        return new Staff(staffId, user);
     }
 }

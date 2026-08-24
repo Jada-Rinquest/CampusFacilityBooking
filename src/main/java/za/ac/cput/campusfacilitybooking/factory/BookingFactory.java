@@ -5,27 +5,38 @@ package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Booking;
 
-import java.util.UUID;
-
 public class BookingFactory {
 
-    public static Booking createBooking(
-            String facilityId,
-            String timeSlotId,
-            String userId,
-            String purpose,
-            String bookingStatusId) {
+    public static Booking createBooking(String bookingId,
+                                        String facilityId,
+                                        String timeSlotId,
+                                        String userId,
+                                        String purpose,
+                                        String bookingStatusId) {
 
-        if (facilityId == null || facilityId.isEmpty()
-                || timeSlotId == null || timeSlotId.isEmpty()
-                || userId == null || userId.isEmpty()
-                || purpose == null || purpose.isEmpty()
-                || bookingStatusId == null || bookingStatusId.isEmpty()) {
-
-            return null;
+        if (bookingId == null || bookingId.isEmpty()) {
+            throw new IllegalArgumentException("Booking ID is required");
         }
 
-        String bookingId = UUID.randomUUID().toString();
+        if (facilityId == null || facilityId.isEmpty()) {
+            throw new IllegalArgumentException("Facility ID is required");
+        }
+
+        if (timeSlotId == null || timeSlotId.isEmpty()) {
+            throw new IllegalArgumentException("Time Slot ID is required");
+        }
+
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        if (purpose == null || purpose.isEmpty()) {
+            throw new IllegalArgumentException("Purpose is required");
+        }
+
+        if (bookingStatusId == null || bookingStatusId.isEmpty()) {
+            throw new IllegalArgumentException("Booking Status ID is required");
+        }
 
         return new Booking.Builder()
                 .setBookingId(bookingId)

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Campus Facility Booking - Notifications</title>
+
+    <link rel="stylesheet" href="notification.css">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="page-header">
+
+    <div class="header-content">
+
+        <div>
+
+            <p class="eyebrow">
+                CAMPUS FACILITY BOOKING SYSTEM
+            </p>
+
+            <h1>
+                Notification Management
+            </h1>
+
+            <p class="subtitle">
+                Create, view, update and manage system notifications.
+            </p>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         CREATE / UPDATE NOTIFICATION
+    ====================================================== -->
+
+    <section class="card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-label">
+                    NOTIFICATION
+                </p>
+
+                <h2 id="formTitle">
+                    Create a Notification
+                </h2>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="cancelEditButton"
+                    class="secondary-button hidden">
+
+                Cancel Edit
+
+            </button>
+
+        </div>
+
+
+
+        <form id="notificationForm">
+
+
+            <!-- Notification ID -->
+
+            <div class="form-group">
+
+                <label for="notificationId">
+                    Notification ID
+                </label>
+
+                <input
+                        type="text"
+                        id="notificationId"
+                        name="notificationId"
+                        placeholder="e.g. N001"
+                        required>
+
+            </div>
+
+
+
+            <!-- User ID -->
+
+            <div class="form-group">
+
+                <label for="userId">
+                    User ID
+                </label>
+
+                <input
+                        type="text"
+                        id="userId"
+                        name="userId"
+                        placeholder="e.g. U001"
+                        required>
+
+            </div>
+
+
+
+            <!-- Notification Type -->
+
+            <div class="form-group">
+
+                <label for="notificationTypeId">
+                    Notification Type ID
+                </label>
+
+                <input
+                        type="text"
+                        id="notificationTypeId"
+                        name="notificationTypeId"
+                        placeholder="e.g. NT001"
+                        required>
+
+            </div>
+
+
+
+            <!-- Sent Date -->
+
+            <div class="form-group">
+
+                <label for="sentDate">
+                    Sent Date
+                </label>
+
+                <input
+                        type="date"
+                        id="sentDate"
+                        name="sentDate"
+                        required>
+
+            </div>
+
+
+
+            <!-- Message -->
+
+            <div class="form-group full-width">
+
+                <label for="message">
+                    Message
+                </label>
+
+                <textarea
+                        id="message"
+                        name="message"
+                        rows="4"
+                        placeholder="Enter notification message"
+                        required></textarea>
+
+            </div>
+
+
+
+            <!-- Form Actions -->
+
+            <div class="form-actions">
+
+                <button
+                        type="submit"
+                        id="submitButton"
+                        class="primary-button">
+
+                    Create Notification
+
+                </button>
+
+
+                <button
+                        type="button"
+                        id="clearButton"
+                        class="secondary-button">
+
+                    Clear
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FIND NOTIFICATION
+    ====================================================== -->
+
+    <section class="card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-label">
+                    SEARCH
+                </p>
+
+                <h2>
+                    Find a Notification
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="search-row">
+
+            <div class="form-group">
+
+                <label for="searchNotificationId">
+                    Notification ID
+                </label>
+
+                <input
+                        type="text"
+                        id="searchNotificationId"
+                        placeholder="Enter notification ID">
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="searchButton"
+                    class="primary-button">
+
+                Find Notification
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+     NOTIFICATION DETAILS
+====================================================== -->
+
+    <section
+            id="notificationDetails"
+            class="card hidden">
+
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-label">
+                    NOTIFICATION DETAILS
+                </p>
+
+                <h2>
+                    Selected Notification
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="details-grid">
+
+
+            <!-- Notification ID -->
+
+            <div class="detail-item">
+
+            <span>
+                Notification ID
+            </span>
+
+                <strong id="detailNotificationId">
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- User ID -->
+
+            <div class="detail-item">
+
+            <span>
+                User ID
+            </span>
+
+                <strong id="detailUserId">
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- Notification Type -->
+
+            <div class="detail-item">
+
+            <span>
+                Notification Type
+            </span>
+
+                <strong id="detailNotificationTypeId">
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- Sent Date -->
+
+            <div class="detail-item">
+
+            <span>
+                Sent Date
+            </span>
+
+                <strong id="detailSentDate">
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- Message -->
+
+            <div class="detail-item full-width">
+
+            <span>
+                Message
+            </span>
+
+                <strong id="detailMessage">
+                    -
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             DETAIL ACTIONS
+        ================================================== -->
+
+        <div class="detail-actions">
+
+            <button
+                    type="button"
+                    id="editNotificationButton"
+                    class="primary-button">
+
+                Edit Notification
+
+            </button>
+
+
+            <button
+                    type="button"
+                    id="deleteNotificationButton"
+                    class="delete-button">
+
+                Delete Notification
+
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         STATUS MESSAGE
+    ====================================================== -->
+
+    <div
+            id="statusMessage"
+            class="status-message hidden">
+
+        <span id="statusText"></span>
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="notification.js"></script>
+
+
+</body>
+
+</html>
