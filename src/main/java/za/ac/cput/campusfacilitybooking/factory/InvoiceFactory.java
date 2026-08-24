@@ -1,7 +1,9 @@
-package za.ac.cput.campusfacilitybooking.factory;
+
 /* Author: Ayren Villet (223120030)
      Date: 28 June 2026 */
-import za.ac.cput.campusfacilitybooking.domain.Booking;
+
+package za.ac.cput.campusfacilitybooking.factory;
+
 import za.ac.cput.campusfacilitybooking.domain.Invoice;
 
 import java.time.LocalDate;
@@ -9,39 +11,37 @@ import java.time.LocalDate;
 public class InvoiceFactory {
 
     public static Invoice createInvoice(String invoiceId,
-                                        Booking booking,
+                                        String bookingId,
                                         double amount,
                                         LocalDate issueDate,
-                                        LocalDate dueDate,
-                                        boolean paid) {
+                                        LocalDate dueDate) {
 
         if (invoiceId == null || invoiceId.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Invoice ID is required");
         }
 
-        if (booking == null) {
-            return null;
+        if (bookingId == null || bookingId.isEmpty()) {
+            throw new IllegalArgumentException("Booking ID is required");
         }
 
-        if (amount <= 0) {
-            return null;
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
         }
 
-        if (issueDate == null || dueDate == null) {
-            return null;
+        if (issueDate == null) {
+            throw new IllegalArgumentException("Issue date is required");
         }
 
-        if (dueDate.isBefore(issueDate)) {
-            return null;
+        if (dueDate == null) {
+            throw new IllegalArgumentException("Due date is required");
         }
 
         return new Invoice(
                 invoiceId,
-                booking,
+                bookingId,
                 amount,
                 issueDate,
-                dueDate,
-                paid
+                dueDate
         );
     }
 }

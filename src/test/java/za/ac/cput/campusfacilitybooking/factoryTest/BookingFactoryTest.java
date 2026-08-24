@@ -1,7 +1,7 @@
 package za.ac.cput.campusfacilitybooking.factoryTest;
 
 /* Author: Nuyra Swanson (221290524)
-     Date: 28 June 2026 */
+   Date: 28 June 2026 */
 
 import org.junit.jupiter.api.Test;
 import za.ac.cput.campusfacilitybooking.domain.Booking;
@@ -15,6 +15,7 @@ public class BookingFactoryTest {
     void testCreateBooking() {
 
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
                 "U001",
@@ -23,7 +24,7 @@ public class BookingFactoryTest {
         );
 
         assertNotNull(booking);
-        assertNotNull(booking.getBookingId());
+        assertEquals("B001", booking.getBookingId());
         assertEquals("F001", booking.getFacilityId());
         assertEquals("TS001", booking.getTimeSlotId());
         assertEquals("U001", booking.getUserId());
@@ -32,16 +33,17 @@ public class BookingFactoryTest {
     }
 
     @Test
-    void testCreateBookingWithInvalidFacilityId() {
+    void testCreateBookingWithInvalidBookingId() {
 
-        Booking booking = BookingFactory.createBooking(
-                "",
-                "TS001",
-                "U001",
-                "Study Session",
-                "BS001"
+        assertThrows(IllegalArgumentException.class, () ->
+                BookingFactory.createBooking(
+                        "",
+                        "F001",
+                        "TS001",
+                        "U001",
+                        "Study Session",
+                        "BS001"
+                )
         );
-
-        assertNull(booking);
     }
 }
