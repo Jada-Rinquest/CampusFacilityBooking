@@ -35,15 +35,13 @@ public class Booking {
     protected Booking() {
     }
 
-    public Booking(String bookingId, String facilityId,
-                   String timeSlotId, String userId,
-                   String purpose, String bookingStatusId) {
-        this.bookingId = bookingId;
-        this.facilityId = facilityId;
-        this.timeSlotId = timeSlotId;
-        this.userId = userId;
-        this.purpose = purpose;
-        this.bookingStatusId = bookingStatusId;
+    private Booking(Builder builder) {
+        this.bookingId = builder.bookingId;
+        this.facilityId = builder.facilityId;
+        this.timeSlotId = builder.timeSlotId;
+        this.userId = builder.userId;
+        this.purpose = builder.purpose;
+        this.bookingStatusId = builder.bookingStatusId;
     }
 
     public String getBookingId() {
@@ -68,5 +66,61 @@ public class Booking {
 
     public String getBookingStatusId() {
         return bookingStatusId;
+    }
+
+    public static class Builder {
+
+        private String bookingId;
+        private String facilityId;
+        private String timeSlotId;
+        private String userId;
+        private String purpose;
+        private String bookingStatusId;
+
+        public Builder setBookingId(String bookingId) {
+            this.bookingId = bookingId;
+            return this;
+        }
+
+        public Builder setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+            return this;
+        }
+
+        public Builder setTimeSlotId(String timeSlotId) {
+            this.timeSlotId = timeSlotId;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder setPurpose(String purpose) {
+            this.purpose = purpose;
+            return this;
+        }
+
+        public Builder setBookingStatusId(String bookingStatusId) {
+            this.bookingStatusId = bookingStatusId;
+            return this;
+        }
+
+        public Booking build() {
+            return new Booking(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingId='" + bookingId + '\'' +
+                ", facilityId='" + facilityId + '\'' +
+                ", timeSlotId='" + timeSlotId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", bookingStatusId='" + bookingStatusId + '\'' +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package za.ac.cput.campusfacilitybooking.factory;
+package za.ac.cput.campusfacilitybooking.factoryTest;
 
 /*Author: Milani Sani(230371574)
 Date: 28 June 2026
@@ -8,6 +8,7 @@ import za.ac.cput.campusfacilitybooking.domain.Department;
 import za.ac.cput.campusfacilitybooking.domain.Staff;
 import za.ac.cput.campusfacilitybooking.domain.enums.StaffRole;
 import org.junit.jupiter.api.Test;
+import za.ac.cput.campusfacilitybooking.factory.StaffFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +16,8 @@ class StaffFactoryTest {
 
     private Department buildDepartment() {
         return new Department.Builder()
-                .departmentId("D001")
-                .name("Information Technology")
+                .setDepartmentId("D001")
+                .setName("Information Technology")
                 .build();
     }
 
@@ -49,7 +50,7 @@ class StaffFactoryTest {
         assertThrows(NullPointerException.class, () ->
                 StaffFactory.createStaff(
                         "S003", "Sipho", null, "sipho@cout.ac.za",
-                        StaffRole.ADMIN, buildDepartment()));
+                        StaffRole.STAFF, buildDepartment()));
     }
 
     @Test

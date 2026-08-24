@@ -4,23 +4,24 @@ package za.ac.cput.campusfacilitybooking.factory;
      Date: 27 June 2026 */
 
 import za.ac.cput.campusfacilitybooking.domain.Booking;
+
 import java.util.UUID;
 
 public class BookingFactory {
 
-    public static Booking createBooking(String facilityId,
-                                        String timeSlotId,
-                                        String requesterId,
-                                        String requesterType,
-                                        String purpose,
-                                        String status) {
+    public static Booking createBooking(
+            String facilityId,
+            String timeSlotId,
+            String userId,
+            String purpose,
+            String bookingStatusId) {
 
         if (facilityId == null || facilityId.isEmpty()
-        || timeSlotId == null || timeSlotId.isEmpty()
-        || requesterId == null || requesterId.isEmpty()
-        || requesterType == null || requesterType.isEmpty()
+                || timeSlotId == null || timeSlotId.isEmpty()
+                || userId == null || userId.isEmpty()
                 || purpose == null || purpose.isEmpty()
-                || status == null || status.isEmpty()) {
+                || bookingStatusId == null || bookingStatusId.isEmpty()) {
+
             return null;
         }
 
@@ -30,10 +31,9 @@ public class BookingFactory {
                 .setBookingId(bookingId)
                 .setFacilityId(facilityId)
                 .setTimeSlotId(timeSlotId)
-                .setRequesterId(requesterId)
-                .setRequesterType(requesterType)
+                .setUserId(userId)
                 .setPurpose(purpose)
-                .setStatus(status)
+                .setBookingStatusId(bookingStatusId)
                 .build();
     }
 }

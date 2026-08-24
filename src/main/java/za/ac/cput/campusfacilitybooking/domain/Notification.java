@@ -2,7 +2,12 @@ package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "notification")
@@ -13,29 +18,18 @@ public class Notification {
 
     private String userId;
     private String message;
-    private LocalDateTime sentDate;
+    private LocalDate sentDate;
     private String notificationTypeId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "notification_type_id",
-            insertable = false, updatable = false)
-    private NotificationType notificationType;
 
     protected Notification() {
     }
 
-    public Notification(String notificationId, String userId,
-                        String message, LocalDateTime sentDate,
-                        String notificationTypeId) {
-        this.notificationId = notificationId;
-        this.userId = userId;
-        this.message = message;
-        this.sentDate = sentDate;
-        this.notificationTypeId = notificationTypeId;
+    private Notification(Builder builder) {
+        this.notificationId = builder.notificationId;
+        this.userId = builder.userId;
+        this.message = builder.message;
+        this.sentDate = builder.sentDate;
+        this.notificationTypeId = builder.notificationTypeId;
     }
 
     public String getNotificationId() {
@@ -50,11 +44,60 @@ public class Notification {
         return message;
     }
 
-    public LocalDateTime getSentDate() {
+    public LocalDate getSentDate() {
         return sentDate;
     }
 
     public String getNotificationTypeId() {
         return notificationTypeId;
+    }
+
+    public static class Builder {
+
+        private String notificationId;
+        private String userId;
+        private String message;
+        private LocalDate sentDate;
+        private String notificationTypeId;
+
+        public Builder setNotificationId(String notificationId) {
+            this.notificationId = notificationId;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public Builder setSentDate(LocalDate sentDate) {
+            this.sentDate = sentDate;
+            return this;
+        }
+
+        public Builder setNotificationTypeId(String notificationTypeId) {
+            this.notificationTypeId = notificationTypeId;
+            return this;
+        }
+
+        public Notification build() {
+            return new Notification(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "notificationId='" + notificationId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", message='" + message + '\'' +
+                ", sentDate=" + sentDate +
+                ", notificationTypeId='" + notificationTypeId + '\'' +
+                '}';
     }
 }
