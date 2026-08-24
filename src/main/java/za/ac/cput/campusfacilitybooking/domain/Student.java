@@ -40,4 +40,13 @@ public class Student {
     public User getUser() {
         return user;
     }
+    // Add this to Student.java
+    @Override
+    public String toString() {
+        return "Student{" +
+                "studentId='" + studentId + '\'' +
+                ", studentNumber='" + studentNumber + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

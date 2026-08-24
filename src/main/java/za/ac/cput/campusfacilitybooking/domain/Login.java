@@ -39,4 +39,13 @@ public class Login {
     public String getPassword() {
         return password;
     }
+    @Override
+    public String toString() {
+        return "Login{" +
+                "loginId='" + loginId + '\'' +
+                ", registrarId='" + registrarId + '\'' +
+                ", username='" + username + '\'' +
+                ", password='[PROTECTED]'" +
+                '}';
+    }
 }

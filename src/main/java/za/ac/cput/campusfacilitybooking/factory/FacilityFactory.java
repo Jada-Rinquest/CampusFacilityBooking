@@ -20,7 +20,7 @@ public class FacilityFactory {
         }
 
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than zero");
+            throw new IllegalArgumentException("Capacity must be greater than 0");
         }
 
         if (location == null || location.isEmpty()) {

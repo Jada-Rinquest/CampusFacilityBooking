@@ -43,4 +43,14 @@ public class Contact {
     public User getUser() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "contactId='" + contactId + '\'' +
+                ", contact='" + contact + '\'' +
+                ", description='" + description + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

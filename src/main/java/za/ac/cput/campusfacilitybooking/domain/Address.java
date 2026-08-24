@@ -42,4 +42,14 @@ public class Address {
     public User getUser() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressId='" + addressId + '\'' +
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

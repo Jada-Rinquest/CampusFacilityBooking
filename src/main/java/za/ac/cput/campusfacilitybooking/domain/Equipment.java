@@ -7,6 +7,7 @@ Date: 21 June 2026
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
 
 @Entity
 @Table(name = "equipment")
@@ -24,6 +25,7 @@ public class Equipment {
     @JoinColumn(name = "facility_id", insertable = false, updatable = false)
     private Facility facility;
 
+    @Enumerated(EnumType.STRING)
     @ManyToOne
     @JoinColumn(name = "equipment_status_id", insertable = false, updatable = false)
     private EquipmentStatus equipmentStatus;
@@ -59,5 +61,16 @@ public class Equipment {
 
     public String getEquipmentStatusId() {
         return equipmentStatusId;
+    }
+
+    @Override
+    public String toString() {
+        return "Equipment{" +
+                "equipmentId='" + equipmentId + '\'' +
+                ", name='" + name + '\'' +
+                ", serialNumber='" + serialNumber + '\'' +
+                ", facilityId='" + facilityId + '\'' +
+                ", equipmentStatusId='" + equipmentStatusId + '\'' +
+                '}';
     }
 }

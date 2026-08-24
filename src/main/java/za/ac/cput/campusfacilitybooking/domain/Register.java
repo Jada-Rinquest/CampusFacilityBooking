@@ -35,4 +35,12 @@ public class Register {
     public LocalDate getDateRegistered() {
         return dateRegistered;
     }
+    @Override
+    public String toString() {
+        return "Register{" +
+                "registrarId='" + registrarId + '\'' +
+                ", email='" + email + '\'' +
+                ", dateRegistered=" + dateRegistered +
+                '}';
+    }
 }

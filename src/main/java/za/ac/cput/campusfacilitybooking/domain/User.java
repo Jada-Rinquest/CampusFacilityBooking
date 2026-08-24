@@ -34,6 +34,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addresses;
 
+    // Fixed: Notification relationship
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
@@ -90,5 +91,37 @@ public class User {
 
     public Staff getStaff() {
         return staff;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public List<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", departmentId='" + departmentId + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Facility {
     @JoinColumn(name = "department_id", insertable = false, updatable = false)
     private Department department;
 
+    @Enumerated(EnumType.STRING)
     @ManyToOne
     @JoinColumn(name = "facility_type_id", insertable = false, updatable = false)
     private FacilityType facilityType;
@@ -67,5 +69,16 @@ public class Facility {
 
     public String getFacilityTypeId() {
         return facilityTypeId;
+    }
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "facilityId='" + facilityId + '\'' +
+                ", name='" + name + '\'' +
+                ", capacity=" + capacity +
+                ", location='" + location + '\'' +
+                ", departmentId='" + departmentId + '\'' +
+                ", facilityTypeId='" + facilityTypeId + '\'' +
+                '}';
     }
 }

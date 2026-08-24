@@ -1,6 +1,8 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
 
 import java.time.LocalDate;
 
@@ -22,14 +24,14 @@ public class MaintenanceRequest {
     @JoinColumn(name = "equipment_id", insertable = false, updatable = false)
     private Equipment equipment;
 
+    @Enumerated(EnumType.STRING)
     @ManyToOne
-    @JoinColumn(name = "maintenance_priority_id",
-            insertable = false, updatable = false)
+    @JoinColumn(name = "maintenance_priority_id", insertable = false, updatable = false)
     private MaintenancePriority maintenancePriority;
 
+    @Enumerated(EnumType.STRING)
     @ManyToOne
-    @JoinColumn(name = "maintenance_status_id",
-            insertable = false, updatable = false)
+    @JoinColumn(name = "maintenance_status_id", insertable = false, updatable = false)
     private MaintenanceStatus maintenanceStatus;
 
     protected MaintenanceRequest() {
@@ -75,5 +77,17 @@ public class MaintenanceRequest {
 
     public String getMaintenanceStatusId() {
         return maintenanceStatusId;
+    }
+    @Override
+    public String toString() {
+        return "MaintenanceRequest{" +
+                "requestId='" + requestId + '\'' +
+                ", equipmentId='" + equipmentId + '\'' +
+                ", reportedBy='" + reportedBy + '\'' +
+                ", description='" + description + '\'' +
+                ", dateReported=" + dateReported +
+                ", maintenancePriorityId='" + maintenancePriorityId + '\'' +
+                ", maintenanceStatusId='" + maintenanceStatusId + '\'' +
+                '}';
     }
 }

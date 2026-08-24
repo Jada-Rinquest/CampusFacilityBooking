@@ -1,8 +1,3 @@
-
-/*Author: Milani Sani(230371574)
-Date: 28 June 2026
- */
-
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Staff;
@@ -20,6 +15,9 @@ public class StaffFactory {
             throw new IllegalArgumentException("User is required");
         }
 
-        return new Staff(staffId, user);
+        return new Staff.Builder()
+                .setStaffId(staffId)
+                .setUser(user)
+                .build();
     }
 }

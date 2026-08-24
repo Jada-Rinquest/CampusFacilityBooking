@@ -42,4 +42,13 @@ public class TimeSlot {
     public LocalTime getEndTime() {
         return endTime;
     }
+    @Override
+    public String toString() {
+        return "TimeSlot{" +
+                "timeSlotId='" + timeSlotId + '\'' +
+                ", date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
 }

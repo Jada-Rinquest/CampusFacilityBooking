@@ -1,10 +1,8 @@
-
-/* Author: Nuyra Swanson (221290524)
-     Date: 27 June 2026 */
-
 package za.ac.cput.campusfacilitybooking.factory;
 
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+import za.ac.cput.campusfacilitybooking.domain.User;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 
 import java.time.LocalDate;
 
@@ -12,20 +10,20 @@ public class NotificationFactory {
 
     public static Notification createNotification(
             String notificationId,
-            String userId,
+            User user,
             String message,
             LocalDate sentDate,
-            String notificationTypeId) {
+            NotificationType notificationType) {
 
-        if (notificationId == null || notificationId.isEmpty()) {
+        if (notificationId == null || notificationId.trim().isEmpty()) {
             throw new IllegalArgumentException("Notification ID is required");
         }
 
-        if (userId == null || userId.isEmpty()) {
-            throw new IllegalArgumentException("User ID is required");
+        if (user == null) {
+            throw new IllegalArgumentException("User is required");
         }
 
-        if (message == null || message.isEmpty()) {
+        if (message == null || message.trim().isEmpty()) {
             throw new IllegalArgumentException("Message is required");
         }
 
@@ -33,16 +31,16 @@ public class NotificationFactory {
             throw new IllegalArgumentException("Sent date is required");
         }
 
-        if (notificationTypeId == null || notificationTypeId.isEmpty()) {
-            throw new IllegalArgumentException("Notification type ID is required");
+        if (notificationType == null) {
+            throw new IllegalArgumentException("Notification type is required");
         }
 
         return new Notification.Builder()
                 .setNotificationId(notificationId)
-                .setUserId(userId)
+                .setUser(user)
                 .setMessage(message)
                 .setSentDate(sentDate)
-                .setNotificationTypeId(notificationTypeId)
+                .setNotificationType(notificationType)
                 .build();
     }
 }

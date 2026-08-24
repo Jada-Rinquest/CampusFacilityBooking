@@ -52,4 +52,14 @@ public class Invoice {
     public LocalDate getDueDate() {
         return dueDate;
     }
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId='" + invoiceId + '\'' +
+                ", bookingId='" + bookingId + '\'' +
+                ", amount=" + amount +
+                ", issueDate=" + issueDate +
+                ", dueDate=" + dueDate +
+                '}';
+    }
 }
