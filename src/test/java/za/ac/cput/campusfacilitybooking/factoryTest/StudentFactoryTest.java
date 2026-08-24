@@ -5,9 +5,7 @@ package za.ac.cput.campusfacilitybooking.factoryTest;
    Student Number: 222871296 */
 
 import org.junit.jupiter.api.Test;
-
 import za.ac.cput.campusfacilitybooking.domain.Student;
-import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.factory.StudentFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,51 +14,56 @@ class StudentFactoryTest {
 
     @Test
     void testCreateStudent() {
-
-        User user = null;
-
         Student student = StudentFactory.createStudent(
                 "S001",
                 "230123",
-                user
+                "U001"
         );
 
         assertNotNull(student);
         assertEquals("S001", student.getStudentId());
         assertEquals("230123", student.getStudentNumber());
-        assertNull(student.getUser());
+        assertEquals("U001", student.getUserId());
     }
 
     @Test
     void testCreateStudentWithInvalidStudentId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 StudentFactory.createStudent(
                         "",
                         "230123",
-                        null
+                        "U001"
                 )
         );
     }
 
     @Test
     void testCreateStudentWithInvalidStudentNumber() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 StudentFactory.createStudent(
                         "S002",
                         "",
-                        null
+                        "U001"
                 )
         );
     }
 
     @Test
     void testCreateStudentWithNullStudentId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 StudentFactory.createStudent(
                         null,
+                        "230123",
+                        "U001"
+                )
+        );
+    }
+
+    @Test
+    void testCreateStudentWithNullUserId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        "S003",
                         "230123",
                         null
                 )
@@ -68,13 +71,12 @@ class StudentFactoryTest {
     }
 
     @Test
-    void testCreateStudentWithNullUser() {
-
+    void testCreateStudentWithEmptyUserId() {
         assertThrows(IllegalArgumentException.class, () ->
                 StudentFactory.createStudent(
-                        "S003",
+                        "S004",
                         "230123",
-                        null
+                        ""
                 )
         );
     }

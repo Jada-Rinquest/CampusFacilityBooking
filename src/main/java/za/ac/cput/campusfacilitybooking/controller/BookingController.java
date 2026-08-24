@@ -53,7 +53,7 @@ public class BookingController {
     }
 }
 
-class BookingRequest {
+public class BookingRequest {
     private String bookingId;
     private String facilityId;
     private String timeSlotId;

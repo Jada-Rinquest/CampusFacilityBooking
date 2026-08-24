@@ -3,8 +3,11 @@ package za.ac.cput.campusfacilitybooking.controllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import za.ac.cput.campusfacilitybooking.controller.DepartmentController;
 import za.ac.cput.campusfacilitybooking.domain.Department;
+import za.ac.cput.campusfacilitybooking.factory.DepartmentFactory;
 import za.ac.cput.campusfacilitybooking.service.DepartmentService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,65 +21,67 @@ class DepartmentControllerTest {
 
     @BeforeEach
     void setUp() {
-
         service = Mockito.mock(DepartmentService.class);
+        controller = new DepartmentController(service);
 
-        controller = new DepartmentController();
-
-        try {
-            var field = DepartmentController.class.getDeclaredField("service");
-            field.setAccessible(true);
-            field.set(controller, service);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        department = new Department.Builder()
-                .setDepartmentId("D001")
-                .setName("IT")
-                .setBuilding("Block A")
-                .setHeadOfDepartment("Mr Adams")
-                .build();
+        department = DepartmentFactory.createDepartment(
+                "D001",
+                "Information Technology",
+                "Block A",
+                "Mr Adams"
+        );
     }
 
     @Test
-    void create() {
-
+    void testCreate() {
         when(service.create(department)).thenReturn(department);
 
-        Department created = controller.create(department);
+        ResponseEntity<Department> response = controller.create(department);
 
-        assertNotNull(created);
-        assertEquals("D001", created.getDepartmentId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("D001", response.getBody().getDepartmentId());
     }
 
     @Test
-    void read() {
-
+    void testRead() {
         when(service.read("D001")).thenReturn(department);
 
-        Department found = controller.read("D001");
+        ResponseEntity<Department> response = controller.read("D001");
 
-        assertNotNull(found);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Information Technology", response.getBody().getName());
     }
 
     @Test
-    void update() {
+    void testReadNotFound() {
+        when(service.read("D999")).thenReturn(null);
 
+        ResponseEntity<Department> response = controller.read("D999");
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void testUpdate() {
         when(service.update(department)).thenReturn(department);
 
-        Department updated = controller.update(department);
+        ResponseEntity<Department> response = controller.update(department);
 
-        assertNotNull(updated);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 
     @Test
-    void delete() {
-
+    void testDelete() {
         when(service.delete("D001")).thenReturn(true);
 
-        boolean deleted = controller.delete("D001");
+        ResponseEntity<Boolean> response = controller.delete("D001");
 
-        assertTrue(deleted);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody());
+        verify(service).delete("D001");
     }
 }

@@ -5,6 +5,8 @@ package za.ac.cput.campusfacilitybooking.factoryTest;
 
 import org.junit.jupiter.api.Test;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
+import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
 import za.ac.cput.campusfacilitybooking.factory.MaintenanceRequestFactory;
 
 import java.time.LocalDate;
@@ -15,19 +17,17 @@ class MaintenanceRequestFactoryTest {
 
     @Test
     void testCreateMaintenanceRequest() {
-
         LocalDate today = LocalDate.of(2026, 6, 28);
 
-        MaintenanceRequest request =
-                MaintenanceRequestFactory.createMaintenanceRequest(
-                        "MR001",
-                        "E001",
-                        "S001",
-                        "Projector bulb is burnt out",
-                        today,
-                        "MP001",
-                        "MS001"
-                );
+        MaintenanceRequest request = MaintenanceRequestFactory.createMaintenanceRequest(
+                "MR001",
+                "E001",
+                "S001",
+                "Projector bulb is burnt out",
+                today,
+                MaintenancePriority.HIGH,
+                MaintenanceStatus.OPEN
+        );
 
         assertNotNull(request);
         assertEquals("MR001", request.getRequestId());
@@ -35,13 +35,12 @@ class MaintenanceRequestFactoryTest {
         assertEquals("S001", request.getReportedBy());
         assertEquals("Projector bulb is burnt out", request.getDescription());
         assertEquals(today, request.getDateReported());
-        assertEquals("MP001", request.getMaintenancePriorityId());
-        assertEquals("MS001", request.getMaintenanceStatusId());
+        assertEquals(MaintenancePriority.HIGH, request.getMaintenancePriority());
+        assertEquals(MaintenanceStatus.OPEN, request.getMaintenanceStatus());
     }
 
     @Test
     void testCreateMaintenanceRequestWithInvalidRequestId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "",
@@ -49,15 +48,14 @@ class MaintenanceRequestFactoryTest {
                         "S001",
                         "Projector bulb is burnt out",
                         LocalDate.now(),
-                        "MP001",
-                        "MS001"
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
     void testCreateMaintenanceRequestWithInvalidEquipmentId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR002",
@@ -65,15 +63,14 @@ class MaintenanceRequestFactoryTest {
                         "S002",
                         "Aircon is making a noise",
                         LocalDate.now(),
-                        "MP001",
-                        "MS001"
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
     void testCreateMaintenanceRequestWithInvalidReportedBy() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR003",
@@ -81,15 +78,14 @@ class MaintenanceRequestFactoryTest {
                         "",
                         "A chair is broken",
                         LocalDate.now(),
-                        "MP001",
-                        "MS001"
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
     void testCreateMaintenanceRequestWithInvalidDescription() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR004",
@@ -97,15 +93,14 @@ class MaintenanceRequestFactoryTest {
                         "S004",
                         "",
                         LocalDate.now(),
-                        "MP001",
-                        "MS001"
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
     void testCreateMaintenanceRequestWithNullDate() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR005",
@@ -113,15 +108,14 @@ class MaintenanceRequestFactoryTest {
                         "S005",
                         "Equipment is missing",
                         null,
-                        "MP001",
-                        "MS001"
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
-    void testCreateMaintenanceRequestWithInvalidPriorityId() {
-
+    void testCreateMaintenanceRequestWithNullPriority() {
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR006",
@@ -129,15 +123,14 @@ class MaintenanceRequestFactoryTest {
                         "S006",
                         "Projector is not working",
                         LocalDate.now(),
-                        "",
-                        "MS001"
+                        null,
+                        MaintenanceStatus.OPEN
                 )
         );
     }
 
     @Test
-    void testCreateMaintenanceRequestWithInvalidStatusId() {
-
+    void testCreateMaintenanceRequestWithNullStatus() {
         assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
                         "MR007",
@@ -145,8 +138,8 @@ class MaintenanceRequestFactoryTest {
                         "S007",
                         "Projector is not working",
                         LocalDate.now(),
-                        "MP001",
-                        ""
+                        MaintenancePriority.HIGH,
+                        null
                 )
         );
     }

@@ -10,7 +10,6 @@ class LoginFactoryTest {
 
     @Test
     void testCreateLogin() {
-
         Login login = LoginFactory.createLogin(
                 "L001",
                 "R001",
@@ -27,7 +26,6 @@ class LoginFactoryTest {
 
     @Test
     void testCreateLoginWithInvalidLoginId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 LoginFactory.createLogin(
                         "",
@@ -40,7 +38,6 @@ class LoginFactoryTest {
 
     @Test
     void testCreateLoginWithInvalidRegistrarId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 LoginFactory.createLogin(
                         "L002",
@@ -53,7 +50,6 @@ class LoginFactoryTest {
 
     @Test
     void testCreateLoginWithInvalidUsername() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 LoginFactory.createLogin(
                         "L003",
@@ -66,7 +62,6 @@ class LoginFactoryTest {
 
     @Test
     void testCreateLoginWithInvalidPassword() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 LoginFactory.createLogin(
                         "L004",

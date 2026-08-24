@@ -5,7 +5,6 @@ package za.ac.cput.campusfacilitybooking.factoryTest;
 
 import org.junit.jupiter.api.Test;
 import za.ac.cput.campusfacilitybooking.domain.Staff;
-import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.factory.StaffFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,48 +13,52 @@ class StaffFactoryTest {
 
     @Test
     void testCreateStaff() {
-
-        User user = null;
-
         Staff staff = StaffFactory.createStaff(
                 "S001",
-                user
+                "U001"
         );
 
         assertNotNull(staff);
         assertEquals("S001", staff.getStaffId());
-        assertNull(staff.getUser());
+        assertEquals("U001", staff.getUserId());
     }
 
     @Test
     void testCreateStaffWithInvalidStaffId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 StaffFactory.createStaff(
                         "",
-                        null
+                        "U001"
                 )
         );
     }
 
     @Test
     void testCreateStaffWithNullStaffId() {
-
         assertThrows(IllegalArgumentException.class, () ->
                 StaffFactory.createStaff(
                         null,
+                        "U001"
+                )
+        );
+    }
+
+    @Test
+    void testCreateStaffWithNullUserId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StaffFactory.createStaff(
+                        "S002",
                         null
                 )
         );
     }
 
     @Test
-    void testCreateStaffWithNullUser() {
-
+    void testCreateStaffWithEmptyUserId() {
         assertThrows(IllegalArgumentException.class, () ->
                 StaffFactory.createStaff(
-                        "S002",
-                        null
+                        "S003",
+                        ""
                 )
         );
     }
