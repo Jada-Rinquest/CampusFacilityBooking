@@ -4,371 +4,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Campus Facility Booking</title>
+    <title>Login | Campus Facility Booking</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<header>
-    <div class="header-content">
-        <h1>Campus Facility Booking</h1>
-        <p>Student & Department Management</p>
-    </div>
-</header>
+<div class="login-page">
 
-<main>
+    <!-- LEFT SIDE -->
+    <section class="login-branding">
 
-    <!-- DASHBOARD -->
-    <section class="dashboard">
+        <div class="branding-content">
 
-        <div class="dashboard-card">
-            <h2>Departments</h2>
-            <p>Manage campus departments.</p>
-            <button onclick="showSection('departmentSection')">
-                Manage Departments
-            </button>
-        </div>
-
-        <div class="dashboard-card">
-            <h2>Students</h2>
-            <p>Manage registered students.</p>
-            <button onclick="showSection('studentSection')">
-                Manage Students
-            </button>
-        </div>
-
-    </section>
-
-
-    <!-- ============================= -->
-    <!-- DEPARTMENT SECTION -->
-    <!-- ============================= -->
-
-    <section id="departmentSection" class="management-section">
-
-        <div class="section-header">
-            <div>
-                <h2>Department Management</h2>
-                <p>Create, search, update and delete departments.</p>
+            <div class="logo">
+                <i class="fa-solid fa-building-columns"></i>
             </div>
 
-            <button class="back-button"
-                    onclick="hideSection('departmentSection')">
-                Back
-            </button>
-        </div>
+            <span class="eyebrow">CAMPUS FACILITY BOOKING</span>
 
+            <h1>
+                Manage your campus
+                <span>facilities with ease.</span>
+            </h1>
 
-        <form id="departmentForm">
+            <p>
+                Book facilities, manage equipment, and keep track of
+                your campus activities all in one place.
+            </p>
 
-            <div class="form-grid">
+            <div class="branding-features">
 
-                <div class="form-group">
-                    <label for="departmentId">
-                        Department ID
-                    </label>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
 
-                    <input
-                            type="text"
-                            id="departmentId"
-                            placeholder="e.g. D001"
-                            required>
+                    <div>
+                        <strong>Easy Booking</strong>
+                        <span>Reserve facilities quickly and efficiently.</span>
+                    </div>
                 </div>
 
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
 
-                <div class="form-group">
-                    <label for="departmentName">
-                        Department Name
-                    </label>
-
-                    <input
-                            type="text"
-                            id="departmentName"
-                            placeholder="e.g. Information Technology"
-                            required>
+                    <div>
+                        <strong>Equipment Management</strong>
+                        <span>Keep track of campus equipment and availability.</span>
+                    </div>
                 </div>
 
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
 
-                <div class="form-group">
-                    <label for="building">
-                        Building
-                    </label>
-
-                    <input
-                            type="text"
-                            id="building"
-                            placeholder="e.g. Block A"
-                            required>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="headOfDepartment">
-                        Head of Department
-                    </label>
-
-                    <input
-                            type="text"
-                            id="headOfDepartment"
-                            placeholder="e.g. Mr Adams"
-                            required>
+                    <div>
+                        <strong>Stay Updated</strong>
+                        <span>Receive notifications about your bookings.</span>
+                    </div>
                 </div>
 
             </div>
 
-
-            <div class="button-group">
-
-                <button
-                        type="button"
-                        class="primary-button"
-                        onclick="createDepartment()">
-                    Create Department
-                </button>
-
-                <button
-                        type="button"
-                        class="secondary-button"
-                        onclick="readDepartment()">
-                    Search Department
-                </button>
-
-                <button
-                        type="button"
-                        class="secondary-button"
-                        onclick="updateDepartment()">
-                    Update Department
-                </button>
-
-                <button
-                        type="button"
-                        class="delete-button"
-                        onclick="deleteDepartment()">
-                    Delete Department
-                </button>
-
-                <button
-                        type="reset"
-                        class="clear-button">
-                    Clear
-                </button>
-
-            </div>
-
-        </form>
-
-
-        <div id="departmentMessage"
-             class="message">
         </div>
 
-
-        <div class="result-card">
-
-            <h3>Department Information</h3>
-
-            <div id="departmentResult">
-                No department selected.
-            </div>
-
+        <div class="branding-footer">
+            <span>Campus Facility & Equipment Booking System</span>
         </div>
 
     </section>
 
 
-    <!-- ============================= -->
-    <!-- STUDENT SECTION -->
-    <!-- ============================= -->
+    <!-- RIGHT SIDE -->
+    <section class="login-section">
 
-    <section id="studentSection" class="management-section">
+        <div class="login-card">
 
-        <div class="section-header">
-
-            <div>
-                <h2>Student Management</h2>
-                <p>Create, search, update and delete students.</p>
+            <div class="mobile-logo">
+                <div class="logo">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
             </div>
 
-            <button
-                    class="back-button"
-                    onclick="hideSection('studentSection')">
-                Back
-            </button>
+            <div class="login-header">
 
-        </div>
+                <span class="login-eyebrow">WELCOME BACK</span>
 
+                <h2>Sign in</h2>
 
-        <form id="studentForm">
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label for="studentId">
-                        Student ID
-                    </label>
-
-                    <input
-                            type="text"
-                            id="studentId"
-                            placeholder="e.g. S001"
-                            required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="studentNumber">
-                        Student Number
-                    </label>
-
-                    <input
-                            type="text"
-                            id="studentNumber"
-                            placeholder="e.g. 222871296"
-                            required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="firstName">
-                        First Name
-                    </label>
-
-                    <input
-                            type="text"
-                            id="firstName"
-                            placeholder="e.g. Jada"
-                            required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="lastName">
-                        Last Name
-                    </label>
-
-                    <input
-                            type="text"
-                            id="lastName"
-                            placeholder="e.g. Rinquest"
-                            required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="email">
-                        Email
-                    </label>
-
-                    <input
-                            type="email"
-                            id="email"
-                            placeholder="e.g. student@email.com"
-                            required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="studentDepartment">
-                        Department ID
-                    </label>
-
-                    <input
-                            type="text"
-                            id="studentDepartment"
-                            placeholder="e.g. D001"
-                            required>
-
-                </div>
+                <p>
+                    Enter your credentials to access your account.
+                </p>
 
             </div>
 
 
-            <div class="button-group">
+            <!-- LOGIN FORM -->
+            <form id="loginForm">
 
+                <!-- USERNAME -->
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                        >
+
+                    </div>
+
+                    <small class="error-message" id="usernameError"></small>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+                <div class="form-group">
+
+                    <div class="password-label">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <a href="#" id="forgotPassword">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                        >
+
+                        <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+
+                    </div>
+
+                    <small class="error-message" id="passwordError"></small>
+
+                </div>
+
+
+                <!-- REMEMBER ME -->
+                <div class="login-options">
+
+                    <label class="remember-me">
+
+                        <input
+                                type="checkbox"
+                                id="rememberMe"
+                        >
+
+                        <span>Remember me</span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- GENERAL ERROR -->
+                <div
+                        class="login-error"
+                        id="loginError"
+                        role="alert"
+                >
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>Invalid username or password.</span>
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
                 <button
-                        type="button"
-                        class="primary-button"
-                        onclick="createStudent()">
-                    Create Student
+                        type="submit"
+                        class="login-button"
+                        id="loginButton"
+                >
+
+                    <span id="loginButtonText">
+                        Sign In
+                    </span>
+
+                    <i
+                            class="fa-solid fa-arrow-right"
+                            id="loginButtonIcon"
+                    ></i>
+
                 </button>
 
-                <button
-                        type="button"
-                        class="secondary-button"
-                        onclick="readStudent()">
-                    Search Student
-                </button>
-
-                <button
-                        type="button"
-                        class="secondary-button"
-                        onclick="updateStudent()">
-                    Update Student
-                </button>
-
-                <button
-                        type="button"
-                        class="delete-button"
-                        onclick="deleteStudent()">
-                    Delete Student
-                </button>
-
-                <button
-                        type="reset"
-                        class="clear-button">
-                    Clear
-                </button>
-
-            </div>
-
-        </form>
+            </form>
 
 
-        <div id="studentMessage"
-             class="message">
-        </div>
+            <div class="login-footer">
 
+                <p>
+                    Campus Facility & Equipment Booking System
+                </p>
 
-        <div class="result-card">
+                <span>
+                    © 2026 CPUT
+                </span>
 
-            <h3>Student Information</h3>
-
-            <div id="studentResult">
-                No student selected.
             </div>
 
         </div>
 
     </section>
 
-</main>
-
-
-<footer>
-
-    <p>
-        Campus Facility Booking System
-    </p>
-
-    <p>
-        Student & Department Management
-    </p>
-
-</footer>
-
+</div>
 
 <script src="script.js"></script>
 

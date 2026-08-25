@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="staff-dashboard.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <!-- LOGO -->
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building-columns"></i>
+
+        <span>CampusBook</span>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html" class="active">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="booking.html">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <span>Bookings</span>
+
+        </a>
+
+
+        <a href="facility.html">
+
+            <i class="fa-solid fa-building"></i>
+
+            <span>Facilities</span>
+
+        </a>
+
+
+        <a href="equipment.html">
+
+            <i class="fa-solid fa-desktop"></i>
+
+            <span>Equipment</span>
+
+        </a>
+
+
+        <a href="maintenance.html">
+
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+            <span>Maintenance</span>
+
+        </a>
+
+
+        <a href="notification.html">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>Notifications</span>
+
+        </a>
+
+
+        <a href="user.html">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Users</span>
+
+        </a>
+
+
+        <a href="invoice.html">
+
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+
+            <span>Invoices</span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>Profile</span>
+
+        </a>
+
+
+        <a href="index.html" class="logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    type="button">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Welcome back to CampusBook.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOPBAR ACTIONS -->
+
+        <div class="topbar-actions">
+
+
+            <!-- Notifications -->
+
+            <button
+                    class="notification-icon"
+                    type="button"
+                    title="Notifications"
+                    onclick="window.location.href='notification.html'">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <!-- Profile -->
+
+            <a href="profile.html" class="staff-profile">
+
+                <div class="staff-avatar">
+
+                    <span>
+                        ST
+                    </span>
+
+                </div>
+
+
+                <div class="staff-info">
+
+                    <strong>
+                        Staff Member
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         DASHBOARD CONTENT
+    ====================================================== -->
+
+    <section class="dashboard-page">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    OVERVIEW
+
+                </span>
+
+
+                <h2>
+                    Campus Overview
+                </h2>
+
+
+                <p>
+                    Manage campus facilities, bookings,
+                    equipment and users from one place.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUICK STATISTICS
+        ================================================== -->
+
+        <div class="dashboard-stats">
+
+
+            <!-- BOOKINGS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-calendar-check"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Bookings
+                    </span>
+
+                    <strong>
+                        24
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- FACILITIES -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-building"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Facilities
+                    </span>
+
+                    <strong>
+                        18
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- EQUIPMENT -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-desktop"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Equipment
+                    </span>
+
+                    <strong>
+                        64
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- USERS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <div>
+
+                    <span>
+                        Users
+                    </span>
+
+                    <strong>
+                        128
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MANAGEMENT CARDS
+        ================================================== -->
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    MANAGEMENT
+                </span>
+
+                <h2>
+                    System Management
+                </h2>
+
+                <p>
+                    Select an area to manage the campus
+                    booking system.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-grid">
+
+
+            <!-- BOOKINGS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-calendar-check"></i>
+
+                </div>
+
+
+                <h3>
+                    Bookings
+                </h3>
+
+
+                <p>
+                    Create, view, update and manage
+                    campus facility bookings.
+                </p>
+
+
+                <a href="booking.html" class="dashboard-button">
+
+                    Manage Bookings
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- FACILITIES -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-building"></i>
+
+                </div>
+
+
+                <h3>
+                    Facilities
+                </h3>
+
+
+                <p>
+                    Manage campus facilities and
+                    facility information.
+                </p>
+
+
+                <a href="facility.html" class="dashboard-button">
+
+                    Manage Facilities
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- EQUIPMENT -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-desktop"></i>
+
+                </div>
+
+
+                <h3>
+                    Equipment
+                </h3>
+
+
+                <p>
+                    Manage equipment assigned to
+                    campus facilities.
+                </p>
+
+
+                <a href="equipment.html" class="dashboard-button">
+
+                    Manage Equipment
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- MAINTENANCE -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                </div>
+
+
+                <h3>
+                    Maintenance
+                </h3>
+
+
+                <p>
+                    Manage equipment maintenance
+                    requests and repairs.
+                </p>
+
+
+                <a href="maintenance.html" class="dashboard-button">
+
+                    Manage Maintenance
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- NOTIFICATIONS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                </div>
+
+
+                <h3>
+                    Notifications
+                </h3>
+
+
+                <p>
+                    Send and manage notifications
+                    for campus users.
+                </p>
+
+
+                <a href="notification.html" class="dashboard-button">
+
+                    Manage Notifications
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- USERS -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+
+                <h3>
+                    Users
+                </h3>
+
+
+                <p>
+                    View and manage registered
+                    campus users.
+                </p>
+
+
+                <a href="user.html" class="dashboard-button">
+
+                    Manage Users
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- INVOICES -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+
+                </div>
+
+
+                <h3>
+                    Invoices
+                </h3>
+
+
+                <p>
+                    Manage invoices and booking-related
+                    financial information.
+                </p>
+
+
+                <a href="invoice.html" class="dashboard-button">
+
+                    Manage Invoices
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- PROFILE -->
+
+            <div class="dashboard-card">
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+
+                <h3>
+                    My Profile
+                </h3>
+
+
+                <p>
+                    View your personal information,
+                    role and account details.
+                </p>
+
+
+                <a href="profile.html" class="dashboard-button">
+
+                    View Profile
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

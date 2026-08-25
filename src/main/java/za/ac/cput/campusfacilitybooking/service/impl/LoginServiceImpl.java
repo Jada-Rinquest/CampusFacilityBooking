@@ -40,4 +40,17 @@ public class LoginServiceImpl implements LoginService {
         }
         return false;
     }
+
+    @Override
+    public Login authenticate(String username, String password) {
+
+        Login login = repository.findByUsername(username)
+                .orElse(null);
+
+        if (login != null && login.getPassword().equals(password)) {
+            return login;
+        }
+
+        return null;
+    }
 }

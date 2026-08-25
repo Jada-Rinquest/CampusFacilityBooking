@@ -1,196 +1,137 @@
 /* =========================================================
-   BOOKING MANAGEMENT
+   CAMPUS FACILITY BOOKING
+   BOOKING MANAGEMENT JAVASCRIPT
 ========================================================= */
 
-const API_BASE_URL = "http://localhost:8080/bookings";
 
-let editingBookingId = null;
+/* =========================================================
+   API CONFIGURATION
+========================================================= */
+
+const API_BASE_URL = "http://localhost:8080";
+
+const BOOKING_API = `${API_BASE_URL}/booking`;
+const USER_API = `${API_BASE_URL}/user`;
+const FACILITY_API = `${API_BASE_URL}/facility`;
+const TIME_SLOT_API = `${API_BASE_URL}/time-slot`;
 
 
 /* =========================================================
    DOM ELEMENTS
 ========================================================= */
 
+// New booking
+const newBookingBtn = document.getElementById("newBookingBtn");
+const bookingFormSection = document.getElementById("bookingFormSection");
+const closeFormBtn = document.getElementById("closeFormBtn");
+const cancelBookingBtn = document.getElementById("cancelBookingBtn");
+
+// Form
 const bookingForm = document.getElementById("bookingForm");
-
-const bookingIdInput = document.getElementById("bookingId");
-const facilityIdInput = document.getElementById("facilityId");
-const timeSlotIdInput = document.getElementById("timeSlotId");
-const userIdInput = document.getElementById("userId");
+const userSelect = document.getElementById("userId");
+const facilitySelect = document.getElementById("facilityId");
+const bookingDate = document.getElementById("bookingDate");
+const timeSlotSelect = document.getElementById("timeSlotId");
 const purposeInput = document.getElementById("purpose");
-const bookingStatusIdInput = document.getElementById("bookingStatusId");
+const purposeCount = document.getElementById("purposeCount");
+const submitBookingBtn = document.getElementById("submitBookingBtn");
 
-const submitButton = document.getElementById("submitButton");
-const clearButton = document.getElementById("clearButton");
-const cancelEditButton = document.getElementById("cancelEditButton");
-
-const searchBookingId = document.getElementById("searchBookingId");
-const searchButton = document.getElementById("searchButton");
-
-const bookingDetails = document.getElementById("bookingDetails");
-
-const detailBookingId = document.getElementById("detailBookingId");
-const detailFacilityId = document.getElementById("detailFacilityId");
-const detailTimeSlotId = document.getElementById("detailTimeSlotId");
-const detailUserId = document.getElementById("detailUserId");
-const detailPurpose = document.getElementById("detailPurpose");
-const detailBookingStatusId = document.getElementById("detailBookingStatusId");
-
+// Table
 const bookingTableBody = document.getElementById("bookingTableBody");
-const emptyMessage = document.getElementById("emptyMessage");
+const emptyState = document.getElementById("emptyState");
 
-const refreshButton = document.getElementById("refreshButton");
+// Filters
+const bookingSearch = document.getElementById("bookingSearch");
+const statusFilter = document.getElementById("statusFilter");
+const facilityFilter = document.getElementById("facilityFilter");
 
-const statusMessage = document.getElementById("statusMessage");
-const statusText = document.getElementById("statusText");
+// Refresh
+const refreshBtn = document.getElementById("refreshBtn");
 
-const formTitle = document.getElementById("formTitle");
+// Statistics
+const totalBookings = document.getElementById("totalBookings");
+const approvedBookings = document.getElementById("approvedBookings");
+const pendingBookings = document.getElementById("pendingBookings");
+const cancelledBookings = document.getElementById("cancelledBookings");
+
+// Table count
+const bookingCount = document.getElementById("bookingCount");
+
+// Pagination
+const previousPage = document.getElementById("previousPage");
+const nextPage = document.getElementById("nextPage");
+const currentPage = document.getElementById("currentPage");
+
+// View modal
+const viewBookingModal = document.getElementById("viewBookingModal");
+const closeViewModalBtn = document.getElementById("closeViewModalBtn");
+
+const viewBookingId = document.getElementById("viewBookingId");
+const viewUser = document.getElementById("viewUser");
+const viewFacility = document.getElementById("viewFacility");
+const viewDate = document.getElementById("viewDate");
+const viewTime = document.getElementById("viewTime");
+const viewStatus = document.getElementById("viewStatus");
+const viewPurpose = document.getElementById("viewPurpose");
+
+// Mobile menu
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const sidebar = document.querySelector(".sidebar");
 
 
 /* =========================================================
-   PAGE LOAD
+   APPLICATION STATE
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+let bookings = [];
+let users = [];
+let facilities = [];
+let timeSlots = [];
 
-    loadBookings();
+let editingBookingId = null;
+
+let currentPageNumber = 1;
+
+const bookingsPerPage = 8;
+
+
+/* =========================================================
+   INITIALISE PAGE
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+    setMinimumDate();
+
+    await loadInitialData();
+
+    setupEventListeners();
 
 });
 
 
 /* =========================================================
-   CREATE / UPDATE BOOKING
+   INITIAL DATA
 ========================================================= */
 
-bookingForm.addEventListener("submit", async function (event) {
-
-    event.preventDefault();
-
-    const booking = {
-
-        bookingId: bookingIdInput.value.trim(),
-
-        facilityId: facilityIdInput.value.trim(),
-
-        timeSlotId: timeSlotIdInput.value.trim(),
-
-        userId: userIdInput.value.trim(),
-
-        purpose: purposeInput.value.trim(),
-
-        bookingStatusId: bookingStatusIdInput.value.trim()
-
-    };
-
-
-    if (!validateBooking(booking)) {
-        return;
-    }
-
-
-    if (editingBookingId) {
-
-        await updateBooking(booking);
-
-    } else {
-
-        await createBooking(booking);
-
-    }
-
-});
-
-
-/* =========================================================
-   VALIDATE BOOKING
-========================================================= */
-
-function validateBooking(booking) {
-
-    if (!booking.bookingId) {
-        showStatus("Booking ID is required.", "error");
-        return false;
-    }
-
-    if (!booking.facilityId) {
-        showStatus("Facility ID is required.", "error");
-        return false;
-    }
-
-    if (!booking.timeSlotId) {
-        showStatus("Time Slot ID is required.", "error");
-        return false;
-    }
-
-    if (!booking.userId) {
-        showStatus("User ID is required.", "error");
-        return false;
-    }
-
-    if (!booking.purpose) {
-        showStatus("Booking purpose is required.", "error");
-        return false;
-    }
-
-    if (!booking.bookingStatusId) {
-        showStatus("Booking Status ID is required.", "error");
-        return false;
-    }
-
-    return true;
-}
-
-
-/* =========================================================
-   CREATE BOOKING
-========================================================= */
-
-async function createBooking(booking) {
+async function loadInitialData() {
 
     try {
 
-        setLoading(true);
-
-        const response = await fetch(API_BASE_URL, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(booking)
-
-        });
-
-
-        if (!response.ok) {
-
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        showStatus("Booking created successfully.", "success");
-
-        clearForm();
-
-        await loadBookings();
+        await Promise.all([
+            loadBookings(),
+            loadUsers(),
+            loadFacilities()
+        ]);
 
     } catch (error) {
 
-        console.error("Error creating booking:", error);
+        console.error("Error loading page data:", error);
 
-        showStatus(
-            "Unable to create booking: " + error.message,
+        showNotification(
+            "Unable to load booking data. Make sure the Spring Boot backend is running.",
             "error"
         );
-
-    } finally {
-
-        setLoading(false);
 
     }
 
@@ -198,42 +139,349 @@ async function createBooking(booking) {
 
 
 /* =========================================================
-   GET ALL BOOKINGS
+   EVENT LISTENERS
+========================================================= */
+
+function setupEventListeners() {
+
+    /* New booking */
+
+    if (newBookingBtn) {
+
+        newBookingBtn.addEventListener("click", openBookingForm);
+
+    }
+
+
+    /* Close form */
+
+    if (closeFormBtn) {
+
+        closeFormBtn.addEventListener(
+            "click",
+            closeBookingForm
+        );
+
+    }
+
+
+    /* Cancel form */
+
+    if (cancelBookingBtn) {
+
+        cancelBookingBtn.addEventListener(
+            "click",
+            closeBookingForm
+        );
+
+    }
+
+
+    /* Booking form */
+
+    if (bookingForm) {
+
+        bookingForm.addEventListener(
+            "submit",
+            handleBookingSubmit
+        );
+
+    }
+
+
+    /* Facility */
+
+    if (facilitySelect) {
+
+        facilitySelect.addEventListener(
+            "change",
+            handleFacilityChange
+        );
+
+    }
+
+
+    /* Date */
+
+    if (bookingDate) {
+
+        bookingDate.addEventListener(
+            "change",
+            handleDateChange
+        );
+
+    }
+
+
+    /* Purpose character counter */
+
+    if (purposeInput) {
+
+        purposeInput.addEventListener(
+            "input",
+            updatePurposeCounter
+        );
+
+    }
+
+
+    /* Search */
+
+    if (bookingSearch) {
+
+        bookingSearch.addEventListener(
+            "input",
+            function () {
+
+                currentPageNumber = 1;
+
+                renderBookings();
+
+            }
+        );
+
+    }
+
+
+    /* Status filter */
+
+    if (statusFilter) {
+
+        statusFilter.addEventListener(
+            "change",
+            function () {
+
+                currentPageNumber = 1;
+
+                renderBookings();
+
+            }
+        );
+
+    }
+
+
+    /* Facility filter */
+
+    if (facilityFilter) {
+
+        facilityFilter.addEventListener(
+            "change",
+            function () {
+
+                currentPageNumber = 1;
+
+                renderBookings();
+
+            }
+        );
+
+    }
+
+
+    /* Refresh */
+
+    if (refreshBtn) {
+
+        refreshBtn.addEventListener(
+            "click",
+            async function () {
+
+                await loadBookings();
+
+                showNotification(
+                    "Bookings refreshed successfully.",
+                    "success"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* Pagination */
+
+    if (previousPage) {
+
+        previousPage.addEventListener(
+            "click",
+            function () {
+
+                if (currentPageNumber > 1) {
+
+                    currentPageNumber--;
+
+                    renderBookings();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (nextPage) {
+
+        nextPage.addEventListener(
+            "click",
+            function () {
+
+                currentPageNumber++;
+
+                renderBookings();
+
+            }
+        );
+
+    }
+
+
+    /* View modal */
+
+    if (closeViewModalBtn) {
+
+        closeViewModalBtn.addEventListener(
+            "click",
+            closeViewModal
+        );
+
+    }
+
+
+    /* Close modal when clicking outside */
+
+    if (viewBookingModal) {
+
+        viewBookingModal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === viewBookingModal) {
+
+                    closeViewModal();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* Mobile menu */
+
+    if (mobileMenuBtn) {
+
+        mobileMenuBtn.addEventListener(
+            "click",
+            function () {
+
+                sidebar.classList.toggle("open");
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   OPEN BOOKING FORM
+========================================================= */
+
+function openBookingForm() {
+
+    editingBookingId = null;
+
+    bookingForm.reset();
+
+    if (purposeCount) {
+
+        purposeCount.textContent = "0 / 500";
+
+    }
+
+    document.getElementById("formTitle").textContent =
+        "Create a Booking";
+
+    submitBookingBtn.innerHTML =
+        '<i class="fa-solid fa-calendar-check"></i> Create Booking';
+
+    bookingFormSection.classList.remove("hidden");
+
+    bookingFormSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+/* =========================================================
+   CLOSE BOOKING FORM
+========================================================= */
+
+function closeBookingForm() {
+
+    bookingFormSection.classList.add("hidden");
+
+    bookingForm.reset();
+
+    editingBookingId = null;
+
+    if (purposeCount) {
+
+        purposeCount.textContent = "0 / 500";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD BOOKINGS
 ========================================================= */
 
 async function loadBookings() {
 
     try {
 
-        const response = await fetch(API_BASE_URL);
+        /*
+         * Change this URL if your controller uses
+         * a different endpoint for findAll().
+         */
 
+        const response = await fetch(
+            `${BOOKING_API}/all`
+        );
 
         if (!response.ok) {
 
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
+            throw new Error(
+                `Booking request failed: ${response.status}`
+            );
 
         }
 
+        bookings = await response.json();
 
-        const bookings = await response.json();
+        renderBookings();
 
-        displayBookings(bookings);
+        updateStatistics();
 
     } catch (error) {
 
-        console.error("Error loading bookings:", error);
+        console.error(
+            "Error loading bookings:",
+            error
+        );
 
-        bookingTableBody.innerHTML = "";
+        bookings = [];
 
-        emptyMessage.classList.remove("hidden");
-
-        emptyMessage.querySelector("p").textContent =
-            "Unable to load bookings.";
-
-        emptyMessage.querySelector("span").textContent =
-            error.message;
+        renderBookings();
 
     }
 
@@ -241,72 +489,101 @@ async function loadBookings() {
 
 
 /* =========================================================
-   DISPLAY ALL BOOKINGS
+   LOAD USERS
 ========================================================= */
 
-function displayBookings(bookings) {
+async function loadUsers() {
 
-    bookingTableBody.innerHTML = "";
+    try {
 
+        /*
+         * Change /all if your UserController
+         * uses another findAll endpoint.
+         */
 
-    if (!bookings || bookings.length === 0) {
+        const response = await fetch(
+            `${USER_API}/all`
+        );
 
-        emptyMessage.classList.remove("hidden");
+        if (!response.ok) {
 
-        emptyMessage.querySelector("p").textContent =
-            "No bookings found.";
+            throw new Error(
+                `User request failed: ${response.status}`
+            );
 
-        emptyMessage.querySelector("span").textContent =
-            "Create a booking using the form above.";
+        }
 
-        return;
+        users = await response.json();
+
+        populateUserDropdown();
+
+    } catch (error) {
+
+        console.error(
+            "Error loading users:",
+            error
+        );
+
     }
 
-
-    emptyMessage.classList.add("hidden");
-
-
-    bookings.forEach(booking => {
-
-        const row = document.createElement("tr");
+}
 
 
-        row.innerHTML = `
+/* =========================================================
+   LOAD FACILITIES
+========================================================= */
 
-            <td>${escapeHtml(booking.bookingId)}</td>
+async function loadFacilities() {
 
-            <td>${escapeHtml(booking.facilityId)}</td>
+    try {
 
-            <td>${escapeHtml(booking.timeSlotId)}</td>
+        const response = await fetch(
+            `${FACILITY_API}/all`
+        );
 
-            <td>${escapeHtml(booking.userId)}</td>
+        if (!response.ok) {
 
-            <td>${escapeHtml(booking.purpose)}</td>
+            throw new Error(
+                `Facility request failed: ${response.status}`
+            );
 
-            <td>${escapeHtml(booking.bookingStatusId)}</td>
+        }
 
-            <td>
+        facilities = await response.json();
 
-                <button
-                    type="button"
-                    class="edit-button"
-                    onclick="editBooking('${escapeAttribute(booking.bookingId)}')">
-                    Edit
-                </button>
+        populateFacilityDropdowns();
 
-                <button
-                    type="button"
-                    class="delete-button"
-                    onclick="deleteBooking('${escapeAttribute(booking.bookingId)}')">
-                    Delete
-                </button>
+    } catch (error) {
 
-            </td>
+        console.error(
+            "Error loading facilities:",
+            error
+        );
 
-        `;
+    }
+
+}
 
 
-        bookingTableBody.appendChild(row);
+/* =========================================================
+   POPULATE USER DROPDOWN
+========================================================= */
+
+function populateUserDropdown() {
+
+    userSelect.innerHTML =
+        '<option value="">Select a user</option>';
+
+    users.forEach(function (user) {
+
+        const option = document.createElement("option");
+
+        option.value = user.userId;
+
+        option.textContent =
+            `${user.firstName} ${user.lastName} (${user.userId})`;
+
+        userSelect.appendChild(option);
 
     });
 
@@ -314,79 +591,160 @@ function displayBookings(bookings) {
 
 
 /* =========================================================
-   FIND BOOKING
+   POPULATE FACILITY DROPDOWNS
 ========================================================= */
 
-searchButton.addEventListener("click", async () => {
+function populateFacilityDropdowns() {
 
-    const id = searchBookingId.value.trim();
+    facilitySelect.innerHTML =
+        '<option value="">Select a facility</option>';
 
-
-    if (!id) {
-
-        showStatus(
-            "Please enter a Booking ID.",
-            "error"
-        );
-
-        return;
-    }
+    facilityFilter.innerHTML =
+        '<option value="all">All Facilities</option>';
 
 
-    await findBooking(id);
+    facilities.forEach(function (facility) {
 
-});
+        /* Form dropdown */
+
+        const option = document.createElement("option");
+
+        option.value = facility.facilityId;
+
+        option.textContent =
+            `${facility.name} (${facility.location})`;
+
+        facilitySelect.appendChild(option);
+
+
+        /* Filter dropdown */
+
+        const filterOption =
+            document.createElement("option");
+
+        filterOption.value =
+            facility.facilityId;
+
+        filterOption.textContent =
+            facility.name;
+
+        facilityFilter.appendChild(filterOption);
+
+    });
+
+}
 
 
 /* =========================================================
-   FIND BOOKING BY ID
+   FACILITY CHANGE
 ========================================================= */
 
-async function findBooking(id) {
+async function handleFacilityChange() {
+
+    const selectedFacility =
+        facilitySelect.value;
+
+    if (!selectedFacility) {
+
+        timeSlotSelect.innerHTML =
+            '<option value="">Select a time slot</option>';
+
+        return;
+
+    }
+
+    await loadTimeSlots();
+
+}
+
+
+/* =========================================================
+   DATE CHANGE
+========================================================= */
+
+async function handleDateChange() {
+
+    if (!bookingDate.value) {
+
+        timeSlotSelect.innerHTML =
+            '<option value="">Select a time slot</option>';
+
+        return;
+
+    }
+
+    await loadTimeSlots();
+
+}
+
+
+/* =========================================================
+   LOAD TIME SLOTS
+========================================================= */
+
+async function loadTimeSlots() {
+
+    const selectedDate =
+        bookingDate.value;
+
+    if (!selectedDate) {
+
+        timeSlotSelect.innerHTML =
+            '<option value="">Select a date first</option>';
+
+        return;
+
+    }
+
 
     try {
 
-        const response = await fetch(
-            `${API_BASE_URL}/${encodeURIComponent(id)}`
-        );
+        /*
+         * This assumes your TimeSlotController
+         * has an endpoint such as:
+         *
+         * GET /time-slot/all
+         *
+         * The filtering is done here in JavaScript.
+         */
 
+        const response = await fetch(
+            `${TIME_SLOT_API}/all`
+        );
 
         if (!response.ok) {
 
-            if (response.status === 404) {
-
-                throw new Error(
-                    "Booking with ID " + id + " was not found."
-                );
-
-            }
-
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
+            throw new Error(
+                `Time slot request failed: ${response.status}`
+            );
 
         }
 
+        timeSlots = await response.json();
 
-        const booking = await response.json();
 
-        displayBookingDetails(booking);
+        const matchingSlots =
+            timeSlots.filter(function (slot) {
 
-        showStatus(
-            "Booking found successfully.",
-            "success"
+                return slot.date === selectedDate;
+
+            });
+
+
+        populateTimeSlotDropdown(
+            matchingSlots
         );
+
 
     } catch (error) {
 
-        console.error("Error finding booking:", error);
-
-        bookingDetails.classList.add("hidden");
-
-        showStatus(
-            error.message,
-            "error"
+        console.error(
+            "Error loading time slots:",
+            error
         );
+
+        timeSlotSelect.innerHTML =
+            '<option value="">Unable to load time slots</option>';
 
     }
 
@@ -394,31 +752,733 @@ async function findBooking(id) {
 
 
 /* =========================================================
-   DISPLAY BOOKING DETAILS
+   POPULATE TIME SLOT DROPDOWN
 ========================================================= */
 
-function displayBookingDetails(booking) {
+function populateTimeSlotDropdown(slots) {
 
-    detailBookingId.textContent =
-        booking.bookingId ?? "-";
-
-    detailFacilityId.textContent =
-        booking.facilityId ?? "-";
-
-    detailTimeSlotId.textContent =
-        booking.timeSlotId ?? "-";
-
-    detailUserId.textContent =
-        booking.userId ?? "-";
-
-    detailPurpose.textContent =
-        booking.purpose ?? "-";
-
-    detailBookingStatusId.textContent =
-        booking.bookingStatusId ?? "-";
+    timeSlotSelect.innerHTML =
+        '<option value="">Select a time slot</option>';
 
 
-    bookingDetails.classList.remove("hidden");
+    if (slots.length === 0) {
+
+        timeSlotSelect.innerHTML =
+            '<option value="">No time slots available</option>';
+
+        return;
+
+    }
+
+
+    slots.forEach(function (slot) {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            slot.timeSlotId;
+
+        option.textContent =
+            `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`;
+
+        timeSlotSelect.appendChild(option);
+
+    });
+
+}
+
+
+/* =========================================================
+   CREATE / UPDATE BOOKING
+========================================================= */
+
+async function handleBookingSubmit(event) {
+
+    event.preventDefault();
+
+
+    const userId =
+        userSelect.value;
+
+    const facilityId =
+        facilitySelect.value;
+
+    const timeSlotId =
+        timeSlotSelect.value;
+
+    const purpose =
+        purposeInput.value.trim();
+
+
+    /* Validation */
+
+    if (!userId) {
+
+        showNotification(
+            "Please select a user.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!facilityId) {
+
+        showNotification(
+            "Please select a facility.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!bookingDate.value) {
+
+        showNotification(
+            "Please select a booking date.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!timeSlotId) {
+
+        showNotification(
+            "Please select a time slot.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!purpose) {
+
+        showNotification(
+            "Please enter the purpose of the booking.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * When creating a booking, generate
+     * a simple unique booking ID.
+     */
+
+    const bookingId =
+        editingBookingId ||
+        generateBookingId();
+
+
+    /*
+     * Default status.
+     *
+     * Change this value if your database
+     * uses a different booking status ID.
+     */
+
+    const bookingStatusId =
+        "BS001";
+
+
+    const bookingData = {
+
+        bookingId: bookingId,
+
+        facilityId: facilityId,
+
+        timeSlotId: timeSlotId,
+
+        userId: userId,
+
+        purpose: purpose,
+
+        bookingStatusId: bookingStatusId
+
+    };
+
+
+    try {
+
+        submitBookingBtn.disabled = true;
+
+        submitBookingBtn.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+
+        let response;
+
+
+        /* UPDATE */
+
+        if (editingBookingId) {
+
+            response = await fetch(
+                `${BOOKING_API}/update`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(bookingData)
+                }
+            );
+
+        }
+
+        /* CREATE */
+
+        else {
+
+            response = await fetch(
+                `${BOOKING_API}/create`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(bookingData)
+                }
+            );
+
+        }
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            throw new Error(
+                errorText ||
+                `Server error: ${response.status}`
+            );
+
+        }
+
+
+        const savedBooking =
+            await response.json();
+
+
+        console.log(
+            "Saved booking:",
+            savedBooking
+        );
+
+
+        showNotification(
+            editingBookingId
+                ? "Booking updated successfully."
+                : "Booking created successfully.",
+            "success"
+        );
+
+
+        closeBookingForm();
+
+        await loadBookings();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error saving booking:",
+            error
+        );
+
+        showNotification(
+            "Unable to save the booking.",
+            "error"
+        );
+
+
+    } finally {
+
+        submitBookingBtn.disabled = false;
+
+        submitBookingBtn.innerHTML =
+            editingBookingId
+                ? '<i class="fa-solid fa-floppy-disk"></i> Update Booking'
+                : '<i class="fa-solid fa-calendar-check"></i> Create Booking';
+
+    }
+
+}
+
+
+/* =========================================================
+   GENERATE BOOKING ID
+========================================================= */
+
+function generateBookingId() {
+
+    const randomNumber =
+        Math.floor(
+            10000 +
+            Math.random() * 90000
+        );
+
+    return `B${randomNumber}`;
+
+}
+
+
+/* =========================================================
+   RENDER BOOKINGS
+========================================================= */
+
+function renderBookings() {
+
+    const filteredBookings =
+        getFilteredBookings();
+
+
+    if (filteredBookings.length === 0) {
+
+        bookingTableBody.innerHTML = "";
+
+        emptyState.style.display = "block";
+
+        updateBookingCount(0);
+
+        updatePagination(
+            0
+        );
+
+        return;
+
+    }
+
+
+    emptyState.style.display = "none";
+
+
+    const totalPages =
+        Math.ceil(
+            filteredBookings.length /
+            bookingsPerPage
+        );
+
+
+    if (
+        currentPageNumber >
+        totalPages
+    ) {
+
+        currentPageNumber =
+            totalPages;
+
+    }
+
+
+    const startIndex =
+        (currentPageNumber - 1) *
+        bookingsPerPage;
+
+
+    const endIndex =
+        startIndex +
+        bookingsPerPage;
+
+
+    const pageBookings =
+        filteredBookings.slice(
+            startIndex,
+            endIndex
+        );
+
+
+    bookingTableBody.innerHTML = "";
+
+
+    pageBookings.forEach(
+        function (booking) {
+
+            const row =
+                createBookingRow(
+                    booking
+                );
+
+            bookingTableBody.appendChild(
+                row
+            );
+
+        }
+    );
+
+
+    updateBookingCount(
+        filteredBookings.length
+    );
+
+    updatePagination(
+        filteredBookings.length
+    );
+
+}
+
+
+/* =========================================================
+   FILTER BOOKINGS
+========================================================= */
+
+function getFilteredBookings() {
+
+    const search =
+        bookingSearch.value
+            .trim()
+            .toLowerCase();
+
+
+    const selectedStatus =
+        statusFilter.value;
+
+
+    const selectedFacility =
+        facilityFilter.value;
+
+
+    return bookings.filter(
+        function (booking) {
+
+            const searchMatch =
+
+                !search ||
+
+                String(
+                    booking.bookingId
+                )
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                String(
+                    booking.userId
+                )
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                String(
+                    booking.facilityId
+                )
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                String(
+                    booking.purpose
+                )
+                    .toLowerCase()
+                    .includes(search);
+
+
+            const statusMatch =
+
+                selectedStatus === "all" ||
+
+                getStatusName(
+                    booking.bookingStatusId
+                ).toLowerCase()
+                === selectedStatus;
+
+
+            const facilityMatch =
+
+                selectedFacility === "all" ||
+
+                booking.facilityId ===
+                selectedFacility;
+
+
+            return (
+                searchMatch &&
+                statusMatch &&
+                facilityMatch
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CREATE TABLE ROW
+========================================================= */
+
+function createBookingRow(booking) {
+
+    const row =
+        document.createElement("tr");
+
+
+    const user =
+        findUser(
+            booking.userId
+        );
+
+
+    const facility =
+        findFacility(
+            booking.facilityId
+        );
+
+
+    const slot =
+        findTimeSlot(
+            booking.timeSlotId
+        );
+
+
+    const status =
+        getStatusName(
+            booking.bookingStatusId
+        );
+
+
+    row.innerHTML = `
+
+        <td>
+
+            <span class="booking-id">
+                ${escapeHTML(booking.bookingId)}
+            </span>
+
+        </td>
+
+
+        <td>
+
+            ${
+                user
+                    ? `${escapeHTML(user.firstName)}
+                       ${escapeHTML(user.lastName)}`
+                    : escapeHTML(booking.userId)
+            }
+
+        </td>
+
+
+        <td>
+
+            ${
+                facility
+                    ? escapeHTML(facility.name)
+                    : escapeHTML(booking.facilityId)
+            }
+
+        </td>
+
+
+        <td>
+
+            ${
+                slot
+                    ? escapeHTML(slot.date)
+                    : "-"
+            }
+
+        </td>
+
+
+        <td>
+
+            ${
+                slot
+                    ? `${formatTime(slot.startTime)}
+                       -
+                       ${formatTime(slot.endTime)}`
+                    : escapeHTML(booking.timeSlotId)
+            }
+
+        </td>
+
+
+        <td>
+
+            <span class="status-badge ${status}">
+
+                ${status}
+
+            </span>
+
+        </td>
+
+
+        <td>
+
+            <div class="table-actions">
+
+                <button
+                    type="button"
+                    class="table-action"
+                    title="View booking"
+                    onclick="viewBooking('${booking.bookingId}')">
+
+                    <i class="fa-regular fa-eye"></i>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="table-action"
+                    title="Edit booking"
+                    onclick="editBooking('${booking.bookingId}')">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="table-action delete"
+                    title="Delete booking"
+                    onclick="deleteBooking('${booking.bookingId}')">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </div>
+
+        </td>
+
+    `;
+
+
+    return row;
+
+}
+
+
+/* =========================================================
+   VIEW BOOKING
+========================================================= */
+
+function viewBooking(bookingId) {
+
+    const booking =
+        bookings.find(
+            function (item) {
+
+                return item.bookingId === bookingId;
+
+            }
+        );
+
+
+    if (!booking) {
+
+        return;
+
+    }
+
+
+    const user =
+        findUser(
+            booking.userId
+        );
+
+
+    const facility =
+        findFacility(
+            booking.facilityId
+        );
+
+
+    const slot =
+        findTimeSlot(
+            booking.timeSlotId
+        );
+
+
+    const status =
+        getStatusName(
+            booking.bookingStatusId
+        );
+
+
+    viewBookingId.textContent =
+        booking.bookingId;
+
+
+    viewUser.textContent =
+        user
+            ? `${user.firstName} ${user.lastName}`
+            : booking.userId;
+
+
+    viewFacility.textContent =
+        facility
+            ? facility.name
+            : booking.facilityId;
+
+
+    viewDate.textContent =
+        slot
+            ? slot.date
+            : "-";
+
+
+    viewTime.textContent =
+        slot
+            ? `${formatTime(slot.startTime)}
+               - ${formatTime(slot.endTime)}`
+            : "-";
+
+
+    viewStatus.textContent =
+        status;
+
+
+    viewPurpose.textContent =
+        booking.purpose || "-";
+
+
+    viewBookingModal.classList.add(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE VIEW MODAL
+========================================================= */
+
+function closeViewModal() {
+
+    viewBookingModal.classList.remove(
+        "active"
+    );
 
 }
 
@@ -427,143 +1487,92 @@ function displayBookingDetails(booking) {
    EDIT BOOKING
 ========================================================= */
 
-async function editBooking(id) {
+function editBooking(bookingId) {
 
-    try {
+    const booking =
+        bookings.find(
+            function (item) {
 
-        const response = await fetch(
-            `${API_BASE_URL}/${encodeURIComponent(id)}`
-        );
-
-
-        if (!response.ok) {
-
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        const booking = await response.json();
-
-
-        bookingIdInput.value =
-            booking.bookingId ?? "";
-
-        facilityIdInput.value =
-            booking.facilityId ?? "";
-
-        timeSlotIdInput.value =
-            booking.timeSlotId ?? "";
-
-        userIdInput.value =
-            booking.userId ?? "";
-
-        purposeInput.value =
-            booking.purpose ?? "";
-
-        bookingStatusIdInput.value =
-            booking.bookingStatusId ?? "";
-
-
-        editingBookingId = booking.bookingId;
-
-
-        formTitle.textContent = "Update Booking";
-
-        submitButton.textContent = "Update Booking";
-
-        cancelEditButton.classList.remove("hidden");
-
-
-        bookingForm.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-
-        showStatus(
-            "Editing booking " + booking.bookingId,
-            "warning"
-        );
-
-
-    } catch (error) {
-
-        console.error("Error loading booking:", error);
-
-        showStatus(
-            "Unable to load booking: " + error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   UPDATE BOOKING
-========================================================= */
-
-async function updateBooking(booking) {
-
-    try {
-
-        setLoading(true);
-
-
-        const response = await fetch(
-            `${API_BASE_URL}/${encodeURIComponent(editingBookingId)}`,
-            {
-
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(booking)
+                return item.bookingId === bookingId;
 
             }
         );
 
 
-        if (!response.ok) {
+    if (!booking) {
 
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        showStatus(
-            "Booking updated successfully.",
-            "success"
-        );
-
-
-        clearForm();
-
-        await loadBookings();
-
-
-    } catch (error) {
-
-        console.error("Error updating booking:", error);
-
-        showStatus(
-            "Unable to update booking: " + error.message,
-            "error"
-        );
-
-    } finally {
-
-        setLoading(false);
+        return;
 
     }
+
+
+    editingBookingId =
+        booking.bookingId;
+
+
+    userSelect.value =
+        booking.userId;
+
+
+    facilitySelect.value =
+        booking.facilityId;
+
+
+    const slot =
+        findTimeSlot(
+            booking.timeSlotId
+        );
+
+
+    if (slot) {
+
+        bookingDate.value =
+            slot.date;
+
+    }
+
+
+    purposeInput.value =
+        booking.purpose || "";
+
+
+    updatePurposeCounter();
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Update Booking";
+
+
+    submitBookingBtn.innerHTML =
+        '<i class="fa-solid fa-floppy-disk"></i> Update Booking';
+
+
+    bookingFormSection.classList.remove(
+        "hidden"
+    );
+
+
+    bookingFormSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+
+    /*
+     * Load the available time slots
+     * after setting the date.
+     */
+
+    loadTimeSlots().then(
+        function () {
+
+            timeSlotSelect.value =
+                booking.timeSlotId;
+
+        }
+    );
 
 }
 
@@ -572,49 +1581,45 @@ async function updateBooking(booking) {
    DELETE BOOKING
 ========================================================= */
 
-async function deleteBooking(id) {
+async function deleteBooking(bookingId) {
 
-    const confirmed = confirm(
-        `Are you sure you want to delete booking "${id}"?`
-    );
+    const confirmed =
+        confirm(
+            `Are you sure you want to delete booking ${bookingId}?`
+        );
 
 
     if (!confirmed) {
+
         return;
+
     }
 
 
     try {
 
-        const response = await fetch(
-            `${API_BASE_URL}/${encodeURIComponent(id)}`,
-            {
-                method: "DELETE"
-            }
-        );
+        const response =
+            await fetch(
+                `${BOOKING_API}/delete/${bookingId}`,
+                {
+                    method: "DELETE"
+                }
+            );
 
 
         if (!response.ok) {
 
-            const errorMessage = await getErrorMessage(response);
-
-            throw new Error(errorMessage);
+            throw new Error(
+                `Delete failed: ${response.status}`
+            );
 
         }
 
 
-        showStatus(
+        showNotification(
             "Booking deleted successfully.",
             "success"
         );
-
-
-        if (editingBookingId === id) {
-            clearForm();
-        }
-
-
-        bookingDetails.classList.add("hidden");
 
 
         await loadBookings();
@@ -622,10 +1627,14 @@ async function deleteBooking(id) {
 
     } catch (error) {
 
-        console.error("Error deleting booking:", error);
+        console.error(
+            "Error deleting booking:",
+            error
+        );
 
-        showStatus(
-            "Unable to delete booking: " + error.message,
+
+        showNotification(
+            "Unable to delete the booking.",
             "error"
         );
 
@@ -635,175 +1644,444 @@ async function deleteBooking(id) {
 
 
 /* =========================================================
-   CLEAR FORM
+   UPDATE STATISTICS
 ========================================================= */
 
-clearButton.addEventListener("click", () => {
+function updateStatistics() {
 
-    clearForm();
-
-});
-
-
-function clearForm() {
-
-    bookingForm.reset();
-
-    editingBookingId = null;
+    totalBookings.textContent =
+        bookings.length;
 
 
-    formTitle.textContent = "Create a Booking";
+    approvedBookings.textContent =
+        bookings.filter(
+            function (booking) {
 
-    submitButton.textContent = "Create Booking";
+                return getStatusName(
+                    booking.bookingStatusId
+                ) === "approved";
 
-    cancelEditButton.classList.add("hidden");
+            }
+        ).length;
+
+
+    pendingBookings.textContent =
+        bookings.filter(
+            function (booking) {
+
+                return getStatusName(
+                    booking.bookingStatusId
+                ) === "pending";
+
+            }
+        ).length;
+
+
+    cancelledBookings.textContent =
+        bookings.filter(
+            function (booking) {
+
+                return getStatusName(
+                    booking.bookingStatusId
+                ) === "cancelled";
+
+            }
+        ).length;
 
 }
 
 
 /* =========================================================
-   CANCEL EDIT
+   STATUS NAME
 ========================================================= */
 
-cancelEditButton.addEventListener("click", () => {
+function getStatusName(statusId) {
 
-    clearForm();
+    /*
+     * Update these IDs to match the values
+     * in your BookingStatus table.
+     */
 
-    showStatus(
-        "Edit cancelled.",
-        "warning"
+    const statuses = {
+
+        "BS001": "pending",
+
+        "BS002": "approved",
+
+        "BS003": "cancelled",
+
+        "BS004": "completed"
+
+    };
+
+
+    return statuses[statusId]
+        || "pending";
+
+}
+
+
+/* =========================================================
+   FIND USER
+========================================================= */
+
+function findUser(userId) {
+
+    return users.find(
+        function (user) {
+
+            return user.userId === userId;
+
+        }
     );
 
-});
+}
 
 
 /* =========================================================
-   REFRESH BOOKINGS
+   FIND FACILITY
 ========================================================= */
 
-refreshButton.addEventListener("click", async () => {
+function findFacility(facilityId) {
 
-    await loadBookings();
+    return facilities.find(
+        function (facility) {
 
-    showStatus(
-        "Bookings refreshed.",
-        "success"
+            return facility.facilityId === facilityId;
+
+        }
     );
 
-});
+}
 
 
 /* =========================================================
-   STATUS MESSAGE
+   FIND TIME SLOT
 ========================================================= */
 
-function showStatus(message, type) {
+function findTimeSlot(timeSlotId) {
 
-    statusText.textContent = message;
+    return timeSlots.find(
+        function (slot) {
 
-    statusMessage.className =
-        `status-message ${type}`;
+            return slot.timeSlotId === timeSlotId;
 
-    statusMessage.classList.remove("hidden");
-
-
-    setTimeout(() => {
-
-        statusMessage.classList.add("hidden");
-
-    }, 4000);
+        }
+    );
 
 }
 
 
 /* =========================================================
-   LOADING STATE
+   PURPOSE CHARACTER COUNTER
 ========================================================= */
 
-function setLoading(isLoading) {
+function updatePurposeCounter() {
 
-    if (isLoading) {
+    if (!purposeInput || !purposeCount) {
 
-        submitButton.disabled = true;
-
-        submitButton.textContent =
-            editingBookingId
-                ? "Updating..."
-                : "Creating...";
-
-    } else {
-
-        submitButton.disabled = false;
-
-        submitButton.textContent =
-            editingBookingId
-                ? "Update Booking"
-                : "Create Booking";
+        return;
 
     }
 
+
+    const length =
+        purposeInput.value.length;
+
+
+    purposeCount.textContent =
+        `${length} / 500`;
+
 }
 
 
 /* =========================================================
-   ERROR HANDLING
+   MINIMUM DATE
 ========================================================= */
 
-async function getErrorMessage(response) {
+function setMinimumDate() {
 
-    try {
+    if (!bookingDate) {
 
-        const data = await response.json();
-
-
-        if (data.message) {
-            return data.message;
-        }
-
-        if (data.error) {
-            return data.error;
-        }
-
-
-        return `Request failed with status ${response.status}.`;
-
-    } catch {
-
-        return `Request failed with status ${response.status}.`;
+        return;
 
     }
 
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    bookingDate.min =
+        `${year}-${month}-${day}`;
+
 }
 
 
 /* =========================================================
-   SECURITY HELPERS
+   FORMAT TIME
 ========================================================= */
 
-function escapeHtml(value) {
+function formatTime(time) {
 
-    if (value === null || value === undefined) {
+    if (!time) {
+
+        return "-";
+
+    }
+
+
+    /*
+     * Handles values such as:
+     *
+     * 09:00:00
+     * 09:00
+     */
+
+    return time.substring(
+        0,
+        5
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE BOOKING COUNT
+========================================================= */
+
+function updateBookingCount(count) {
+
+    if (!bookingCount) {
+
+        return;
+
+    }
+
+
+    bookingCount.textContent =
+        `Showing ${count} booking${count === 1 ? "" : "s"}`;
+
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+function updatePagination(totalItems) {
+
+    const totalPages =
+        Math.ceil(
+            totalItems /
+            bookingsPerPage
+        );
+
+
+    currentPage.textContent =
+        currentPageNumber;
+
+
+    previousPage.disabled =
+        currentPageNumber <= 1;
+
+
+    nextPage.disabled =
+        currentPageNumber >= totalPages
+        || totalPages === 0;
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function showNotification(
+    message,
+    type = "success"
+) {
+
+    const existing =
+        document.querySelector(
+            ".booking-notification"
+        );
+
+
+    if (existing) {
+
+        existing.remove();
+
+    }
+
+
+    const notification =
+        document.createElement("div");
+
+
+    notification.className =
+        `booking-notification ${type}`;
+
+
+    const icon =
+        type === "success"
+            ? "fa-circle-check"
+            : "fa-circle-exclamation";
+
+
+    notification.innerHTML = `
+
+        <i class="fa-solid ${icon}"></i>
+
+        <span>
+            ${escapeHTML(message)}
+        </span>
+
+    `;
+
+
+    notification.style.cssText = `
+
+        position: fixed;
+        top: 25px;
+        right: 25px;
+        z-index: 9999;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        padding: 14px 18px;
+
+        border-radius: 10px;
+
+        background: white;
+
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.12);
+
+        border: 1px solid #e5e7eb;
+
+        color: ${
+            type === "success"
+                ? "#16a34a"
+                : "#dc2626"
+        };
+
+        font-size: 13px;
+        font-weight: 600;
+
+        animation:
+            notificationIn 0.25s ease;
+
+    `;
+
+
+    document.body.appendChild(
+        notification
+    );
+
+
+    setTimeout(
+        function () {
+
+            notification.remove();
+
+        },
+        3500
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    if (value === null ||
+        value === undefined) {
+
         return "";
+
     }
+
 
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
-function escapeAttribute(value) {
+/* =========================================================
+   NOTIFICATION ANIMATION
+========================================================= */
 
-    if (value === null || value === undefined) {
-        return "";
+const notificationStyle =
+    document.createElement("style");
+
+notificationStyle.textContent = `
+
+    @keyframes notificationIn {
+
+        from {
+
+            opacity: 0;
+
+            transform:
+                translateX(20px);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform:
+                translateX(0);
+
+        }
+
     }
 
-    return String(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
+`;
 
-}
+document.head.appendChild(
+    notificationStyle
+);

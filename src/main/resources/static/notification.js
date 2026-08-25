@@ -1,927 +1,835 @@
-/* =========================================================
-   NOTIFICATION MANAGEMENT
-========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
-const API_BASE_URL = "http://localhost:8080/notification";
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
 
-let editingNotificationId = null;
+    const openNotificationModal =
+        document.getElementById("openNotificationModal");
 
+    const notificationModal =
+        document.getElementById("notificationModal");
 
-/* =========================================================
-   DOM ELEMENTS
-========================================================= */
+    const closeNotificationModal =
+        document.getElementById("closeNotificationModal");
 
-const notificationForm =
-    document.getElementById("notificationForm");
+    const cancelNotification =
+        document.getElementById("cancelNotification");
 
-const notificationIdInput =
-    document.getElementById("notificationId");
+    const notificationForm =
+        document.getElementById("notificationForm");
 
-const userIdInput =
-    document.getElementById("userId");
+    const viewNotificationModal =
+        document.getElementById("viewNotificationModal");
 
-const notificationTypeIdInput =
-    document.getElementById("notificationTypeId");
+    const closeViewModal =
+        document.getElementById("closeViewModal");
 
-const sentDateInput =
-    document.getElementById("sentDate");
+    const notificationSearch =
+        document.getElementById("notificationSearch");
 
-const messageInput =
-    document.getElementById("message");
+    const notificationTypeFilter =
+        document.getElementById("notificationTypeFilter");
 
-const submitButton =
-    document.getElementById("submitButton");
+    const notificationMessage =
+        document.getElementById("notificationMessage");
 
-const clearButton =
-    document.getElementById("clearButton");
+    const characterCount =
+        document.getElementById("characterCount");
 
-const cancelEditButton =
-    document.getElementById("cancelEditButton");
+    const notificationTableBody =
+        document.getElementById("notificationTableBody");
 
-const formTitle =
-    document.getElementById("formTitle");
+    const totalNotifications =
+        document.getElementById("totalNotifications");
 
+    const sentToday =
+        document.getElementById("sentToday");
 
-/* Search */
+    const bookingNotifications =
+        document.getElementById("bookingNotifications");
 
-const searchNotificationId =
-    document.getElementById("searchNotificationId");
+    const systemNotifications =
+        document.getElementById("systemNotifications");
 
-const searchButton =
-    document.getElementById("searchButton");
 
-    const editNotificationButton =
-        document.getElementById("editNotificationButton");
+    /* =========================================================
+       OPEN SEND NOTIFICATION MODAL
+    ========================================================= */
 
-    const deleteNotificationButton =
-        document.getElementById("deleteNotificationButton");
+    if (openNotificationModal) {
 
+        openNotificationModal.addEventListener("click", function () {
 
-/* Details */
+            notificationModal.classList.add("active");
 
-const notificationDetails =
-    document.getElementById("notificationDetails");
+            document.body.classList.add("modal-open");
 
-const detailNotificationId =
-    document.getElementById("detailNotificationId");
-
-const detailUserId =
-    document.getElementById("detailUserId");
-
-const detailNotificationTypeId =
-    document.getElementById("detailNotificationTypeId");
-
-const detailSentDate =
-    document.getElementById("detailSentDate");
-
-const detailMessage =
-    document.getElementById("detailMessage");
-
-
-/* Status */
-
-const statusMessage =
-    document.getElementById("statusMessage");
-
-const statusText =
-    document.getElementById("statusText");
-
-
-/* =========================================================
-   PAGE LOAD
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    setDefaultDate();
-
-});
-
-
-/* =========================================================
-   DEFAULT DATE
-========================================================= */
-
-function setDefaultDate() {
-
-    if (!sentDateInput.value) {
-
-        const today = new Date();
-
-        const year = today.getFullYear();
-
-        const month = String(
-            today.getMonth() + 1
-        ).padStart(2, "0");
-
-        const day = String(
-            today.getDate()
-        ).padStart(2, "0");
-
-        sentDateInput.value =
-            `${year}-${month}-${day}`;
-    }
-
-}
-
-
-/* =========================================================
-   CREATE / UPDATE FORM
-========================================================= */
-
-notificationForm.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-
-        const notification = {
-
-            notificationId:
-                notificationIdInput.value.trim(),
-
-            userId:
-                userIdInput.value.trim(),
-
-            message:
-                messageInput.value.trim(),
-
-            sentDate:
-                sentDateInput.value,
-
-            notificationTypeId:
-                notificationTypeIdInput.value.trim()
-
-        };
-
-
-        if (!validateNotification(notification)) {
-            return;
-        }
-
-
-        if (editingNotificationId) {
-
-            await updateNotification(notification);
-
-        } else {
-
-            await createNotification(notification);
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   VALIDATE NOTIFICATION
-========================================================= */
-
-function validateNotification(notification) {
-
-    if (!notification.notificationId) {
-
-        showStatus(
-            "Notification ID is required.",
-            "error"
-        );
-
-        return false;
-    }
-
-
-    if (!notification.userId) {
-
-        showStatus(
-            "User ID is required.",
-            "error"
-        );
-
-        return false;
-    }
-
-
-    if (!notification.notificationTypeId) {
-
-        showStatus(
-            "Notification Type ID is required.",
-            "error"
-        );
-
-        return false;
-    }
-
-
-    if (!notification.sentDate) {
-
-        showStatus(
-            "Sent date is required.",
-            "error"
-        );
-
-        return false;
-    }
-
-
-    if (!notification.message) {
-
-        showStatus(
-            "Notification message is required.",
-            "error"
-        );
-
-        return false;
-    }
-
-
-    return true;
-
-}
-
-
-/* =========================================================
-   CREATE NOTIFICATION
-========================================================= */
-
-async function createNotification(notification) {
-
-    try {
-
-        setLoading(true);
-
-
-        const response = await fetch(
-            `${API_BASE_URL}/create`,
-            {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(notification)
-
-            }
-        );
-
-
-        if (!response.ok) {
-
-            const errorMessage =
-                await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        const createdNotification =
-            await response.json();
-
-
-        showStatus(
-            "Notification created successfully.",
-            "success"
-        );
-
-
-        displayNotificationDetails(
-            createdNotification
-        );
-
-
-        clearForm();
-
-
-    } catch (error) {
-
-        console.error(
-            "Error creating notification:",
-            error
-        );
-
-
-        showStatus(
-            "Unable to create notification: " +
-            error.message,
-            "error"
-        );
-
-
-    } finally {
-
-        setLoading(false);
-
-    }
-
-}
-
-
-/* =========================================================
-   FIND NOTIFICATION
-========================================================= */
-
-searchButton.addEventListener(
-    "click",
-    async () => {
-
-        const id =
-            searchNotificationId.value.trim();
-
-
-        if (!id) {
-
-            showStatus(
-                "Please enter a Notification ID.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        await findNotification(id);
-
-    }
-);
-
-
-/* =========================================================
-   FIND NOTIFICATION BY ID
-========================================================= */
-
-async function findNotification(id) {
-
-    try {
-
-        const response = await fetch(
-            `${API_BASE_URL}/read/${encodeURIComponent(id)}`
-        );
-
-
-        if (!response.ok) {
-
-            if (response.status === 404) {
-
-                throw new Error(
-                    `Notification with ID ${id} was not found.`
-                );
-
-            }
-
-
-            const errorMessage =
-                await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        const notification =
-            await response.json();
-
-
-        displayNotificationDetails(
-            notification
-        );
-
-
-        showStatus(
-            "Notification found successfully.",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Error finding notification:",
-            error
-        );
-
-
-        notificationDetails.classList.add(
-            "hidden"
-        );
-
-
-        showStatus(
-            error.message,
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DISPLAY NOTIFICATION DETAILS
-========================================================= */
-
-function displayNotificationDetails(notification) {
-
-    detailNotificationId.textContent =
-        notification.notificationId ?? "-";
-
-
-    detailUserId.textContent =
-        notification.userId ?? "-";
-
-
-    detailNotificationTypeId.textContent =
-        notification.notificationTypeId ?? "-";
-
-
-    detailSentDate.textContent =
-        notification.sentDate ?? "-";
-
-
-    detailMessage.textContent =
-        notification.message ?? "-";
-
-
-    notificationDetails.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-/* =========================================================
-   EDIT NOTIFICATION
-========================================================= */
-
-async function editNotification(id) {
-
-    try {
-
-        const response = await fetch(
-            `${API_BASE_URL}/read/${encodeURIComponent(id)}`
-        );
-
-
-        if (!response.ok) {
-
-            const errorMessage =
-                await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        const notification =
-            await response.json();
-
-
-        notificationIdInput.value =
-            notification.notificationId ?? "";
-
-
-        userIdInput.value =
-            notification.userId ?? "";
-
-
-        notificationTypeIdInput.value =
-            notification.notificationTypeId ?? "";
-
-
-        sentDateInput.value =
-            notification.sentDate ?? "";
-
-
-        messageInput.value =
-            notification.message ?? "";
-
-
-        editingNotificationId =
-            notification.notificationId;
-
-
-        formTitle.textContent =
-            "Update Notification";
-
-
-        submitButton.textContent =
-            "Update Notification";
-
-
-        cancelEditButton.classList.remove(
-            "hidden"
-        );
-
-
-        notificationForm.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
         });
 
-
-        showStatus(
-            "Editing notification " +
-            notification.notificationId,
-            "warning"
-        );
+    }
 
 
-    } catch (error) {
+    /* =========================================================
+       CLOSE SEND NOTIFICATION MODAL
+    ========================================================= */
 
-        console.error(
-            "Error loading notification:",
-            error
-        );
+    function closeNotification() {
+
+        notificationModal.classList.remove("active");
+
+        document.body.classList.remove("modal-open");
+
+        if (notificationForm) {
+            notificationForm.reset();
+        }
+
+        if (characterCount) {
+            characterCount.textContent = "0";
+        }
+    }
 
 
-        showStatus(
-            "Unable to load notification: " +
-            error.message,
-            "error"
+    if (closeNotificationModal) {
+
+        closeNotificationModal.addEventListener(
+            "click",
+            closeNotification
         );
 
     }
 
-}
+
+    if (cancelNotification) {
+
+        cancelNotification.addEventListener(
+            "click",
+            closeNotification
+        );
+
+    }
 
 
-/* =========================================================
-   UPDATE NOTIFICATION
-========================================================= */
+    /* =========================================================
+       CLOSE MODAL WHEN CLICKING OUTSIDE
+    ========================================================= */
 
-async function updateNotification(notification) {
+    if (notificationModal) {
 
-    try {
+        notificationModal.addEventListener("click", function (event) {
 
-        setLoading(true);
+            if (event.target === notificationModal) {
+
+                closeNotification();
+
+            }
+
+        });
+
+    }
 
 
-        const response = await fetch(
-            `${API_BASE_URL}/update`,
-            {
+    /* =========================================================
+       CHARACTER COUNT
+    ========================================================= */
 
-                method: "PUT",
+    if (notificationMessage && characterCount) {
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        notificationMessage.addEventListener("input", function () {
 
-                body: JSON.stringify(notification)
+            characterCount.textContent =
+                notificationMessage.value.length;
+
+        });
+
+    }
+
+
+    /* =========================================================
+       SEND NOTIFICATION
+    ========================================================= */
+
+    if (notificationForm) {
+
+        notificationForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const recipient =
+                document.getElementById("recipient").value;
+
+            const notificationType =
+                document.getElementById("notificationType").value;
+
+            const message =
+                document.getElementById("notificationMessage").value.trim();
+
+
+            /* Validate form */
+
+            if (!recipient ||
+                !notificationType ||
+                !message) {
+
+                alert("Please complete all required fields.");
+
+                return;
+            }
+
+
+            /* Generate a temporary notification ID */
+
+            const notificationId =
+                "NT" + Date.now();
+
+
+            /* Current date */
+
+            const currentDate =
+                new Date().toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                });
+
+
+            /* Get recipient name */
+
+            const recipientSelect =
+                document.getElementById("recipient");
+
+            const recipientName =
+                recipientSelect.options[
+                    recipientSelect.selectedIndex
+                ].text;
+
+
+            /* Get notification type name */
+
+            const typeSelect =
+                document.getElementById("notificationType");
+
+            const typeName =
+                typeSelect.options[
+                    typeSelect.selectedIndex
+                ].text;
+
+
+            /* Add notification to table */
+
+            addNotificationToTable(
+                notificationId,
+                recipientName,
+                recipient,
+                typeName,
+                notificationType,
+                currentDate,
+                message
+            );
+
+
+            /* Update statistics */
+
+            updateStatistics(notificationType);
+
+
+            /* Close modal */
+
+            closeNotification();
+
+
+            /* Success message */
+
+            alert("Notification sent successfully!");
+
+        });
+
+    }
+
+
+    /* =========================================================
+       ADD NOTIFICATION TO TABLE
+    ========================================================= */
+
+    function addNotificationToTable(
+        notificationId,
+        recipientName,
+        recipientId,
+        typeName,
+        typeValue,
+        date,
+        message
+    ) {
+
+        if (!notificationTableBody) {
+            return;
+        }
+
+
+        /* Determine icon */
+
+        let icon = "fa-bell";
+
+        if (typeValue === "booking") {
+            icon = "fa-calendar-check";
+        }
+
+        else if (typeValue === "maintenance") {
+            icon = "fa-screwdriver-wrench";
+        }
+
+        else if (typeValue === "system") {
+            icon = "fa-circle-info";
+        }
+
+        else if (typeValue === "reminder") {
+            icon = "fa-clock";
+        }
+
+        else if (typeValue === "announcement") {
+            icon = "fa-bullhorn";
+        }
+
+
+        /* Create row */
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="notification-message">
+
+                    <div class="notification-row-icon ${typeValue}-icon">
+
+                        <i class="fa-solid ${icon}"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            New ${typeName} Notification
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(message)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="recipient">
+
+                    <div class="recipient-avatar">
+                        ${getInitials(recipientName)}
+                    </div>
+
+                    <span>
+                        ${escapeHTML(recipientName)}
+                    </span>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="type-badge ${typeValue}">
+                    ${escapeHTML(typeName)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="date">
+                    ${date}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                        class="action-btn view-btn"
+                        title="View notification"
+                        data-title="New ${escapeHTML(typeName)} Notification"
+                        data-recipient="${escapeHTML(recipientName)}"
+                        data-type="${escapeHTML(typeName)}"
+                        data-date="${date}"
+                        data-message="${escapeHTML(message)}">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        title="Delete notification">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        `;
+
+
+        /*
+         * Insert the newest notification
+         * at the top of the table.
+         */
+
+        notificationTableBody.prepend(row);
+
+
+        /*
+         * Attach buttons to the new row.
+         */
+
+        attachRowButtons(row);
+
+    }
+
+
+    /* =========================================================
+       VIEW + DELETE BUTTONS
+    ========================================================= */
+
+    function attachRowButtons(row) {
+
+        const viewButton =
+            row.querySelector(".view-btn");
+
+        const deleteButton =
+            row.querySelector(".delete-btn");
+
+
+        /* VIEW */
+
+        if (viewButton) {
+
+            viewButton.addEventListener("click", function () {
+
+                const title =
+                    this.dataset.title;
+
+                const recipient =
+                    this.dataset.recipient;
+
+                const type =
+                    this.dataset.type;
+
+                const date =
+                    this.dataset.date;
+
+                const message =
+                    this.dataset.message;
+
+
+                document.getElementById(
+                    "viewNotificationTitle"
+                ).textContent = title;
+
+
+                document.getElementById(
+                    "viewRecipient"
+                ).textContent = recipient;
+
+
+                document.getElementById(
+                    "viewType"
+                ).textContent = type;
+
+
+                document.getElementById(
+                    "viewDate"
+                ).textContent = date;
+
+
+                document.getElementById(
+                    "viewMessage"
+                ).textContent = message;
+
+
+                viewNotificationModal.classList.add("active");
+
+                document.body.classList.add("modal-open");
+
+            });
+
+        }
+
+
+        /* DELETE */
+
+        if (deleteButton) {
+
+            deleteButton.addEventListener(
+                "click",
+                function () {
+
+                    const confirmed =
+                        confirm(
+                            "Are you sure you want to delete this notification?"
+                        );
+
+
+                    if (confirmed) {
+
+                        row.remove();
+
+                        updateTotalCount(-1);
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       ATTACH BUTTONS TO EXISTING NOTIFICATIONS
+    ========================================================= */
+
+    if (notificationTableBody) {
+
+        const rows =
+            notificationTableBody.querySelectorAll("tr");
+
+        rows.forEach(function (row) {
+
+            attachRowButtons(row);
+
+        });
+
+    }
+
+
+    /* =========================================================
+       CLOSE VIEW MODAL
+    ========================================================= */
+
+    if (closeViewModal) {
+
+        closeViewModal.addEventListener(
+            "click",
+            function () {
+
+                viewNotificationModal.classList.remove("active");
+
+                document.body.classList.remove("modal-open");
 
             }
         );
 
-
-        if (!response.ok) {
-
-            const errorMessage =
-                await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
-
-
-        const updatedNotification =
-            await response.json();
-
-
-        showStatus(
-            "Notification updated successfully.",
-            "success"
-        );
-
-
-        displayNotificationDetails(
-            updatedNotification
-        );
-
-
-        clearForm();
-
-
-    } catch (error) {
-
-        console.error(
-            "Error updating notification:",
-            error
-        );
-
-
-        showStatus(
-            "Unable to update notification: " +
-            error.message,
-            "error"
-        );
-
-
-    } finally {
-
-        setLoading(false);
-
-    }
-
-}
-
-/* =========================================================
-   DETAIL ACTION BUTTONS
-========================================================= */
-
-editNotificationButton.addEventListener(
-    "click",
-    async () => {
-
-        const id =
-            detailNotificationId.textContent.trim();
-
-
-        if (!id || id === "-") {
-
-            showStatus(
-                "No notification selected.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        await editNotification(id);
-
-    }
-);
-
-
-deleteNotificationButton.addEventListener(
-    "click",
-    async () => {
-
-        const id =
-            detailNotificationId.textContent.trim();
-
-
-        if (!id || id === "-") {
-
-            showStatus(
-                "No notification selected.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        await deleteNotification(id);
-
-    }
-);
-
-
-/* =========================================================
-   DELETE NOTIFICATION
-========================================================= */
-
-async function deleteNotification(id) {
-
-    const confirmed = confirm(
-        `Are you sure you want to delete notification "${id}"?`
-    );
-
-
-    if (!confirmed) {
-        return;
     }
 
 
-    try {
+    /* =========================================================
+       CLOSE VIEW MODAL WHEN CLICKING OUTSIDE
+    ========================================================= */
 
-        const response = await fetch(
-            `${API_BASE_URL}/delete/${encodeURIComponent(id)}`,
-            {
+    if (viewNotificationModal) {
 
-                method: "DELETE"
+        viewNotificationModal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === viewNotificationModal) {
+
+                    viewNotificationModal.classList.remove("active");
+
+                    document.body.classList.remove("modal-open");
+
+                }
 
             }
         );
 
-
-        if (!response.ok) {
-
-            const errorMessage =
-                await getErrorMessage(response);
-
-            throw new Error(errorMessage);
-
-        }
+    }
 
 
-        const deleted =
-            await response.json();
+    /* =========================================================
+       SEARCH NOTIFICATIONS
+    ========================================================= */
 
+    if (notificationSearch) {
 
-        if (deleted === true) {
-
-            showStatus(
-                "Notification deleted successfully.",
-                "success"
-            );
-
-        } else {
-
-            showStatus(
-                "Notification could not be deleted.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        notificationDetails.classList.add(
-            "hidden"
-        );
-
-
-        if (editingNotificationId === id) {
-
-            clearForm();
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Error deleting notification:",
-            error
-        );
-
-
-        showStatus(
-            "Unable to delete notification: " +
-            error.message,
-            "error"
+        notificationSearch.addEventListener(
+            "input",
+            filterNotifications
         );
 
     }
 
-}
 
+    /* =========================================================
+       FILTER BY TYPE
+    ========================================================= */
 
-/* =========================================================
-   CLEAR FORM
-========================================================= */
+    if (notificationTypeFilter) {
 
-clearButton.addEventListener(
-    "click",
-    () => {
-
-        clearForm();
+        notificationTypeFilter.addEventListener(
+            "change",
+            filterNotifications
+        );
 
     }
-);
 
 
-function clearForm() {
+    function filterNotifications() {
 
-    notificationForm.reset();
+        const searchTerm =
+            notificationSearch.value
+                .toLowerCase()
+                .trim();
 
-
-    editingNotificationId = null;
-
-
-    formTitle.textContent =
-        "Create a Notification";
-
-
-    submitButton.textContent =
-        "Create Notification";
+        const selectedType =
+            notificationTypeFilter.value
+                .toLowerCase();
 
 
-    cancelEditButton.classList.add(
-        "hidden"
+        const rows =
+            notificationTableBody.querySelectorAll("tr");
+
+
+        rows.forEach(function (row) {
+
+            const rowText =
+                row.textContent.toLowerCase();
+
+
+            const matchesSearch =
+                rowText.includes(searchTerm);
+
+
+            const badge =
+                row.querySelector(".type-badge");
+
+
+            let matchesType = true;
+
+
+            if (selectedType && badge) {
+
+                matchesType =
+                    badge.classList.contains(selectedType);
+
+            }
+
+
+            if (matchesSearch && matchesType) {
+
+                row.style.display = "";
+
+            }
+
+            else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* =========================================================
+       UPDATE STATISTICS
+    ========================================================= */
+
+    function updateStatistics(type) {
+
+        updateTotalCount(1);
+
+
+        if (sentToday) {
+
+            sentToday.textContent =
+                parseInt(sentToday.textContent) + 1;
+
+        }
+
+
+        if (type === "booking" && bookingNotifications) {
+
+            bookingNotifications.textContent =
+                parseInt(
+                    bookingNotifications.textContent
+                ) + 1;
+
+        }
+
+
+        if (type === "system" && systemNotifications) {
+
+            systemNotifications.textContent =
+                parseInt(
+                    systemNotifications.textContent
+                ) + 1;
+
+        }
+
+    }
+
+
+    function updateTotalCount(amount) {
+
+        if (totalNotifications) {
+
+            totalNotifications.textContent =
+                parseInt(
+                    totalNotifications.textContent
+                ) + amount;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       GET INITIALS
+    ========================================================= */
+
+    function getInitials(name) {
+
+        if (!name) {
+            return "U";
+        }
+
+
+        if (name === "All Users") {
+            return "AL";
+        }
+
+
+        const words =
+            name.trim().split(" ");
+
+
+        if (words.length === 1) {
+
+            return words[0]
+                .substring(0, 2)
+                .toUpperCase();
+
+        }
+
+
+        return (
+            words[0].charAt(0) +
+            words[words.length - 1].charAt(0)
+        ).toUpperCase();
+
+    }
+
+
+    /* =========================================================
+       SECURITY HELPER
+       Prevent HTML being inserted directly from user input.
+    ========================================================= */
+
+    function escapeHTML(value) {
+
+        if (!value) {
+            return "";
+        }
+
+
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =========================================================
+       ESC KEY CLOSES MODALS
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+
+                if (
+                    notificationModal &&
+                    notificationModal.classList.contains("active")
+                ) {
+
+                    closeNotification();
+
+                }
+
+
+                if (
+                    viewNotificationModal &&
+                    viewNotificationModal.classList.contains("active")
+                ) {
+
+                    viewNotificationModal.classList.remove("active");
+
+                    document.body.classList.remove("modal-open");
+
+                }
+
+            }
+
+        }
     );
 
 
-    setDefaultDate();
+    /* =========================================================
+       MOBILE SIDEBAR
+    ========================================================= */
 
-}
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
 
-
-/* =========================================================
-   CANCEL EDIT
-========================================================= */
-
-cancelEditButton.addEventListener(
-    "click",
-    () => {
-
-        clearForm();
+    const sidebar =
+        document.querySelector(".sidebar");
 
 
-        showStatus(
-            "Edit cancelled.",
-            "warning"
+    if (mobileMenuBtn && sidebar) {
+
+        mobileMenuBtn.addEventListener(
+            "click",
+            function () {
+
+                sidebar.classList.toggle("open");
+
+            }
         );
 
     }
-);
 
 
-/* =========================================================
-   STATUS MESSAGE
-========================================================= */
-
-function showStatus(message, type) {
-
-    statusText.textContent =
-        message;
-
-
-    statusMessage.className =
-        `status-message ${type}`;
-
-
-    statusMessage.classList.remove(
-        "hidden"
-    );
-
-
-    setTimeout(() => {
-
-        statusMessage.classList.add(
-            "hidden"
-        );
-
-    }, 4000);
-
-}
-
-
-/* =========================================================
-   LOADING STATE
-========================================================= */
-
-function setLoading(isLoading) {
-
-    if (isLoading) {
-
-        submitButton.disabled = true;
-
-
-        submitButton.textContent =
-            editingNotificationId
-                ? "Updating..."
-                : "Creating...";
-
-    } else {
-
-        submitButton.disabled = false;
-
-
-        submitButton.textContent =
-            editingNotificationId
-                ? "Update Notification"
-                : "Create Notification";
-
-    }
-
-}
-
-
-/* =========================================================
-   ERROR HANDLING
-========================================================= */
-
-async function getErrorMessage(response) {
-
-    try {
-
-        const data =
-            await response.json();
-
-
-        if (data.message) {
-            return data.message;
-        }
-
-
-        if (data.error) {
-            return data.error;
-        }
-
-
-        return `Request failed with status ${response.status}.`;
-
-
-    } catch {
-
-        return `Request failed with status ${response.status}.`;
-
-    }
-
-}
+});

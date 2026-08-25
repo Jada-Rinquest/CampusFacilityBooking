@@ -47,6 +47,21 @@ public class LoginController {
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(service.delete(id));
     }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<Login> authenticate(@RequestBody LoginRequest request) {
+
+        Login login = service.authenticate(
+                request.getUsername(),
+                request.getPassword()
+        );
+
+        if (login == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        return ResponseEntity.ok(login);
+    }
 }
 
 class LoginRequest {
