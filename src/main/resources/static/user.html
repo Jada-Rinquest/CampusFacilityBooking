@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>User Management | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- User CSS -->
+    <link rel="stylesheet" href="user.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <!-- Logo -->
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building-columns"></i>
+
+        <span>CampusBook</span>
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="booking.html">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <span>Bookings</span>
+
+        </a>
+
+
+        <a href="facility.html">
+
+            <i class="fa-solid fa-building"></i>
+
+            <span>Facilities</span>
+
+        </a>
+
+
+        <a href="equipment.html">
+
+            <i class="fa-solid fa-desktop"></i>
+
+            <span>Equipment</span>
+
+        </a>
+
+
+        <a href="maintenance.html">
+
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+            <span>Maintenance</span>
+
+        </a>
+
+
+        <a href="notification.html">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>Notifications</span>
+
+        </a>
+
+
+        <a href="user.html" class="active">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Users</span>
+
+        </a>
+
+
+        <a href="invoice.html">
+
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+
+            <span>Invoices</span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- Bottom Navigation -->
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>Profile</span>
+
+        </a>
+
+
+        <a href="index.html" class="logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    type="button">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>User Management</h1>
+
+                <p>
+                    Create, search, update and manage system users.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Topbar Actions -->
+
+        <div class="topbar-actions">
+
+            <button
+                    class="notification-icon"
+                    type="button"
+                    title="Notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <!-- Logged-in User -->
+
+            <a href="profile.html" class="staff-profile">
+
+                <div class="staff-avatar">
+
+                    <span>
+                        ST
+                    </span>
+
+                </div>
+
+
+                <div class="staff-info">
+
+                    <strong>
+                        Staff Member
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+
+    <section class="user-page">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    USER MANAGEMENT
+
+                </span>
+
+
+                <h2>
+                    Manage Users
+                </h2>
+
+
+                <p>
+                    Create and manage users registered on the
+                    Campus Facility Booking System.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             USER FORM CARD
+        ================================================== -->
+
+        <div class="content-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        User Information
+                    </h3>
+
+                    <p>
+                        Enter the user's details below.
+                    </p>
+
+                </div>
+
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 USER FORM
+            ================================================== -->
+
+            <form id="userForm">
+
+
+                <div class="form-grid">
+
+
+                    <!-- USER ID -->
+
+                    <div class="form-group">
+
+                        <label for="userId">
+
+                            User ID
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            <input
+                                    type="text"
+                                    id="userId"
+                                    name="userId"
+                                    placeholder="e.g. U001"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="form-group">
+
+                        <label for="firstName">
+
+                            First Name
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    placeholder="Enter first name"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="form-group">
+
+                        <label for="lastName">
+
+                            Last Name
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    placeholder="Enter last name"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+
+                            Email Address
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="e.g. user@cput.ac.za"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- DATE OF BIRTH -->
+
+                    <div class="form-group">
+
+                        <label for="dateOfBirth">
+
+                            Date of Birth
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-calendar"></i>
+
+                            <input
+                                    type="date"
+                                    id="dateOfBirth"
+                                    name="dateOfBirth"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- DEPARTMENT ID -->
+
+                    <div class="form-group">
+
+                        <label for="departmentId">
+
+                            Department ID
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-building"></i>
+
+                            <input
+                                    type="text"
+                                    id="departmentId"
+                                    name="departmentId"
+                                    placeholder="e.g. D001"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     FORM BUTTONS
+                ================================================== -->
+
+                <div class="form-actions">
+
+
+                    <button
+                            type="submit"
+                            class="primary-button"
+                            id="createButton">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Create User
+
+                    </button>
+
+
+                    <button
+                            type="button"
+                            class="secondary-button"
+                            id="readButton">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        Search User
+
+                    </button>
+
+
+                    <button
+                            type="button"
+                            class="secondary-button"
+                            id="updateButton">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Update User
+
+                    </button>
+
+
+                    <button
+                            type="button"
+                            class="delete-button"
+                            id="deleteButton">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Delete User
+
+                    </button>
+
+
+                    <button
+                            type="reset"
+                            class="clear-button"
+                            id="clearButton">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Clear
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MESSAGE
+        ================================================== -->
+
+        <div
+                id="userMessage"
+                class="message"
+                role="alert">
+
+        </div>
+
+
+
+        <!-- =================================================
+             USER RESULT
+        ================================================== -->
+
+        <div class="content-card result-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        User Information
+                    </h3>
+
+                    <p>
+                        Details of the selected user.
+                    </p>
+
+                </div>
+
+
+                <div class="card-icon">
+
+                    <i class="fa-solid fa-address-card"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULT CONTENT
+            ================================================== -->
+
+            <div
+                    id="userResult"
+                    class="user-result">
+
+                <div class="empty-result">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <h4>
+                        No User Selected
+                    </h4>
+
+                    <p>
+                        Search for a user using their User ID
+                        to display their information here.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="user.js"></script>
+
+</body>
+
+</html>

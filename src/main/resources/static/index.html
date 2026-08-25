@@ -1,105 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Login | Campus Facility Booking</title>
 
+    <!-- Login CSS -->
     <link rel="stylesheet" href="style.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
+
 
 <body>
 
 <div class="login-page">
 
-    <!-- LEFT SIDE -->
+
+    <!-- =========================================================
+         LEFT SIDE - BRANDING
+    ========================================================== -->
+
     <section class="login-branding">
 
         <div class="branding-content">
 
+
+            <!-- Logo -->
+
             <div class="logo">
+
                 <i class="fa-solid fa-building-columns"></i>
+
             </div>
 
-            <span class="eyebrow">CAMPUS FACILITY BOOKING</span>
+
+            <!-- Eyebrow -->
+
+            <span class="eyebrow">
+                CAMPUS FACILITY BOOKING
+            </span>
+
+
+            <!-- Heading -->
 
             <h1>
                 Manage your campus
                 <span>facilities with ease.</span>
             </h1>
 
+
+            <!-- Description -->
+
             <p>
                 Book facilities, manage equipment, and keep track of
                 your campus activities all in one place.
             </p>
 
+
+            <!-- =================================================
+                 FEATURES
+            ================================================== -->
+
             <div class="branding-features">
 
+
+                <!-- Feature 1 -->
+
                 <div class="feature">
+
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-calendar-check"></i>
+
                     </div>
 
                     <div>
-                        <strong>Easy Booking</strong>
-                        <span>Reserve facilities quickly and efficiently.</span>
+
+                        <strong>
+                            Easy Booking
+                        </strong>
+
+                        <span>
+                            Reserve facilities quickly and efficiently.
+                        </span>
+
                     </div>
+
                 </div>
 
+
+                <!-- Feature 2 -->
+
                 <div class="feature">
+
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-boxes-stacked"></i>
+
                     </div>
 
                     <div>
-                        <strong>Equipment Management</strong>
-                        <span>Keep track of campus equipment and availability.</span>
+
+                        <strong>
+                            Equipment Management
+                        </strong>
+
+                        <span>
+                            Keep track of campus equipment and availability.
+                        </span>
+
                     </div>
+
                 </div>
 
+
+                <!-- Feature 3 -->
+
                 <div class="feature">
+
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-bell"></i>
+
                     </div>
 
                     <div>
-                        <strong>Stay Updated</strong>
-                        <span>Receive notifications about your bookings.</span>
+
+                        <strong>
+                            Stay Updated
+                        </strong>
+
+                        <span>
+                            Receive notifications about your bookings.
+                        </span>
+
                     </div>
+
                 </div>
 
             </div>
 
         </div>
 
+
+        <!-- Branding Footer -->
+
         <div class="branding-footer">
-            <span>Campus Facility & Equipment Booking System</span>
+
+            <span>
+                Campus Facility & Equipment Booking System
+            </span>
+
         </div>
 
     </section>
 
 
-    <!-- RIGHT SIDE -->
+
+    <!-- =========================================================
+         RIGHT SIDE - LOGIN
+    ========================================================== -->
+
     <section class="login-section">
+
 
         <div class="login-card">
 
+
+            <!-- =================================================
+                 MOBILE LOGO
+            ================================================== -->
+
             <div class="mobile-logo">
+
                 <div class="logo">
+
                     <i class="fa-solid fa-building-columns"></i>
+
                 </div>
+
             </div>
+
+
+
+            <!-- =================================================
+                 LOGIN HEADER
+            ================================================== -->
 
             <div class="login-header">
 
-                <span class="login-eyebrow">WELCOME BACK</span>
+                <span class="login-eyebrow">
+                    WELCOME BACK
+                </span>
 
-                <h2>Sign in</h2>
+                <h2>
+                    Sign in
+                </h2>
 
                 <p>
                     Enter your credentials to access your account.
@@ -108,10 +211,18 @@
             </div>
 
 
-            <!-- LOGIN FORM -->
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
             <form id="loginForm">
 
-                <!-- USERNAME -->
+
+                <!-- =================================================
+                     USERNAME
+                ================================================== -->
+
                 <div class="form-group">
 
                     <label for="username">
@@ -132,12 +243,19 @@
 
                     </div>
 
-                    <small class="error-message" id="usernameError"></small>
+                    <small
+                            class="error-message"
+                            id="usernameError">
+                    </small>
 
                 </div>
 
 
-                <!-- PASSWORD -->
+
+                <!-- =================================================
+                     PASSWORD
+                ================================================== -->
+
                 <div class="form-group">
 
                     <div class="password-label">
@@ -146,11 +264,14 @@
                             Password
                         </label>
 
-                        <a href="#" id="forgotPassword">
+                        <a
+                                href="#"
+                                id="forgotPassword">
                             Forgot password?
                         </a>
 
                     </div>
+
 
                     <div class="input-wrapper">
 
@@ -164,23 +285,34 @@
                                 autocomplete="current-password"
                         >
 
+
+                        <!-- Password Toggle -->
+
                         <button
                                 type="button"
                                 class="password-toggle"
                                 id="togglePassword"
-                                aria-label="Show password"
-                        >
+                                aria-label="Show password">
+
                             <i class="fa-solid fa-eye"></i>
+
                         </button>
 
                     </div>
 
-                    <small class="error-message" id="passwordError"></small>
+                    <small
+                            class="error-message"
+                            id="passwordError">
+                    </small>
 
                 </div>
 
 
-                <!-- REMEMBER ME -->
+
+                <!-- =================================================
+                     REMEMBER ME
+                ================================================== -->
+
                 <div class="login-options">
 
                     <label class="remember-me">
@@ -190,30 +322,43 @@
                                 id="rememberMe"
                         >
 
-                        <span>Remember me</span>
+                        <span>
+                            Remember me
+                        </span>
 
                     </label>
 
                 </div>
 
 
-                <!-- GENERAL ERROR -->
+
+                <!-- =================================================
+                     LOGIN ERROR
+                ================================================== -->
+
                 <div
                         class="login-error"
                         id="loginError"
-                        role="alert"
-                >
+                        role="alert">
+
                     <i class="fa-solid fa-circle-exclamation"></i>
-                    <span>Invalid username or password.</span>
+
+                    <span>
+                        Invalid username or password.
+                    </span>
+
                 </div>
 
 
-                <!-- LOGIN BUTTON -->
+
+                <!-- =================================================
+                     LOGIN BUTTON
+                ================================================== -->
+
                 <button
                         type="submit"
                         class="login-button"
-                        id="loginButton"
-                >
+                        id="loginButton">
 
                     <span id="loginButtonText">
                         Sign In
@@ -221,13 +366,40 @@
 
                     <i
                             class="fa-solid fa-arrow-right"
-                            id="loginButtonIcon"
-                    ></i>
+                            id="loginButtonIcon">
+                    </i>
 
                 </button>
 
             </form>
 
+
+
+            <!-- =================================================
+                 REGISTER OPTION
+            ================================================== -->
+
+            <div class="register-option">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="register.html">
+
+                    Create an account
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 LOGIN FOOTER
+            ================================================== -->
 
             <div class="login-footer">
 
@@ -241,13 +413,21 @@
 
             </div>
 
+
         </div>
 
     </section>
 
 </div>
 
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
