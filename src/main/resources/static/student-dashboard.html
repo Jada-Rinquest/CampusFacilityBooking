@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Student Dashboard CSS -->
+    <link rel="stylesheet" href="student-dashboard.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <!-- Logo -->
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building-columns"></i>
+
+        <span>CampusBook</span>
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <nav class="sidebar-nav">
+
+        <a href="student-dashboard.html" class="active">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="student-booking.html">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <span>My Bookings</span>
+
+        </a>
+
+
+        <a href="student-facilities.html">
+
+            <i class="fa-solid fa-building"></i>
+
+            <span>Facilities</span>
+
+        </a>
+
+
+        <a href="student-notifications.html">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>Notifications</span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- Bottom Navigation -->
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>My Profile</span>
+
+        </a>
+
+
+        <a href="index.html" class="logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <!-- Mobile menu -->
+
+            <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    type="button">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>Student Dashboard</h1>
+
+                <p>
+                    Manage your campus facility bookings.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Topbar actions -->
+
+        <div class="topbar-actions">
+
+
+            <!-- Notifications -->
+
+            <a
+                    href="student-notifications.html"
+                    class="notification-icon"
+                    title="Notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </a>
+
+
+            <!-- Student profile -->
+
+            <a
+                    href="profile.html"
+                    class="student-profile">
+
+                <div class="student-avatar">
+
+                    <span id="topbarInitials">
+                        ST
+                    </span>
+
+                </div>
+
+
+                <div class="student-info">
+
+                    <strong id="topbarName">
+                        Student
+                    </strong>
+
+                    <span>
+                        Student
+                    </span>
+
+                </div>
+
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         DASHBOARD CONTENT
+    ====================================================== -->
+
+    <section class="dashboard">
+
+
+        <!-- =================================================
+             WELCOME SECTION
+        ================================================== -->
+
+        <div class="welcome-section">
+
+            <div class="welcome-content">
+
+                <span class="welcome-eyebrow">
+
+                    <i class="fa-solid fa-hand-sparkles"></i>
+
+                    STUDENT PORTAL
+
+                </span>
+
+
+                <h2>
+                    Welcome back,
+                    <span id="welcomeName">
+                        Student
+                    </span>
+                </h2>
+
+
+                <p>
+                    Manage your facility bookings, check
+                    availability and stay up to date with
+                    campus notifications.
+                </p>
+
+            </div>
+
+
+            <!-- Quick booking button -->
+
+            <a
+                    href="student-booking.html"
+                    class="primary-button">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Book a Facility
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SUMMARY CARDS
+        ================================================== -->
+
+        <div class="summary-grid">
+
+
+            <!-- Upcoming bookings -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-calendar-check"></i>
+
+                </div>
+
+
+                <div class="summary-content">
+
+                    <span>
+                        Upcoming Bookings
+                    </span>
+
+                    <strong id="upcomingBookings">
+                        2
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Total bookings -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                </div>
+
+
+                <div class="summary-content">
+
+                    <span>
+                        Total Bookings
+                    </span>
+
+                    <strong id="totalBookings">
+                        8
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Notifications -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                </div>
+
+
+                <div class="summary-content">
+
+                    <span>
+                        Notifications
+                    </span>
+
+                    <strong id="unreadNotifications">
+                        3
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Available facilities -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-building"></i>
+
+                </div>
+
+
+                <div class="summary-content">
+
+                    <span>
+                        Available Facilities
+                    </span>
+
+                    <strong id="availableFacilities">
+                        24
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MAIN DASHBOARD GRID
+        ================================================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- =================================================
+                 MY BOOKINGS
+            ================================================== -->
+
+            <section class="dashboard-panel bookings-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="section-label">
+                            BOOKINGS
+                        </p>
+
+                        <h3>
+                            My Upcoming Bookings
+                        </h3>
+
+                    </div>
+
+
+                    <a href="student-booking.html">
+                        View All
+                    </a>
+
+                </div>
+
+
+                <!-- Booking item -->
+
+                <div class="booking-item">
+
+                    <div class="booking-date">
+
+                        <span>
+                            SEP
+                        </span>
+
+                        <strong>
+                            03
+                        </strong>
+
+                    </div>
+
+
+                    <div class="booking-info">
+
+                        <strong>
+                            Computer Lab 2
+                        </strong>
+
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            10:00 - 12:00
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            Engineering Building
+                        </span>
+
+                    </div>
+
+
+                    <span class="status-badge confirmed">
+                        Confirmed
+                    </span>
+
+                </div>
+
+
+
+                <!-- Booking item -->
+
+                <div class="booking-item">
+
+                    <div class="booking-date">
+
+                        <span>
+                            SEP
+                        </span>
+
+                        <strong>
+                            08
+                        </strong>
+
+                    </div>
+
+
+                    <div class="booking-info">
+
+                        <strong>
+                            Study Room 204
+                        </strong>
+
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            14:00 - 16:00
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            Library
+                        </span>
+
+                    </div>
+
+
+                    <span class="status-badge pending">
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <!-- Empty state -->
+
+                <div
+                        class="empty-bookings"
+                        id="emptyBookings"
+                        style="display: none;">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <p>
+                        You don't have any upcoming bookings.
+                    </p>
+
+                    <a href="student-booking.html">
+                        Book a Facility
+                    </a>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <section class="dashboard-panel quick-actions-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="section-label">
+                            QUICK ACCESS
+                        </p>
+
+                        <h3>
+                            What would you like to do?
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <!-- Book -->
+
+                    <a
+                            href="student-booking.html"
+                            class="quick-action">
+
+                        <div class="quick-action-icon">
+
+                            <i class="fa-solid fa-calendar-plus"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Book a Facility
+                            </strong>
+
+                            <span>
+                                Find and book an available facility.
+                            </span>
+
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+
+
+                    <!-- Facilities -->
+
+                    <a
+                            href="student-facilities.html"
+                            class="quick-action">
+
+                        <div class="quick-action-icon">
+
+                            <i class="fa-solid fa-building"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Browse Facilities
+                            </strong>
+
+                            <span>
+                                View available campus facilities.
+                            </span>
+
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+
+
+                    <!-- Notifications -->
+
+                    <a
+                            href="student-notifications.html"
+                            class="quick-action">
+
+                        <div class="quick-action-icon">
+
+                            <i class="fa-solid fa-bell"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Notifications
+                            </strong>
+
+                            <span>
+                                View your latest notifications.
+                            </span>
+
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+
+
+                    <!-- Profile -->
+
+                    <a
+                            href="profile.html"
+                            class="quick-action">
+
+                        <div class="quick-action-icon">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                My Profile
+                            </strong>
+
+                            <span>
+                                View your account information.
+                            </span>
+
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RECENT NOTIFICATIONS
+        ================================================== -->
+
+        <section class="dashboard-panel notifications-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="section-label">
+                        UPDATES
+                    </p>
+
+                    <h3>
+                        Recent Notifications
+                    </h3>
+
+                </div>
+
+
+                <a href="student-notifications.html">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="notification-list">
+
+
+                <!-- Notification -->
+
+                <div class="notification-item">
+
+                    <div class="notification-icon booking">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                    </div>
+
+
+                    <div class="notification-content">
+
+                        <strong>
+                            Booking Approved
+                        </strong>
+
+                        <p>
+                            Your booking for Computer Lab 2
+                            has been approved.
+                        </p>
+
+                        <span>
+                            Today, 10:32
+                        </span>
+
+                    </div>
+
+
+                    <span class="unread-dot"></span>
+
+                </div>
+
+
+
+                <!-- Notification -->
+
+                <div class="notification-item">
+
+                    <div class="notification-icon reminder">
+
+                        <i class="fa-solid fa-clock"></i>
+
+                    </div>
+
+
+                    <div class="notification-content">
+
+                        <strong>
+                            Booking Reminder
+                        </strong>
+
+                        <p>
+                            Your Computer Lab 2 booking is
+                            tomorrow at 10:00.
+                        </p>
+
+                        <span>
+                            Yesterday, 15:20
+                        </span>
+
+                    </div>
+
+
+                    <span class="unread-dot"></span>
+
+                </div>
+
+
+
+                <!-- Notification -->
+
+                <div class="notification-item">
+
+                    <div class="notification-icon system">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                    </div>
+
+
+                    <div class="notification-content">
+
+                        <strong>
+                            System Maintenance
+                        </strong>
+
+                        <p>
+                            CampusBook will undergo scheduled
+                            maintenance tonight.
+                        </p>
+
+                        <span>
+                            24 Aug 2026
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FACILITY SHORTCUT
+        ================================================== -->
+
+        <section class="facility-banner">
+
+
+            <div class="facility-banner-icon">
+
+                <i class="fa-solid fa-building"></i>
+
+            </div>
+
+
+            <div class="facility-banner-content">
+
+                <span>
+                    FIND A SPACE
+                </span>
+
+                <h3>
+                    Need somewhere to work or study?
+                </h3>
+
+                <p>
+                    Browse available campus facilities and
+                    find the perfect space for your next session.
+                </p>
+
+            </div>
+
+
+            <a
+                    href="student-facilities.html"
+                    class="secondary-button">
+
+                Browse Facilities
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </section>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="student-dashboard.js"></script>
+
+</body>
+
+</html>
