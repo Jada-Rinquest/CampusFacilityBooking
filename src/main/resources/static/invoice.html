@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Invoices | Campus Facility Booking</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Invoice CSS -->
+  <link rel="stylesheet" href="invoice.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+  <!-- Logo -->
+
+  <div class="sidebar-logo">
+
+    <i class="fa-solid fa-building-columns"></i>
+
+    <span>CampusBooking</span>
+
+  </div>
+
+
+  <!-- Navigation -->
+
+  <nav class="sidebar-nav">
+
+    <a href="staff-dashboard.html">
+
+      <i class="fa-solid fa-chart-line"></i>
+
+      <span>Dashboard</span>
+
+    </a>
+
+
+    <a href="booking.html">
+
+      <i class="fa-solid fa-calendar-check"></i>
+
+      <span>Bookings</span>
+
+    </a>
+
+
+    <a href="facility.html">
+
+      <i class="fa-solid fa-building"></i>
+
+      <span>Facilities</span>
+
+    </a>
+
+
+    <a href="equipment.html">
+
+      <i class="fa-solid fa-desktop"></i>
+
+      <span>Equipment</span>
+
+    </a>
+
+
+    <a href="maintenance.html">
+
+      <i class="fa-solid fa-screwdriver-wrench"></i>
+
+      <span>Maintenance</span>
+
+    </a>
+
+
+    <a href="notification.html">
+
+      <i class="fa-solid fa-bell"></i>
+
+      <span>Notifications</span>
+
+    </a>
+
+
+    <a href="user.html">
+
+      <i class="fa-solid fa-users"></i>
+
+      <span>Users</span>
+
+    </a>
+
+
+    <a href="invoice.html" class="active">
+
+      <i class="fa-solid fa-file-invoice-dollar"></i>
+
+      <span>Invoices</span>
+
+    </a>
+
+  </nav>
+
+
+  <!-- Bottom Navigation -->
+
+  <div class="sidebar-bottom">
+
+    <a href="profile.html">
+
+      <i class="fa-solid fa-user"></i>
+
+      <span>Profile</span>
+
+    </a>
+
+
+    <a href="index.html" class="logout">
+
+      <i class="fa-solid fa-right-from-bracket"></i>
+
+      <span>Logout</span>
+
+    </a>
+
+  </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+  <!-- =====================================================
+       TOP BAR
+  ====================================================== -->
+
+  <header class="topbar">
+
+    <div class="topbar-title">
+
+      <button
+              class="mobile-menu-btn"
+              id="mobileMenuBtn"
+              type="button">
+
+        <i class="fa-solid fa-bars"></i>
+
+      </button>
+
+
+      <div>
+
+        <h1>Invoice Management</h1>
+
+        <p>
+          Manage booking invoices and payments.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- Topbar Actions -->
+
+    <div class="topbar-actions">
+
+      <button
+              class="notification-icon"
+              type="button"
+              title="Notifications"
+              onclick="window.location.href='notification.html'">
+
+        <i class="fa-solid fa-bell"></i>
+
+        <span class="notification-count">
+                    3
+                </span>
+
+      </button>
+
+
+      <!-- Logged-in User -->
+
+      <a href="profile.html" class="staff-profile">
+
+        <div class="staff-avatar">
+
+                    <span>
+                        ST
+                    </span>
+
+        </div>
+
+
+        <div class="staff-info">
+
+          <strong>
+            Staff Member
+          </strong>
+
+          <span>
+                        Administrator
+                    </span>
+
+        </div>
+
+      </a>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =====================================================
+       PAGE CONTENT
+  ====================================================== -->
+
+  <section class="invoice-page">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="page-header">
+
+      <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+
+                    FINANCIAL MANAGEMENT
+
+                </span>
+
+
+        <h2>
+          Invoices
+        </h2>
+
+
+        <p>
+          Create, view, update and manage booking
+          invoices and payment records.
+        </p>
+
+      </div>
+
+
+      <button
+              type="button"
+              id="newInvoiceBtn"
+              class="primary-btn">
+
+        <i class="fa-solid fa-plus"></i>
+
+        New Invoice
+
+      </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="invoice-stats">
+
+      <div class="stat-card">
+
+        <div class="stat-icon blue">
+
+          <i class="fa-solid fa-file-invoice"></i>
+
+        </div>
+
+        <div>
+
+          <span>Total Invoices</span>
+
+          <strong id="totalInvoices">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon green">
+
+          <i class="fa-solid fa-circle-check"></i>
+
+        </div>
+
+        <div>
+
+          <span>Paid</span>
+
+          <strong id="paidInvoices">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon orange">
+
+          <i class="fa-solid fa-clock"></i>
+
+        </div>
+
+        <div>
+
+          <span>Pending</span>
+
+          <strong id="pendingInvoices">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-icon red">
+
+          <i class="fa-solid fa-exclamation-circle"></i>
+
+        </div>
+
+        <div>
+
+          <span>Overdue</span>
+
+          <strong id="overdueInvoices">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         CREATE INVOICE FORM
+    ================================================== -->
+
+    <section
+            id="invoiceFormSection"
+            class="invoice-card hidden">
+
+      <div class="card-header">
+
+        <div>
+
+                    <span class="card-eyebrow">
+                        NEW INVOICE
+                    </span>
+
+          <h3 id="formTitle">
+            Create an Invoice
+          </h3>
+
+          <p>
+            Enter the invoice details below.
+          </p>
+
+        </div>
+
+
+        <button
+                type="button"
+                id="closeFormBtn"
+                class="close-btn">
+
+          <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+      </div>
+
+
+      <form id="invoiceForm">
+
+
+        <!-- =========================================
+             INVOICE ID
+        ========================================== -->
+
+        <div class="form-group">
+
+          <label for="invoiceId">
+            Invoice ID
+            <span>*</span>
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-hashtag"></i>
+
+            <input
+                    type="text"
+                    id="invoiceId"
+                    name="invoiceId"
+                    placeholder="e.g. INV001"
+                    required>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             BOOKING ID
+        ========================================== -->
+
+        <div class="form-group">
+
+          <label for="bookingId">
+            Booking ID
+            <span>*</span>
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <select
+                    id="bookingId"
+                    name="bookingId"
+                    required>
+
+              <option value="">
+                Select a booking
+              </option>
+
+              <!-- JavaScript will populate bookings -->
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             AMOUNT
+        ========================================== -->
+
+        <div class="form-group">
+
+          <label for="amount">
+            Amount (ZAR)
+            <span>*</span>
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-money-bill-wave"></i>
+
+            <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    required>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             DUE DATE
+        ========================================== -->
+
+        <div class="form-group">
+
+          <label for="dueDate">
+            Due Date
+            <span>*</span>
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-calendar-day"></i>
+
+            <input
+                    type="date"
+                    id="dueDate"
+                    name="dueDate"
+                    required>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             STATUS
+        ========================================== -->
+
+        <div class="form-group">
+
+          <label for="invoiceStatus">
+            Invoice Status
+            <span>*</span>
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-circle"></i>
+
+            <select
+                    id="invoiceStatus"
+                    name="invoiceStatus"
+                    required>
+
+              <option value="">
+                Select status
+              </option>
+
+              <option value="pending">
+                Pending
+              </option>
+
+              <option value="paid">
+                Paid
+              </option>
+
+              <option value="overdue">
+                Overdue
+              </option>
+
+              <option value="cancelled">
+                Cancelled
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             DESCRIPTION
+        ========================================== -->
+
+        <div class="form-group full-width">
+
+          <label for="description">
+            Description
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="fa-solid fa-align-left"></i>
+
+            <textarea
+                    id="description"
+                    name="description"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Enter invoice description..."></textarea>
+
+          </div>
+
+          <small
+                  id="descriptionCount">
+            0 / 500
+          </small>
+
+        </div>
+
+
+
+        <!-- =========================================
+             ACTIONS
+        ========================================== -->
+
+        <div class="form-actions">
+
+          <button
+                  type="button"
+                  id="cancelInvoiceBtn"
+                  class="secondary-btn">
+
+            Cancel
+
+          </button>
+
+
+          <button
+                  type="submit"
+                  id="submitInvoiceBtn"
+                  class="primary-btn">
+
+            <i class="fa-solid fa-file-invoice"></i>
+
+            Create Invoice
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+
+
+    <!-- =================================================
+         INVOICES LIST
+    ================================================== -->
+
+    <section class="invoice-card">
+
+
+      <!-- Card header -->
+
+      <div class="card-header invoice-list-header">
+
+        <div>
+
+                    <span class="card-eyebrow">
+                        RECORDS
+                    </span>
+
+          <h3>
+            All Invoices
+          </h3>
+
+          <p>
+            View and manage all booking invoices.
+          </p>
+
+        </div>
+
+
+        <button
+                type="button"
+                id="refreshBtn"
+                class="secondary-btn">
+
+          <i class="fa-solid fa-rotate"></i>
+
+          Refresh
+
+        </button>
+
+      </div>
+
+
+
+      <!-- Filters -->
+
+      <div class="invoice-filters">
+
+        <div class="search-box">
+
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input
+                  type="text"
+                  id="invoiceSearch"
+                  placeholder="Search invoices...">
+
+        </div>
+
+
+        <select id="statusFilter">
+
+          <option value="all">
+            All Statuses
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="paid">
+            Paid
+          </option>
+
+          <option value="overdue">
+            Overdue
+          </option>
+
+          <option value="cancelled">
+            Cancelled
+          </option>
+
+        </select>
+
+
+        <select id="dateFilter">
+
+          <option value="all">
+            All Dates
+          </option>
+
+          <option value="today">
+            Today
+          </option>
+
+          <option value="week">
+            This Week
+          </option>
+
+          <option value="month">
+            This Month
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- Table -->
+
+      <div class="table-container">
+
+        <table class="invoice-table">
+
+          <thead>
+
+          <tr>
+
+            <th>
+              Invoice
+            </th>
+
+            <th>
+              Booking
+            </th>
+
+            <th>
+              Amount
+            </th>
+
+            <th>
+              Due Date
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Actions
+            </th>
+
+          </tr>
+
+          </thead>
+
+
+          <tbody id="invoiceTableBody">
+
+          <!-- JavaScript inserts invoices here -->
+
+          </tbody>
+
+        </table>
+
+
+        <!-- Empty state -->
+
+        <div
+                id="emptyState"
+                class="empty-state">
+
+          <div class="empty-icon">
+
+            <i class="fa-regular fa-file-invoice"></i>
+
+          </div>
+
+          <h4>
+            No invoices found
+          </h4>
+
+          <p>
+            There are currently no invoices matching your search.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Table footer -->
+
+      <div class="table-footer">
+
+                <span id="invoiceCount">
+                    Showing 0 invoices
+                </span>
+
+
+        <div class="pagination">
+
+          <button
+                  type="button"
+                  id="previousPage"
+                  class="pagination-btn"
+                  disabled>
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+          </button>
+
+
+          <span id="currentPage">
+                        1
+                    </span>
+
+
+          <button
+                  type="button"
+                  id="nextPage"
+                  class="pagination-btn"
+                  disabled>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     VIEW INVOICE MODAL
+========================================================= -->
+
+<div
+        id="viewInvoiceModal"
+        class="modal-overlay">
+
+  <div class="invoice-modal">
+
+
+    <div class="modal-header">
+
+      <div>
+
+                <span class="card-eyebrow">
+                    INVOICE DETAILS
+                </span>
+
+        <h3>
+          Invoice Information
+        </h3>
+
+      </div>
+
+
+      <button
+              type="button"
+              id="closeViewModalBtn"
+              class="close-btn">
+
+        <i class="fa-solid fa-xmark"></i>
+
+      </button>
+
+    </div>
+
+
+    <div class="invoice-details">
+
+
+      <div class="detail-item">
+
+                <span>
+                    Invoice ID
+                </span>
+
+        <strong id="viewInvoiceId">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+                <span>
+                    Booking ID
+                </span>
+
+        <strong id="viewBooking">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+                <span>
+                    Amount
+                </span>
+
+        <strong id="viewAmount">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+                <span>
+                    Due Date
+                </span>
+
+        <strong id="viewDueDate">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+                <span>
+                    Status
+                </span>
+
+        <strong id="viewStatus">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-item">
+
+                <span>
+                    Created Date
+                </span>
+
+        <strong id="viewCreatedDate">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="detail-description">
+
+                <span>
+                    Description
+                </span>
+
+        <p id="viewDescription">
+          -
+        </p>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="invoice.js"></script>
+
+</body>
+
+</html>
