@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Facilities | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="facility.css">
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <!-- LOGO -->
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building-columns"></i>
+
+        <span>CampusBook</span>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="booking.html">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <span>Bookings</span>
+
+        </a>
+
+
+        <a href="facility.html" class="active">
+
+            <i class="fa-solid fa-building"></i>
+
+            <span>Facilities</span>
+
+        </a>
+
+
+        <a href="equipment.html">
+
+            <i class="fa-solid fa-desktop"></i>
+
+            <span>Equipment</span>
+
+        </a>
+
+
+        <a href="maintenance.html">
+
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+            <span>Maintenance</span>
+
+        </a>
+
+
+        <a href="notification.html">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>Notifications</span>
+
+        </a>
+
+
+        <a href="user.html">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>Users</span>
+
+        </a>
+
+
+        <a href="invoice.html">
+
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+
+            <span>Invoices</span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>Profile</span>
+
+        </a>
+
+
+        <a href="index.html" class="logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    type="button">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>Facilities</h1>
+
+                <p>
+                    Manage campus facilities and their information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOPBAR ACTIONS -->
+
+        <div class="topbar-actions">
+
+            <button
+                    class="notification-icon"
+                    type="button"
+                    title="Notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <!-- USER -->
+
+            <a href="profile.html" class="staff-profile">
+
+                <div class="staff-avatar">
+
+                    <span>
+                        ST
+                    </span>
+
+                </div>
+
+
+                <div class="staff-info">
+
+                    <strong>
+                        Staff Member
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         FACILITY PAGE
+    ====================================================== -->
+
+    <section class="facility-page">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-building"></i>
+
+                    FACILITY MANAGEMENT
+
+                </span>
+
+
+                <h2>
+                    Campus Facilities
+                </h2>
+
+
+                <p>
+                    Create, search, update and delete campus
+                    facilities.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FACILITY CONTENT
+        ================================================== -->
+
+        <div class="facility-content">
+
+
+            <!-- =================================================
+                 FACILITY FORM
+            ================================================== -->
+
+            <div class="facility-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+                            Facility Details
+                        </h3>
+
+                        <p>
+                            Enter the facility information below.
+                        </p>
+
+                    </div>
+
+                    <div class="card-header-icon">
+
+                        <i class="fa-solid fa-building"></i>
+
+                    </div>
+
+                </div>
+
+
+
+                <form id="facilityForm">
+
+
+                    <!-- FORM GRID -->
+
+                    <div class="form-grid">
+
+
+                        <!-- FACILITY ID -->
+
+                        <div class="form-group">
+
+                            <label for="facilityId">
+                                Facility ID
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-id-card"></i>
+
+                                <input
+                                        type="text"
+                                        id="facilityId"
+                                        placeholder="e.g. F001"
+                                        required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- FACILITY NAME -->
+
+                        <div class="form-group">
+
+                            <label for="facilityName">
+                                Facility Name
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-building"></i>
+
+                                <input
+                                        type="text"
+                                        id="facilityName"
+                                        placeholder="e.g. Computer Lab"
+                                        required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- CAPACITY -->
+
+                        <div class="form-group">
+
+                            <label for="capacity">
+                                Capacity
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-users"></i>
+
+                                <input
+                                        type="number"
+                                        id="capacity"
+                                        placeholder="e.g. 50"
+                                        min="1"
+                                        required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- LOCATION -->
+
+                        <div class="form-group">
+
+                            <label for="location">
+                                Location
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <input
+                                        type="text"
+                                        id="location"
+                                        placeholder="e.g. Cape Town Campus"
+                                        required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- DEPARTMENT ID -->
+
+                        <div class="form-group">
+
+                            <label for="departmentId">
+                                Department ID
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-sitemap"></i>
+
+                                <input
+                                        type="text"
+                                        id="departmentId"
+                                        placeholder="e.g. D001"
+                                        required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- FACILITY TYPE -->
+
+                        <div class="form-group">
+
+                            <label for="facilityType">
+                                Facility Type
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-layer-group"></i>
+
+                                <select
+                                        id="facilityType"
+                                        required>
+
+                                    <option value="">
+                                        Select facility type
+                                    </option>
+
+                                    <!--
+                                    These values MUST match
+                                    your Java FacilityType enum.
+                                    -->
+
+                                    <option value="LECTURE_HALL">
+                                        Lecture Hall
+                                    </option>
+
+                                    <option value="CLASSROOM">
+                                        Classroom
+                                    </option>
+
+                                    <option value="LABORATORY">
+                                        Laboratory
+                                    </option>
+
+                                    <option value="COMPUTER_LAB">
+                                        Computer Lab
+                                    </option>
+
+                                    <option value="MEETING_ROOM">
+                                        Meeting Room
+                                    </option>
+
+                                    <option value="SPORTS_FACILITY">
+                                        Sports Facility
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         BUTTONS
+                    ================================================== -->
+
+                    <div class="button-group">
+
+
+                        <button
+                                type="button"
+                                class="primary-button"
+                                id="createFacilityButton">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            Create Facility
+
+                        </button>
+
+
+
+                        <button
+                                type="button"
+                                class="secondary-button"
+                                id="readFacilityButton">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            Search Facility
+
+                        </button>
+
+
+
+                        <button
+                                type="button"
+                                class="secondary-button"
+                                id="updateFacilityButton">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                            Update Facility
+
+                        </button>
+
+
+
+                        <button
+                                type="button"
+                                class="delete-button"
+                                id="deleteFacilityButton">
+
+                            <i class="fa-solid fa-trash"></i>
+
+                            Delete Facility
+
+                        </button>
+
+
+
+                        <button
+                                type="reset"
+                                class="clear-button">
+
+                            <i class="fa-solid fa-rotate-left"></i>
+
+                            Clear
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                        id="facilityMessage"
+                        class="message">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FACILITY RESULT
+            ================================================== -->
+
+            <div class="facility-card result-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>
+                            Facility Information
+                        </h3>
+
+                        <p>
+                            Details of the selected facility.
+                        </p>
+
+                    </div>
+
+                    <div class="card-header-icon">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                        id="facilityResult"
+                        class="facility-result">
+
+                    <div class="empty-result">
+
+                        <i class="fa-solid fa-building"></i>
+
+                        <h4>
+                            No Facility Selected
+                        </h4>
+
+                        <p>
+                            Search for a facility to view
+                            its information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="facility.js"></script>
+
+</body>
+
+</html>

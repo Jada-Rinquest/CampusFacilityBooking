@@ -1,37 +1,45 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 27 June 2026 */
-
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class NotificationFactory {
 
     public static Notification createNotification(
+            String notificationId,
             String userId,
             String message,
             LocalDate sentDate,
-            String notificationTypeId) {
+            NotificationType notificationType) {
 
-        if (userId == null || userId.isEmpty()
-                || message == null || message.isEmpty()
-                || sentDate == null
-                || notificationTypeId == null || notificationTypeId.isEmpty()) {
-
-            return null;
+        if (notificationId == null || notificationId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Notification ID is required");
         }
 
-        String notificationId = UUID.randomUUID().toString();
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("Message is required");
+        }
+
+        if (sentDate == null) {
+            throw new IllegalArgumentException("Sent date is required");
+        }
+
+        if (notificationType == null) {
+            throw new IllegalArgumentException("Notification type is required");
+        }
 
         return new Notification.Builder()
                 .setNotificationId(notificationId)
                 .setUserId(userId)
                 .setMessage(message)
                 .setSentDate(sentDate)
-                .setNotificationTypeId(notificationTypeId)
+                .setNotificationType(notificationType)
                 .build();
     }
 }

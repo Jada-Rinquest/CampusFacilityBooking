@@ -5,27 +5,30 @@
 
 package za.ac.cput.campusfacilitybooking.factory;
 
-import za.ac.cput.campusfacilitybooking.domain.Department;
 import za.ac.cput.campusfacilitybooking.domain.Student;
 
 public class StudentFactory {
 
-    public static Student createStudent(
-            String studentId,
-            String firstName,
-            String lastName,
-            String email,
-            String studentNumber,
-            Department department
-    ) {
+    public static Student createStudent(String studentId,
+                                        String studentNumber,
+                                        String userId) {
 
-        return new Student.Builder()
-                .setStudentId(studentId)
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setEmail(email)
-                .setStudentNumber(studentNumber)
-                .setDepartment(department)
-                .build();
+        if (studentId == null || studentId.isEmpty()) {
+            throw new IllegalArgumentException("Student ID is required");
+        }
+
+        if (studentNumber == null || studentNumber.isEmpty()) {
+            throw new IllegalArgumentException("Student number is required");
+        }
+
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        return new Student(
+                studentId,
+                studentNumber,
+                userId
+        );
     }
 }

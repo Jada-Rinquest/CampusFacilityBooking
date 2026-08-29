@@ -3,7 +3,6 @@ package za.ac.cput.campusfacilitybooking.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -11,37 +10,11 @@ public class User {
 
     @Id
     private String userId;
-
     private String firstName;
     private String lastName;
     private String email;
     private LocalDate dateOfBirth;
     private String departmentId;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id", insertable = false, updatable = false)
-    private Department department;
-
-    @OneToOne(mappedBy = "user")
-    private Student student;
-
-    @OneToOne(mappedBy = "user")
-    private Staff staff;
-
-    @OneToMany(mappedBy = "user")
-    private List<Contact> contacts;
-
-    @OneToMany(mappedBy = "user")
-    private List<Address> addresses;
-
-    @OneToMany(mappedBy = "user")
-    private List<Notification> notifications;
-
-    @OneToMany(mappedBy = "user")
-    private List<Booking> bookings;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserRole> userRoles;
 
     protected User() {
     }
@@ -80,15 +53,15 @@ public class User {
         return departmentId;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public Staff getStaff() {
-        return staff;
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", departmentId='" + departmentId + '\'' +
+                '}';
     }
 }

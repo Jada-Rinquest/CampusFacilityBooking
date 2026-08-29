@@ -1,13 +1,14 @@
 package za.ac.cput.campusfacilitybooking.controller;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 19 July 2026 */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
+import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 import za.ac.cput.campusfacilitybooking.service.NotificationService;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/notification")
@@ -21,9 +22,16 @@ public class NotificationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Notification> create(@RequestBody Notification notification) {
-        Notification createdNotification = service.create(notification);
-        return ResponseEntity.ok(createdNotification);
+    public ResponseEntity<Notification> create(@RequestBody NotificationRequest request) {
+        Notification notification = NotificationFactory.createNotification(
+                request.getNotificationId(),
+                request.getUserId(),
+                request.getMessage(),
+                request.getSentDate(),
+                request.getNotificationType()
+        );
+
+        return ResponseEntity.ok(service.create(notification));
     }
 
     @GetMapping("/read/{id}")
@@ -48,4 +56,24 @@ public class NotificationController {
         boolean deleted = service.delete(id);
         return ResponseEntity.ok(deleted);
     }
+}
+
+class NotificationRequest {
+    private String notificationId;
+    private String userId;
+    private String message;
+    private LocalDate sentDate;
+    private NotificationType notificationType;
+
+    // Getters and Setters
+    public String getNotificationId() { return notificationId; }
+    public void setNotificationId(String notificationId) { this.notificationId = notificationId; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+    public LocalDate getSentDate() { return sentDate; }
+    public void setSentDate(LocalDate sentDate) { this.sentDate = sentDate; }
+    public NotificationType getNotificationType() { return notificationType; }
+    public void setNotificationType(NotificationType notificationType) { this.notificationType = notificationType; }
 }

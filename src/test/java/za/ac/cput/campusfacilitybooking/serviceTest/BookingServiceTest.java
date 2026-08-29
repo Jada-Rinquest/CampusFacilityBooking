@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import za.ac.cput.campusfacilitybooking.domain.Booking;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 import za.ac.cput.campusfacilitybooking.factory.BookingFactory;
 import za.ac.cput.campusfacilitybooking.repository.BookingRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.BookingServiceImpl;
@@ -29,13 +30,13 @@ public class BookingServiceTest {
 
     @Test
     void testCreate() {
-
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
                 "U001",
                 "Study Session",
-                "BS001"
+                BookingStatus.PENDING
         );
 
         when(repository.save(booking)).thenReturn(booking);
@@ -48,13 +49,13 @@ public class BookingServiceTest {
 
     @Test
     void testRead() {
-
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
                 "U001",
                 "Study Session",
-                "BS001"
+                BookingStatus.PENDING
         );
 
         when(repository.findById(booking.getBookingId()))
@@ -68,13 +69,13 @@ public class BookingServiceTest {
 
     @Test
     void testUpdate() {
-
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
                 "U001",
                 "Workshop",
-                "BS002"
+                BookingStatus.APPROVED
         );
 
         when(repository.save(booking)).thenReturn(booking);
@@ -82,12 +83,11 @@ public class BookingServiceTest {
         Booking updated = service.update(booking);
 
         assertNotNull(updated);
-        assertEquals("BS002", updated.getBookingStatusId());
+        assertEquals(BookingStatus.APPROVED, updated.getBookingStatus());
     }
 
     @Test
     void testDelete() {
-
         String id = "B001";
 
         when(repository.existsById(id)).thenReturn(true);

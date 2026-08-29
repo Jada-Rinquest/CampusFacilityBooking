@@ -1,6 +1,7 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 
 @Entity
 @Table(name = "booking")
@@ -13,23 +14,8 @@ public class Booking {
     private String timeSlotId;
     private String userId;
     private String purpose;
-    private String bookingStatusId;
 
-    @ManyToOne
-    @JoinColumn(name = "facility_id", insertable = false, updatable = false)
-    private Facility facility;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "time_slot_id", insertable = false, updatable = false)
-    private TimeSlot timeSlot;
-
-    @ManyToOne
-    @JoinColumn(name = "booking_status_id",
-            insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
     protected Booking() {
@@ -41,7 +27,7 @@ public class Booking {
         this.timeSlotId = builder.timeSlotId;
         this.userId = builder.userId;
         this.purpose = builder.purpose;
-        this.bookingStatusId = builder.bookingStatusId;
+        this.bookingStatus = builder.bookingStatus;
     }
 
     public String getBookingId() {
@@ -64,18 +50,17 @@ public class Booking {
         return purpose;
     }
 
-    public String getBookingStatusId() {
-        return bookingStatusId;
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
     }
 
     public static class Builder {
-
         private String bookingId;
         private String facilityId;
         private String timeSlotId;
         private String userId;
         private String purpose;
-        private String bookingStatusId;
+        private BookingStatus bookingStatus;
 
         public Builder setBookingId(String bookingId) {
             this.bookingId = bookingId;
@@ -102,8 +87,8 @@ public class Booking {
             return this;
         }
 
-        public Builder setBookingStatusId(String bookingStatusId) {
-            this.bookingStatusId = bookingStatusId;
+        public Builder setBookingStatus(BookingStatus bookingStatus) {
+            this.bookingStatus = bookingStatus;
             return this;
         }
 
@@ -120,7 +105,7 @@ public class Booking {
                 ", timeSlotId='" + timeSlotId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", purpose='" + purpose + '\'' +
-                ", bookingStatusId='" + bookingStatusId + '\'' +
+                ", bookingStatus=" + bookingStatus +
                 '}';
     }
 }

@@ -1,13 +1,11 @@
-//Jada Rinquest 12/07/2026
-//222871296
-
 package za.ac.cput.campusfacilitybooking.factoryTest;
 
-import org.junit.jupiter.api.Test;
+/* Author: Jada Rinquest
+   Date: 12/07/2026
+   Student Number: 222871296 */
 
-import za.ac.cput.campusfacilitybooking.domain.Department;
+import org.junit.jupiter.api.Test;
 import za.ac.cput.campusfacilitybooking.domain.Student;
-import za.ac.cput.campusfacilitybooking.factory.DepartmentFactory;
 import za.ac.cput.campusfacilitybooking.factory.StudentFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,31 +13,71 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentFactoryTest {
 
     @Test
-    void createStudent() {
-
-        Department department =
-                DepartmentFactory.createDepartment(
-                        "D001",
-                        "IT",
-                        "Block A",
-                        "Mr Adams"
-                );
-
-        Student student =
-                StudentFactory.createStudent(
-                        "S001",
-                        "Jada",
-                        "Smith",
-                        "jada@gmail.com",
-                        "230123",
-                        department
-                );
+    void testCreateStudent() {
+        Student student = StudentFactory.createStudent(
+                "S001",
+                "230123",
+                "U001"
+        );
 
         assertNotNull(student);
+        assertEquals("S001", student.getStudentId());
+        assertEquals("230123", student.getStudentNumber());
+        assertEquals("U001", student.getUserId());
+    }
 
-        assertEquals(
-                "Jada",
-                student.getFirstName()
+    @Test
+    void testCreateStudentWithInvalidStudentId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        "",
+                        "230123",
+                        "U001"
+                )
+        );
+    }
+
+    @Test
+    void testCreateStudentWithInvalidStudentNumber() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        "S002",
+                        "",
+                        "U001"
+                )
+        );
+    }
+
+    @Test
+    void testCreateStudentWithNullStudentId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        null,
+                        "230123",
+                        "U001"
+                )
+        );
+    }
+
+    @Test
+    void testCreateStudentWithNullUserId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        "S003",
+                        "230123",
+                        null
+                )
+        );
+    }
+
+    @Test
+    void testCreateStudentWithEmptyUserId() {
+        assertThrows(IllegalArgumentException.class, () ->
+                StudentFactory.createStudent(
+                        "S004",
+                        "230123",
+                        ""
+                )
         );
     }
 }

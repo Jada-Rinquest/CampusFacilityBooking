@@ -1,6 +1,7 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.Role;
 
 @Entity
 @Table(name = "user_role")
@@ -8,25 +9,18 @@ public class UserRole {
 
     @Id
     private String userRoleId;
-
     private String userId;
-    private String roleId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     protected UserRole() {
     }
 
-    public UserRole(String userRoleId, String userId, String roleId) {
+    public UserRole(String userRoleId, String userId, Role role) {
         this.userRoleId = userRoleId;
         this.userId = userId;
-        this.roleId = roleId;
+        this.role = role;
     }
 
     public String getUserRoleId() {
@@ -37,7 +31,16 @@ public class UserRole {
         return userId;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "userRoleId='" + userRoleId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

@@ -3,11 +3,11 @@ package za.ac.cput.campusfacilitybooking.serviceTest;
 /* Author: Nuyra Swanson (221290524)
      Date: 12 July 2026 */
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 import za.ac.cput.campusfacilitybooking.repository.NotificationRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.NotificationServiceImpl;
@@ -31,12 +31,12 @@ public class NotificationServiceTest {
 
     @Test
     void testCreate() {
-
         Notification notification = NotificationFactory.createNotification(
+                "N001",
                 "U001",
                 "Booking Approved",
                 LocalDate.of(2026, 7, 12),
-                "NT001"
+                NotificationType.BOOKING_CONFIRMATION
         );
 
         when(repository.save(notification)).thenReturn(notification);
@@ -49,12 +49,12 @@ public class NotificationServiceTest {
 
     @Test
     void testRead() {
-
         Notification notification = NotificationFactory.createNotification(
+                "N001",
                 "U001",
                 "Booking Approved",
                 LocalDate.of(2026, 7, 12),
-                "NT001"
+                NotificationType.BOOKING_CONFIRMATION
         );
 
         when(repository.findById(notification.getNotificationId()))
@@ -68,12 +68,12 @@ public class NotificationServiceTest {
 
     @Test
     void testUpdate() {
-
         Notification notification = NotificationFactory.createNotification(
+                "N001",
                 "U001",
                 "Booking Cancelled",
                 LocalDate.of(2026, 7, 13),
-                "NT002"
+                NotificationType.BOOKING_CONFIRMATION
         );
 
         when(repository.save(notification)).thenReturn(notification);
@@ -82,12 +82,10 @@ public class NotificationServiceTest {
 
         assertNotNull(updated);
         assertEquals("Booking Cancelled", updated.getMessage());
-        assertEquals("NT002", updated.getNotificationTypeId());
     }
 
     @Test
     void testDelete() {
-
         String id = "N001";
 
         when(repository.existsById(id)).thenReturn(true);

@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Booking Management | Campus Facility Booking</title>
+
+    <link rel="stylesheet" href="booking.css">
+
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building"></i>
+
+        <span>
+            Campus Booking
+        </span>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="booking.html" class="active">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Bookings</span>
+        </a>
+
+        <a href="facility.html">
+            <i class="fa-solid fa-building"></i>
+            <span>Facilities</span>
+        </a>
+
+        <a href="equipment.html">
+            <i class="fa-solid fa-toolbox"></i>
+            <span>Equipment</span>
+        </a>
+
+        <a href="maintenance.html">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Maintenance</span>
+        </a>
+
+        <a href="notification.html">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+
+        <a href="user.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="invoice.html">
+
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+
+            <span>Invoices</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="login.html" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button
+                    type="button"
+                    id="mobileMenuBtn"
+                    class="mobile-menu-btn">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>
+                    Booking Management
+                </h1>
+
+                <p>
+                    Create and manage campus facility bookings.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+            <button
+                    type="button"
+                    class="notification-icon"
+                    onclick="window.location.href='notification.html'">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <div class="staff-profile">
+
+                <div class="staff-avatar">
+                    ST
+                </div>
+
+                <div class="staff-info">
+
+                    <strong>
+                        Staff Member
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PAGE
+    ====================================================== -->
+
+    <section class="booking-page">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-calendar-plus"></i>
+
+                    FACILITY BOOKINGS
+
+                </span>
+
+                <h2>
+                    Manage Bookings
+                </h2>
+
+                <p>
+                    Create new bookings, review existing reservations,
+                    and manage campus facility schedules.
+                </p>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="newBookingBtn"
+                    class="primary-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                New Booking
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="booking-stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Bookings</span>
+
+                    <strong id="totalBookings">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Approved</span>
+
+                    <strong id="approvedBookings">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Pending</span>
+
+                    <strong id="pendingBookings">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+
+                    <i class="fa-solid fa-ban"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Cancelled</span>
+
+                    <strong id="cancelledBookings">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CREATE BOOKING FORM
+        ================================================== -->
+
+        <section
+                id="bookingFormSection"
+                class="booking-card hidden">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        NEW RESERVATION
+                    </span>
+
+                    <h3 id="formTitle">
+                        Create a Booking
+                    </h3>
+
+                    <p>
+                        Complete the details below to reserve a facility.
+                    </p>
+
+                </div>
+
+
+                <button
+                        type="button"
+                        id="closeFormBtn"
+                        class="close-btn">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <form id="bookingForm">
+
+
+                <!-- =========================================
+                     USER
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="userId">
+                        Booking For
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="userId"
+                            name="userId"
+                            required>
+
+                        <option value="">
+                            Select a user
+                        </option>
+
+                        <!--
+                            JavaScript will populate users
+                            from the backend.
+                        -->
+
+                    </select>
+
+                    <small>
+                        Select the student or staff member making the booking.
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     FACILITY
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="facilityId">
+                        Facility
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="facilityId"
+                            name="facilityId"
+                            required>
+
+                        <option value="">
+                            Select a facility
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     DATE
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="bookingDate">
+                        Date
+                        <span>*</span>
+                    </label>
+
+                    <input
+                            type="date"
+                            id="bookingDate"
+                            name="bookingDate"
+                            required>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     TIME SLOT
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="timeSlotId">
+                        Time Slot
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="timeSlotId"
+                            name="timeSlotId"
+                            required>
+
+                        <option value="">
+                            Select a time slot
+                        </option>
+
+                    </select>
+
+                    <small>
+                        Available time slots will appear here.
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     PURPOSE
+                ========================================== -->
+
+                <div class="form-group full-width">
+
+                    <label for="purpose">
+                        Purpose of Booking
+                        <span>*</span>
+                    </label>
+
+                    <textarea
+                            id="purpose"
+                            name="purpose"
+                            rows="4"
+                            maxlength="500"
+                            placeholder="Explain the purpose of this booking..."
+                            required></textarea>
+
+                    <small
+                            id="purposeCount">
+                        0 / 500
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     ACTIONS
+                ========================================== -->
+
+                <div class="form-actions">
+
+                    <button
+                            type="button"
+                            id="cancelBookingBtn"
+                            class="secondary-btn">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                            type="submit"
+                            id="submitBookingBtn"
+                            class="primary-btn">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                        Create Booking
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BOOKINGS LIST
+        ================================================== -->
+
+        <section class="booking-card">
+
+
+            <!-- Card header -->
+
+            <div class="card-header booking-list-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        RECORDS
+                    </span>
+
+                    <h3>
+                        All Bookings
+                    </h3>
+
+                    <p>
+                        View and manage facility reservations.
+                    </p>
+
+                </div>
+
+
+                <button
+                        type="button"
+                        id="refreshBtn"
+                        class="secondary-btn">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+
+
+            <!-- Filters -->
+
+            <div class="booking-filters">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                            type="text"
+                            id="bookingSearch"
+                            placeholder="Search bookings...">
+
+                </div>
+
+
+                <select id="statusFilter">
+
+                    <option value="all">
+                        All Statuses
+                    </option>
+
+                    <option value="approved">
+                        Approved
+                    </option>
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+
+                <select id="facilityFilter">
+
+                    <option value="all">
+                        All Facilities
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Table -->
+
+            <div class="table-container">
+
+                <table class="booking-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Booking
+                        </th>
+
+                        <th>
+                            User
+                        </th>
+
+                        <th>
+                            Facility
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="bookingTableBody">
+
+                    <!-- JavaScript inserts bookings here -->
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- Empty state -->
+
+                <div
+                        id="emptyState"
+                        class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-regular fa-calendar-xmark"></i>
+
+                    </div>
+
+                    <h4>
+                        No bookings found
+                    </h4>
+
+                    <p>
+                        There are currently no bookings matching your search.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Table footer -->
+
+            <div class="table-footer">
+
+                <span id="bookingCount">
+                    Showing 0 bookings
+                </span>
+
+
+                <div class="pagination">
+
+                    <button
+                            type="button"
+                            id="previousPage"
+                            class="pagination-btn"
+                            disabled>
+
+                        <i class="fa-solid fa-chevron-left"></i>
+
+                    </button>
+
+
+                    <span id="currentPage">
+                        1
+                    </span>
+
+
+                    <button
+                            type="button"
+                            id="nextPage"
+                            class="pagination-btn"
+                            disabled>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     VIEW BOOKING MODAL
+========================================================= -->
+
+<div
+        id="viewBookingModal"
+        class="modal-overlay">
+
+    <div class="booking-modal">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="card-eyebrow">
+                    BOOKING DETAILS
+                </span>
+
+                <h3>
+                    Booking Information
+                </h3>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="closeViewModalBtn"
+                    class="close-btn">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="booking-details">
+
+
+            <div class="detail-item">
+
+                <span>
+                    Booking ID
+                </span>
+
+                <strong id="viewBookingId">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    User
+                </span>
+
+                <strong id="viewUser">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Facility
+                </span>
+
+                <strong id="viewFacility">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Date
+                </span>
+
+                <strong id="viewDate">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Time
+                </span>
+
+                <strong id="viewTime">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Status
+                </span>
+
+                <strong id="viewStatus">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-purpose">
+
+                <span>
+                    Purpose
+                </span>
+
+                <p id="viewPurpose">
+                    -
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="booking.js"></script>
+
+</body>
+
+</html>

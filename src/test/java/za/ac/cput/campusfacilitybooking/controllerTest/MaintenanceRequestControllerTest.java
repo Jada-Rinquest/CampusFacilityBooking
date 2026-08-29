@@ -33,15 +33,14 @@ public class MaintenanceRequestControllerTest {
 
     @Test
     void testCreate() {
-
         MaintenanceRequest maintenanceRequest = MaintenanceRequestFactory.createMaintenanceRequest(
                 "MR001",
                 "E001",
                 "S001",
                 "Projector bulb is burnt out",
+                LocalDate.of(2026, 7, 19),
                 MaintenancePriority.HIGH,
-                MaintenanceStatus.OPEN,
-                LocalDate.of(2026, 7, 19)
+                MaintenanceStatus.OPEN
         );
 
         when(service.create(maintenanceRequest)).thenReturn(maintenanceRequest);
@@ -55,37 +54,45 @@ public class MaintenanceRequestControllerTest {
 
     @Test
     void testRead() {
-
         MaintenanceRequest maintenanceRequest = MaintenanceRequestFactory.createMaintenanceRequest(
                 "MR001",
                 "E001",
                 "S001",
                 "Projector bulb is burnt out",
+                LocalDate.of(2026, 7, 19),
                 MaintenancePriority.HIGH,
-                MaintenanceStatus.OPEN,
-                LocalDate.of(2026, 7, 19)
+                MaintenanceStatus.OPEN
         );
 
-        when(service.read(maintenanceRequest.getRequestId())).thenReturn(maintenanceRequest);
+        when(service.read("MR001")).thenReturn(maintenanceRequest);
 
-        ResponseEntity<MaintenanceRequest> response = controller.read(maintenanceRequest.getRequestId());
+        ResponseEntity<MaintenanceRequest> response = controller.read("MR001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(maintenanceRequest.getRequestId(), response.getBody().getRequestId());
+        assertEquals("MR001", response.getBody().getRequestId());
+    }
+
+    @Test
+    void testReadNotFound() {
+        when(service.read("MR999")).thenReturn(null);
+
+        ResponseEntity<MaintenanceRequest> response = controller.read("MR999");
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     @Test
     void testUpdate() {
-
         MaintenanceRequest maintenanceRequest = MaintenanceRequestFactory.createMaintenanceRequest(
                 "MR001",
                 "E001",
                 "S001",
                 "Projector bulb is burnt out - technician assigned",
+                LocalDate.of(2026, 7, 19),
                 MaintenancePriority.HIGH,
-                MaintenanceStatus.IN_PROGRESS,
-                LocalDate.of(2026, 7, 19)
+                MaintenanceStatus.IN_PROGRESS
         );
 
         when(service.update(maintenanceRequest)).thenReturn(maintenanceRequest);
@@ -94,19 +101,17 @@ public class MaintenanceRequestControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(MaintenanceStatus.IN_PROGRESS, response.getBody().getStatus());
+        assertEquals(MaintenanceStatus.IN_PROGRESS, response.getBody().getMaintenanceStatus());
     }
 
     @Test
     void testDelete() {
-
         when(service.delete("MR001")).thenReturn(true);
 
         ResponseEntity<Boolean> response = controller.delete("MR001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());
-
         verify(service).delete("MR001");
     }
 }

@@ -7,6 +7,7 @@ Date: 21 June 2026
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
 
 @Entity
 @Table(name = "equipment")
@@ -14,18 +15,11 @@ public class Equipment {
 
     @Id
     private String equipmentId;
-
     private String name;
     private String serialNumber;
     private String facilityId;
-    private String equipmentStatusId;
 
-    @ManyToOne
-    @JoinColumn(name = "facility_id", insertable = false, updatable = false)
-    private Facility facility;
-
-    @ManyToOne
-    @JoinColumn(name = "equipment_status_id", insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private EquipmentStatus equipmentStatus;
 
     protected Equipment() {
@@ -33,12 +27,12 @@ public class Equipment {
 
     public Equipment(String equipmentId, String name,
                      String serialNumber, String facilityId,
-                     String equipmentStatusId) {
+                     EquipmentStatus equipmentStatus) {
         this.equipmentId = equipmentId;
         this.name = name;
         this.serialNumber = serialNumber;
         this.facilityId = facilityId;
-        this.equipmentStatusId = equipmentStatusId;
+        this.equipmentStatus = equipmentStatus;
     }
 
     public String getEquipmentId() {
@@ -57,7 +51,18 @@ public class Equipment {
         return facilityId;
     }
 
-    public String getEquipmentStatusId() {
-        return equipmentStatusId;
+    public EquipmentStatus getEquipmentStatus() {
+        return equipmentStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Equipment{" +
+                "equipmentId='" + equipmentId + '\'' +
+                ", name='" + name + '\'' +
+                ", serialNumber='" + serialNumber + '\'' +
+                ", facilityId='" + facilityId + '\'' +
+                ", equipmentStatus=" + equipmentStatus +
+                '}';
     }
 }

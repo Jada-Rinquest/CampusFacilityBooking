@@ -1,11 +1,7 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 
 import java.time.LocalDate;
 
@@ -15,11 +11,12 @@ public class Notification {
 
     @Id
     private String notificationId;
-
     private String userId;
     private String message;
     private LocalDate sentDate;
-    private String notificationTypeId;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
     protected Notification() {
     }
@@ -29,7 +26,7 @@ public class Notification {
         this.userId = builder.userId;
         this.message = builder.message;
         this.sentDate = builder.sentDate;
-        this.notificationTypeId = builder.notificationTypeId;
+        this.notificationType = builder.notificationType;
     }
 
     public String getNotificationId() {
@@ -48,17 +45,16 @@ public class Notification {
         return sentDate;
     }
 
-    public String getNotificationTypeId() {
-        return notificationTypeId;
+    public NotificationType getNotificationType() {
+        return notificationType;
     }
 
     public static class Builder {
-
         private String notificationId;
         private String userId;
         private String message;
         private LocalDate sentDate;
-        private String notificationTypeId;
+        private NotificationType notificationType;
 
         public Builder setNotificationId(String notificationId) {
             this.notificationId = notificationId;
@@ -80,8 +76,8 @@ public class Notification {
             return this;
         }
 
-        public Builder setNotificationTypeId(String notificationTypeId) {
-            this.notificationTypeId = notificationTypeId;
+        public Builder setNotificationType(NotificationType notificationType) {
+            this.notificationType = notificationType;
             return this;
         }
 
@@ -97,7 +93,7 @@ public class Notification {
                 ", userId='" + userId + '\'' +
                 ", message='" + message + '\'' +
                 ", sentDate=" + sentDate +
-                ", notificationTypeId='" + notificationTypeId + '\'' +
+                ", notificationType=" + notificationType +
                 '}';
     }
 }

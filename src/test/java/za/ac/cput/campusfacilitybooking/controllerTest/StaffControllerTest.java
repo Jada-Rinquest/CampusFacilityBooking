@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import za.ac.cput.campusfacilitybooking.controller.StaffController;
 import za.ac.cput.campusfacilitybooking.domain.Staff;
-import za.ac.cput.campusfacilitybooking.domain.enums.StaffRole;
 import za.ac.cput.campusfacilitybooking.factory.StaffFactory;
 import za.ac.cput.campusfacilitybooking.service.StaffService;
 
@@ -30,14 +29,9 @@ public class StaffControllerTest {
 
     @Test
     void testCreate() {
-
         Staff staff = StaffFactory.createStaff(
                 "S001",
-                "Thandiwe",
-                "Khumalo",
-                "thandiwe.khumalo@cput.ac.za",
-                StaffRole.LECTURER,
-                null
+                "U001"
         );
 
         when(service.create(staff)).thenReturn(staff);
@@ -51,35 +45,35 @@ public class StaffControllerTest {
 
     @Test
     void testRead() {
-
         Staff staff = StaffFactory.createStaff(
                 "S001",
-                "Thandiwe",
-                "Khumalo",
-                "thandiwe.khumalo@cput.ac.za",
-                StaffRole.LECTURER,
-                null
+                "U001"
         );
 
-        when(service.read(staff.getStaffId())).thenReturn(staff);
+        when(service.read("S001")).thenReturn(staff);
 
-        ResponseEntity<Staff> response = controller.read(staff.getStaffId());
+        ResponseEntity<Staff> response = controller.read("S001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(staff.getStaffId(), response.getBody().getStaffId());
+        assertEquals("S001", response.getBody().getStaffId());
+    }
+
+    @Test
+    void testReadNotFound() {
+        when(service.read("S999")).thenReturn(null);
+
+        ResponseEntity<Staff> response = controller.read("S999");
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     @Test
     void testUpdate() {
-
         Staff staff = StaffFactory.createStaff(
                 "S001",
-                "Thandiwe",
-                "Khumalo",
-                "thandiwe.khumalo@cput.ac.za",
-                StaffRole.STAFF,
-                null
+                "U002"
         );
 
         when(service.update(staff)).thenReturn(staff);
@@ -88,19 +82,17 @@ public class StaffControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(StaffRole.STAFF, response.getBody().getRole());
+        assertEquals("U002", response.getBody().getUserId());
     }
 
     @Test
     void testDelete() {
-
         when(service.delete("S001")).thenReturn(true);
 
         ResponseEntity<Boolean> response = controller.delete("S001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());
-
         verify(service).delete("S001");
     }
 }

@@ -8,6 +8,8 @@ import za.ac.cput.campusfacilitybooking.domain.Equipment;
 import za.ac.cput.campusfacilitybooking.repository.EquipmentRepository;
 import za.ac.cput.campusfacilitybooking.service.EquipmentService;
 
+import java.util.Optional;
+
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
 
@@ -24,7 +26,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public Equipment read(String id) {
-        return repository.findById(id).orElse(null);
+        Optional<Equipment> equipment = repository.findById(id);
+        return equipment.orElse(null);
     }
 
     @Override
@@ -34,7 +37,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public boolean delete(String id) {
-        repository.deleteById(id);
-        return true;
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

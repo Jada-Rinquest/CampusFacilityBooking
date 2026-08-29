@@ -1,71 +1,48 @@
-package za.ac.cput.campusfacilitybooking.domain;
+package za.ac.cput.campusfacilitybooking.factory;
 
-import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.Facility;
+import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
 
-import java.util.List;
+public class FacilityFactory {
 
-@Entity
-@Table(name = "facility")
-public class Facility {
+    public static Facility createFacility(String facilityId,
+                                          String name,
+                                          int capacity,
+                                          String location,
+                                          String departmentId,
+                                          FacilityType facilityType) {
 
-    @Id
-    private String facilityId;
+        if (facilityId == null || facilityId.isEmpty()) {
+            throw new IllegalArgumentException("Facility ID is required");
+        }
 
-    private String name;
-    private int capacity;
-    private String location;
-    private String departmentId;
-    private String facilityTypeId;
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Facility name is required");
+        }
 
-    @ManyToOne
-    @JoinColumn(name = "department_id", insertable = false, updatable = false)
-    private Department department;
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than 0");
+        }
 
-    @ManyToOne
-    @JoinColumn(name = "facility_type_id", insertable = false, updatable = false)
-    private FacilityType facilityType;
+        if (location == null || location.isEmpty()) {
+            throw new IllegalArgumentException("Location is required");
+        }
 
-    @OneToMany(mappedBy = "facility")
-    private List<Equipment> equipment;
+        if (departmentId == null || departmentId.isEmpty()) {
+            throw new IllegalArgumentException("Department ID is required");
+        }
 
-    @OneToMany(mappedBy = "facility")
-    private List<Booking> bookings;
+        if (facilityType == null) {
+            throw new IllegalArgumentException("Facility Type is required");
+        }
 
-    protected Facility() {
-    }
-
-    public Facility(String facilityId, String name, int capacity,
-                    String location, String departmentId,
-                    String facilityTypeId) {
-        this.facilityId = facilityId;
-        this.name = name;
-        this.capacity = capacity;
-        this.location = location;
-        this.departmentId = departmentId;
-        this.facilityTypeId = facilityTypeId;
-    }
-
-    public String getFacilityId() {
-        return facilityId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
-
-    public String getFacilityTypeId() {
-        return facilityTypeId;
+        return new Facility(
+                facilityId,
+                name,
+                capacity,
+                location,
+                departmentId,
+                facilityType
+        );
     }
 }

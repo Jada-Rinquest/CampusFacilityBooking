@@ -1,9 +1,5 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/*Author: Milani Sani(230371574)
-Date: 21 June 2026
- */
-
 import jakarta.persistence.*;
 
 @Entity
@@ -12,24 +8,53 @@ public class Staff {
 
     @Id
     private String staffId;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userId;
 
     protected Staff() {
     }
 
-    public Staff(String staffId, User user) {
+    public Staff(String staffId, String userId) {
         this.staffId = staffId;
-        this.user = user;
+        this.userId = userId;
+    }
+
+    private Staff(Builder builder) {
+        this.staffId = builder.staffId;
+        this.userId = builder.userId;
     }
 
     public String getStaffId() {
         return staffId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
+    }
+
+    public static class Builder {
+        private String staffId;
+        private String userId;
+
+        public Builder setStaffId(String staffId) {
+            this.staffId = staffId;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Staff build() {
+            return new Staff(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "staffId='" + staffId + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
     }
 }
