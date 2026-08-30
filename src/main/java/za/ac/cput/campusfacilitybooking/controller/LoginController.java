@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.campusfacilitybooking.domain.Login;
+import za.ac.cput.campusfacilitybooking.dto.AuthResponse;
 import za.ac.cput.campusfacilitybooking.factory.LoginFactory;
 import za.ac.cput.campusfacilitybooking.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
+@CrossOrigin(origins = "*")
 public class LoginController {
 
     private final LoginService service;
@@ -49,18 +51,17 @@ public class LoginController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<Login> authenticate(@RequestBody LoginRequest request) {
-
-        Login login = service.authenticate(
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody LoginRequest request) {
+        AuthResponse response = service.authenticate(
                 request.getUsername(),
                 request.getPassword()
         );
 
-        if (login == null) {
+        if (response == null) {
             return ResponseEntity.status(401).build();
         }
 
-        return ResponseEntity.ok(login);
+        return ResponseEntity.ok(response);
     }
 }
 
@@ -70,7 +71,6 @@ class LoginRequest {
     private String username;
     private String password;
 
-    // Getters and Setters
     public String getLoginId() { return loginId; }
     public void setLoginId(String loginId) { this.loginId = loginId; }
     public String getRegistrarId() { return registrarId; }

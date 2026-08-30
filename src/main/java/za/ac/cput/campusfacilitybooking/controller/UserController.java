@@ -8,9 +8,11 @@ import za.ac.cput.campusfacilitybooking.factory.UserFactory;
 import za.ac.cput.campusfacilitybooking.service.UserService;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService service;
@@ -42,6 +44,15 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/findByEmail/{email}")
+    public ResponseEntity<User> findByEmail(@PathVariable String email) {
+        Optional<User> user = service.findByEmail(email);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user.get());
+    }
+
     @PutMapping("/update")
     public ResponseEntity<User> update(@RequestBody User user) {
         return ResponseEntity.ok(service.update(user));
@@ -61,7 +72,6 @@ class UserRequest {
     private LocalDate dateOfBirth;
     private String departmentId;
 
-    // Getters and Setters
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
     public String getFirstName() { return firstName; }
