@@ -10,7 +10,7 @@ import za.ac.cput.campusfacilitybooking.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")  // ← IMPORTANT: Allow CORS
 public class LoginController {
 
     private final LoginService service;
@@ -52,15 +52,19 @@ public class LoginController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody LoginRequest request) {
+        System.out.println("Authenticating user: " + request.getUsername());  // ← Debug log
+
         AuthResponse response = service.authenticate(
                 request.getUsername(),
                 request.getPassword()
         );
 
         if (response == null) {
+            System.out.println("Authentication failed for: " + request.getUsername());  // ← Debug log
             return ResponseEntity.status(401).build();
         }
 
+        System.out.println("Authentication successful for: " + request.getUsername());  // ← Debug log
         return ResponseEntity.ok(response);
     }
 }

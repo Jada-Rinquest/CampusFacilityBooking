@@ -1,7 +1,10 @@
 package za.ac.cput.campusfacilitybooking.factoryTest;
 
 import org.junit.jupiter.api.Test;
+import za.ac.cput.campusfacilitybooking.domain.Booking;
 import za.ac.cput.campusfacilitybooking.domain.Invoice;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
+import za.ac.cput.campusfacilitybooking.factory.BookingFactory;
 import za.ac.cput.campusfacilitybooking.factory.InvoiceFactory;
 
 import java.time.LocalDate;
@@ -12,9 +15,19 @@ class InvoiceFactoryTest {
 
     @Test
     void testCreateInvoice() {
+        // Create a Booking first
+        Booking booking = BookingFactory.createBooking(
+                "B001",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         Invoice invoice = InvoiceFactory.createInvoice(
                 "INV001",
-                "B001",
+                booking,  // ← Pass Booking object
                 150.00,
                 LocalDate.of(2026, 7, 12),
                 LocalDate.of(2026, 8, 12)
@@ -22,18 +35,28 @@ class InvoiceFactoryTest {
 
         assertNotNull(invoice);
         assertEquals("INV001", invoice.getInvoiceId());
-        assertEquals("B001", invoice.getBookingId());
         assertEquals(150.00, invoice.getAmount());
         assertEquals(LocalDate.of(2026, 7, 12), invoice.getIssueDate());
         assertEquals(LocalDate.of(2026, 8, 12), invoice.getDueDate());
+        assertNotNull(invoice.getBooking());
+        assertEquals("B001", invoice.getBooking().getBookingId());
     }
 
     @Test
     void testCreateInvoiceWithInvalidInvoiceId() {
+        Booking booking = BookingFactory.createBooking(
+                "B001",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         assertThrows(IllegalArgumentException.class, () ->
                 InvoiceFactory.createInvoice(
                         "",
-                        "B001",
+                        booking,
                         150.00,
                         LocalDate.of(2026, 7, 12),
                         LocalDate.of(2026, 8, 12)
@@ -42,11 +65,11 @@ class InvoiceFactoryTest {
     }
 
     @Test
-    void testCreateInvoiceWithInvalidBookingId() {
+    void testCreateInvoiceWithNullBooking() {
         assertThrows(IllegalArgumentException.class, () ->
                 InvoiceFactory.createInvoice(
                         "INV002",
-                        "",
+                        null,
                         150.00,
                         LocalDate.of(2026, 7, 12),
                         LocalDate.of(2026, 8, 12)
@@ -56,10 +79,19 @@ class InvoiceFactoryTest {
 
     @Test
     void testCreateInvoiceWithNegativeAmount() {
+        Booking booking = BookingFactory.createBooking(
+                "B002",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         assertThrows(IllegalArgumentException.class, () ->
                 InvoiceFactory.createInvoice(
                         "INV003",
-                        "B001",
+                        booking,
                         -50.00,
                         LocalDate.of(2026, 7, 12),
                         LocalDate.of(2026, 8, 12)
@@ -69,10 +101,19 @@ class InvoiceFactoryTest {
 
     @Test
     void testCreateInvoiceWithNullIssueDate() {
+        Booking booking = BookingFactory.createBooking(
+                "B003",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         assertThrows(IllegalArgumentException.class, () ->
                 InvoiceFactory.createInvoice(
                         "INV004",
-                        "B001",
+                        booking,
                         150.00,
                         null,
                         LocalDate.of(2026, 8, 12)
@@ -82,10 +123,19 @@ class InvoiceFactoryTest {
 
     @Test
     void testCreateInvoiceWithNullDueDate() {
+        Booking booking = BookingFactory.createBooking(
+                "B004",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         assertThrows(IllegalArgumentException.class, () ->
                 InvoiceFactory.createInvoice(
                         "INV005",
-                        "B001",
+                        booking,
                         150.00,
                         LocalDate.of(2026, 7, 12),
                         null

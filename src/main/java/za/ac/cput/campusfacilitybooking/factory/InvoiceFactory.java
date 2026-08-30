@@ -1,9 +1,6 @@
-
-/* Author: Ayren Villet (223120030)
-     Date: 28 June 2026 */
-
 package za.ac.cput.campusfacilitybooking.factory;
 
+import za.ac.cput.campusfacilitybooking.domain.Booking;
 import za.ac.cput.campusfacilitybooking.domain.Invoice;
 
 import java.time.LocalDate;
@@ -11,7 +8,7 @@ import java.time.LocalDate;
 public class InvoiceFactory {
 
     public static Invoice createInvoice(String invoiceId,
-                                        String bookingId,
+                                        Booking booking,  // ← Changed from String to Booking
                                         double amount,
                                         LocalDate issueDate,
                                         LocalDate dueDate) {
@@ -20,8 +17,8 @@ public class InvoiceFactory {
             throw new IllegalArgumentException("Invoice ID is required");
         }
 
-        if (bookingId == null || bookingId.isEmpty()) {
-            throw new IllegalArgumentException("Booking ID is required");
+        if (booking == null) {
+            throw new IllegalArgumentException("Booking is required");
         }
 
         if (amount < 0) {
@@ -38,7 +35,7 @@ public class InvoiceFactory {
 
         return new Invoice(
                 invoiceId,
-                bookingId,
+                booking,  // ← Pass Booking object
                 amount,
                 issueDate,
                 dueDate

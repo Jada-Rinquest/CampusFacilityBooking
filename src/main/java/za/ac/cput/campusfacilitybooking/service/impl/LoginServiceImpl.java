@@ -59,43 +59,66 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public AuthResponse authenticate(String username, String password) {
+        System.out.println("=== AUTHENTICATING ===");
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+
         // 1. Find login by username
-        Login login = loginRepository.findByUsername(username).orElse(null);
-        if (login == null) {
+        Optional<Login> loginOpt = loginRepository.findByUsername(username);
+        if (loginOpt.isEmpty()) {
+            System.out.println("Login not found for username: " + username);
             return null;
         }
+
+        Login login = loginOpt.get();
+        System.out.println("Found login: " + login.getLoginId());
 
         // 2. Check password
         if (!login.getPassword().equals(password)) {
+            System.out.println("Password mismatch!");
             return null;
         }
+        System.out.println("Password matched!");
 
         // 3. Get Register record
         String registrarId = login.getRegistrarId();
-        Register register = registerRepository.findById(registrarId).orElse(null);
-        if (register == null) {
+        System.out.println("Registrar ID: " + registrarId);
+
+        Optional<Register> registerOpt = registerRepository.findById(registrarId);
+        if (registerOpt.isEmpty()) {
+            System.out.println("Register record not found for registrarId: " + registrarId);
             return null;
         }
 
+        Register register = registerOpt.get();
+        System.out.println("Register email: " + register.getEmail());
+
         // 4. Find User by email
-        User user = userRepository.findByEmail(register.getEmail()).orElse(null);
-        if (user == null) {
+        Optional<User> userOpt = userRepository.findByEmail(register.getEmail());
+        if (userOpt.isEmpty()) {
+            System.out.println("User not found for email: " + register.getEmail());
             return null;
         }
+
+        User user = userOpt.get();
+        System.out.println("User found: " + user.getUserId());
 
         // 5. Get UserRole
         String role = "STUDENT";
         try {
-            Optional<UserRole> userRole = userRoleRepository.findByUserIdAndRole(user.getUserId(), null);
-            if (userRole.isPresent()) {
-                role = userRole.get().getRole().toString();
+            Optional<UserRole> userRoleOpt = userRoleRepository.findByUserIdAndRole(user.getUserId(), null);
+            if (userRoleOpt.isPresent()) {
+                role = userRoleOpt.get().getRole().toString();
+                System.out.println("User role: " + role);
+            } else {
+                System.out.println("UserRole not found, defaulting to STUDENT");
             }
         } catch (Exception e) {
-            // Role not found, use default
+            System.out.println("Error getting UserRole: " + e.getMessage());
         }
 
         // 6. Return AuthResponse
-        return new AuthResponse(
+        AuthResponse response = new AuthResponse(
                 user.getUserId(),
                 username,
                 user.getEmail(),
@@ -103,5 +126,10 @@ public class LoginServiceImpl implements LoginService {
                 user.getFirstName(),
                 user.getLastName()
         );
+
+        System.out.println("Authentication successful!");
+        System.out.println("=== END AUTHENTICATE ===");
+
+        return response;
     }
 }
