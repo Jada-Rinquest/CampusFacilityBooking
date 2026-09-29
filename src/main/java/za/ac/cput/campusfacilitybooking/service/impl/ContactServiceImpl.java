@@ -5,6 +5,7 @@ import za.ac.cput.campusfacilitybooking.domain.Contact;
 import za.ac.cput.campusfacilitybooking.repository.ContactRepository;
 import za.ac.cput.campusfacilitybooking.service.ContactService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class ContactServiceImpl implements ContactService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Contact> getAll() {
+        return repository.findAll();
     }
 }

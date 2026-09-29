@@ -8,6 +8,7 @@ import za.ac.cput.campusfacilitybooking.domain.Equipment;
 import za.ac.cput.campusfacilitybooking.repository.EquipmentRepository;
 import za.ac.cput.campusfacilitybooking.service.EquipmentService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +43,10 @@ public class EquipmentServiceImpl implements EquipmentService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Equipment> getAll() {
+        return repository.findAll();
     }
 }

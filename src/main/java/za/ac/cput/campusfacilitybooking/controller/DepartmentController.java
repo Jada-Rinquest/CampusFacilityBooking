@@ -3,6 +3,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Department;
 import za.ac.cput.campusfacilitybooking.service.DepartmentService;
 
@@ -10,12 +12,21 @@ import za.ac.cput.campusfacilitybooking.service.DepartmentService;
 @RequestMapping("/department")
 public class DepartmentController {
 
+    private final DepartmentService service;
+
     @Autowired
-    private DepartmentService service;
+    public DepartmentController(DepartmentService service) {
+        this.service = service;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Department> create(@RequestBody Department department) {
         return ResponseEntity.ok(service.create(department));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Department>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/read/{id}")

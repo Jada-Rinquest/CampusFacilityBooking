@@ -64,4 +64,56 @@ public class User {
                 ", departmentId='" + departmentId + '\'' +
                 '}';
     }
+
+    private User(Builder builder) {
+        this.userId = builder.userId;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.dateOfBirth = builder.dateOfBirth;
+        this.departmentId = builder.departmentId;
+    }
+
+    public static class Builder {
+        private String userId;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private LocalDate dateOfBirth;
+        private String departmentId;
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public Builder setDepartmentId(String departmentId) {
+            this.departmentId = departmentId;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
 }

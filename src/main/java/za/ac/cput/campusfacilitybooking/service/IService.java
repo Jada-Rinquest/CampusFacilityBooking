@@ -5,6 +5,8 @@ package za.ac.cput.campusfacilitybooking.service;
 
 public interface IService<T, ID> {
 
+    java.util.List<T> getAll();
+
     T create(T t);
 
     T read(ID id);

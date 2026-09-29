@@ -3,6 +3,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Address;
 import za.ac.cput.campusfacilitybooking.factory.AddressFactory;
 import za.ac.cput.campusfacilitybooking.service.AddressService;
@@ -29,6 +31,11 @@ public class AddressController {
         return ResponseEntity.ok(service.create(address));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Address>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Address> read(@PathVariable String id) {
         Address address = service.read(id);
@@ -47,21 +54,4 @@ public class AddressController {
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(service.delete(id));
     }
-}
-
-class AddressRequest {
-    private String addressId;
-    private String address;
-    private String description;
-    private String userId;
-
-    // Getters and Setters
-    public String getAddressId() { return addressId; }
-    public void setAddressId(String addressId) { this.addressId = addressId; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
 }

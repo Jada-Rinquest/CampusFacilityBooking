@@ -65,4 +65,49 @@ public class Equipment {
                 ", equipmentStatus=" + equipmentStatus +
                 '}';
     }
+
+    private Equipment(Builder builder) {
+        this.equipmentId = builder.equipmentId;
+        this.name = builder.name;
+        this.serialNumber = builder.serialNumber;
+        this.facilityId = builder.facilityId;
+        this.equipmentStatus = builder.equipmentStatus;
+    }
+
+    public static class Builder {
+        private String equipmentId;
+        private String name;
+        private String serialNumber;
+        private String facilityId;
+        private EquipmentStatus equipmentStatus;
+
+        public Builder setEquipmentId(String equipmentId) {
+            this.equipmentId = equipmentId;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setSerialNumber(String serialNumber) {
+            this.serialNumber = serialNumber;
+            return this;
+        }
+
+        public Builder setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+            return this;
+        }
+
+        public Builder setEquipmentStatus(EquipmentStatus equipmentStatus) {
+            this.equipmentStatus = equipmentStatus;
+            return this;
+        }
+
+        public Equipment build() {
+            return new Equipment(this);
+        }
+    }
 }

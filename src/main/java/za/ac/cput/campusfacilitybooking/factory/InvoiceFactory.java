@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class InvoiceFactory {
 
     public static Invoice createInvoice(String invoiceId,
-                                        Booking booking,  // ← Changed from String to Booking
+                                        Booking booking,
                                         double amount,
                                         LocalDate issueDate,
                                         LocalDate dueDate) {
@@ -33,12 +33,12 @@ public class InvoiceFactory {
             throw new IllegalArgumentException("Due date is required");
         }
 
-        return new Invoice(
-                invoiceId,
-                booking,  // ← Pass Booking object
-                amount,
-                issueDate,
-                dueDate
-        );
+        return new Invoice.Builder()
+                .setInvoiceId(invoiceId)
+                .setBooking(booking)
+                .setAmount(amount)
+                .setIssueDate(issueDate)
+                .setDueDate(dueDate)
+                .build();
     }
 }

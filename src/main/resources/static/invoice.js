@@ -1150,7 +1150,7 @@ async function markAsPaid(invoiceId) {
     try {
 
         const response = await fetch(
-            `${INVOICE_API}/update-status/${invoiceId}?status=paid`,
+            `${INVOICE_API}/mark-paid/${invoiceId}`,
             {
                 method: "PUT"
             }

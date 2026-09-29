@@ -3,13 +3,13 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Booking;
 import za.ac.cput.campusfacilitybooking.domain.Invoice;
 import za.ac.cput.campusfacilitybooking.factory.InvoiceFactory;
 import za.ac.cput.campusfacilitybooking.service.BookingService;
 import za.ac.cput.campusfacilitybooking.service.InvoiceService;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/invoice")
@@ -44,6 +44,11 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.create(invoice));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Invoice>> getAll() {
+        return ResponseEntity.ok(invoiceService.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Invoice> read(@PathVariable String id) {
         Invoice invoice = invoiceService.read(id);
@@ -58,60 +63,22 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.update(invoice));
     }
 
+    @PutMapping("/mark-paid/{id}")
+    public ResponseEntity<Invoice> markPaid(@PathVariable String id) {
+
+        Invoice invoice = invoiceService.read(id);
+
+        if (invoice == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        invoice.setPaid(true);
+
+        return ResponseEntity.ok(invoiceService.update(invoice));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(invoiceService.delete(id));
-    }
-}
-
-// =========================================================
-// INVOICE REQUEST CLASS - NOT PUBLIC (package-private)
-// =========================================================
-
-class InvoiceRequest {  // ← REMOVED 'public' keyword
-    private String invoiceId;
-    private String bookingId;
-    private double amount;
-    private LocalDate issueDate;
-    private LocalDate dueDate;
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public String getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(String bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
     }
 }

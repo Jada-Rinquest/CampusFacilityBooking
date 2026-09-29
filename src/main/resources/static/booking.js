@@ -13,7 +13,7 @@ const API_BASE_URL = "http://localhost:8080";
 const BOOKING_API = `${API_BASE_URL}/booking`;
 const USER_API = `${API_BASE_URL}/user`;
 const FACILITY_API = `${API_BASE_URL}/facility`;
-const TIME_SLOT_API = `${API_BASE_URL}/time-slot`;
+const TIME_SLOT_API = `${API_BASE_URL}/timeslot`;
 
 
 /* =========================================================
@@ -703,7 +703,7 @@ async function loadTimeSlots() {
          * This assumes your TimeSlotController
          * has an endpoint such as:
          *
-         * GET /time-slot/all
+         * GET /timeslot/all
          *
          * The filtering is done here in JavaScript.
          */

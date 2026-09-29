@@ -51,4 +51,42 @@ public class TimeSlot {
                 ", endTime=" + endTime +
                 '}';
     }
+
+    private TimeSlot(Builder builder) {
+        this.timeSlotId = builder.timeSlotId;
+        this.date = builder.date;
+        this.startTime = builder.startTime;
+        this.endTime = builder.endTime;
+    }
+
+    public static class Builder {
+        private String timeSlotId;
+        private LocalDate date;
+        private LocalTime startTime;
+        private LocalTime endTime;
+
+        public Builder setTimeSlotId(String timeSlotId) {
+            this.timeSlotId = timeSlotId;
+            return this;
+        }
+
+        public Builder setDate(LocalDate date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder setStartTime(LocalTime startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Builder setEndTime(LocalTime endTime) {
+            this.endTime = endTime;
+            return this;
+        }
+
+        public TimeSlot build() {
+            return new TimeSlot(this);
+        }
+    }
 }

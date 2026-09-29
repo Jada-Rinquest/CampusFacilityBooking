@@ -8,6 +8,7 @@ import za.ac.cput.campusfacilitybooking.domain.Department;
 import za.ac.cput.campusfacilitybooking.repository.DepartmentRepository;
 import za.ac.cput.campusfacilitybooking.service.DepartmentService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Department> getAll() {
+        return repository.findAll();
     }
 }

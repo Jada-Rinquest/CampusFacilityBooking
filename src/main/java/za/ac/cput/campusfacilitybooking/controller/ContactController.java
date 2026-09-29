@@ -3,6 +3,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Contact;
 import za.ac.cput.campusfacilitybooking.factory.ContactFactory;
 import za.ac.cput.campusfacilitybooking.service.ContactService;
@@ -29,6 +31,11 @@ public class ContactController {
         return ResponseEntity.ok(service.create(contact));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Contact>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Contact> read(@PathVariable String id) {
         Contact contact = service.read(id);
@@ -47,21 +54,4 @@ public class ContactController {
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(service.delete(id));
     }
-}
-
-class ContactRequest {
-    private String contactId;
-    private String contact;
-    private String description;
-    private String userId;
-
-    // Getters and Setters
-    public String getContactId() { return contactId; }
-    public void setContactId(String contactId) { this.contactId = contactId; }
-    public String getContact() { return contact; }
-    public void setContact(String contact) { this.contact = contact; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
 }

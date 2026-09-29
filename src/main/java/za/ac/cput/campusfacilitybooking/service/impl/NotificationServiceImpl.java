@@ -9,6 +9,7 @@ import za.ac.cput.campusfacilitybooking.domain.Notification;
 import za.ac.cput.campusfacilitybooking.repository.NotificationRepository;
 import za.ac.cput.campusfacilitybooking.service.NotificationService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,10 @@ public class NotificationServiceImpl  implements NotificationService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Notification> getAll() {
+        return repository.findAll();
     }
 }

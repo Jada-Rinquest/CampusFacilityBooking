@@ -22,10 +22,10 @@ public class RegisterFactory {
             throw new IllegalArgumentException("Date registered is required");
         }
 
-        return new Register(
-                registrarId,
-                email,
-                dateRegistered
-        );
+        return new Register.Builder()
+                .setRegistrarId(registrarId)
+                .setEmail(email)
+                .setDateRegistered(dateRegistered)
+                .build();
     }
 }

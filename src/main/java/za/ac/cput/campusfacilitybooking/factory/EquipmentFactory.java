@@ -31,12 +31,12 @@ public class EquipmentFactory {
             throw new IllegalArgumentException("Equipment status is required");
         }
 
-        return new Equipment(
-                equipmentId,
-                name,
-                serialNumber,
-                facilityId,
-                equipmentStatus
-        );
+        return new Equipment.Builder()
+                .setEquipmentId(equipmentId)
+                .setName(name)
+                .setSerialNumber(serialNumber)
+                .setFacilityId(facilityId)
+                .setEquipmentStatus(equipmentStatus)
+                .build();
     }
 }

@@ -3,11 +3,11 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Register;
 import za.ac.cput.campusfacilitybooking.factory.RegisterFactory;
 import za.ac.cput.campusfacilitybooking.service.RegisterService;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/register")
@@ -30,6 +30,11 @@ public class RegisterController {
         return ResponseEntity.ok(service.create(register));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Register>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Register> read(@PathVariable String id) {
         Register register = service.read(id);
@@ -48,18 +53,4 @@ public class RegisterController {
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(service.delete(id));
     }
-}
-
-class RegisterRequest {
-    private String registrarId;
-    private String email;
-    private LocalDate dateRegistered;
-
-    // Getters and Setters
-    public String getRegistrarId() { return registrarId; }
-    public void setRegistrarId(String registrarId) { this.registrarId = registrarId; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public LocalDate getDateRegistered() { return dateRegistered; }
-    public void setDateRegistered(LocalDate dateRegistered) { this.dateRegistered = dateRegistered; }
 }

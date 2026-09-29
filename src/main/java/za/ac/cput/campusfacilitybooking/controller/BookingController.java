@@ -3,8 +3,9 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Booking;
-import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 import za.ac.cput.campusfacilitybooking.factory.BookingFactory;
 import za.ac.cput.campusfacilitybooking.service.BookingService;
 
@@ -33,6 +34,11 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.create(booking));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Booking>> getAll() {
+        return ResponseEntity.ok(bookingService.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Booking> read(@PathVariable String id) {
         Booking booking = bookingService.read(id);
@@ -54,25 +60,3 @@ public class BookingController {
 }
 
 // Remove 'public' keyword from this class
-class BookingRequest {
-    private String bookingId;
-    private String facilityId;
-    private String timeSlotId;
-    private String userId;
-    private String purpose;
-    private BookingStatus bookingStatus;
-
-    // Getters and Setters
-    public String getBookingId() { return bookingId; }
-    public void setBookingId(String bookingId) { this.bookingId = bookingId; }
-    public String getFacilityId() { return facilityId; }
-    public void setFacilityId(String facilityId) { this.facilityId = facilityId; }
-    public String getTimeSlotId() { return timeSlotId; }
-    public void setTimeSlotId(String timeSlotId) { this.timeSlotId = timeSlotId; }
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
-    public String getPurpose() { return purpose; }
-    public void setPurpose(String purpose) { this.purpose = purpose; }
-    public BookingStatus getBookingStatus() { return bookingStatus; }
-    public void setBookingStatus(BookingStatus bookingStatus) { this.bookingStatus = bookingStatus; }
-}

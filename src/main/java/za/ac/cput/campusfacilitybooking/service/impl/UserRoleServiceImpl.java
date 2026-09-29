@@ -5,6 +5,7 @@ import za.ac.cput.campusfacilitybooking.domain.UserRole;
 import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.UserRoleService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class UserRoleServiceImpl implements UserRoleService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<UserRole> getAll() {
+        return repository.findAll();
     }
 }

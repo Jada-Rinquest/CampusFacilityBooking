@@ -3,6 +3,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Login;
 import za.ac.cput.campusfacilitybooking.dto.AuthResponse;
 import za.ac.cput.campusfacilitybooking.factory.LoginFactory;
@@ -31,6 +33,11 @@ public class LoginController {
         return ResponseEntity.ok(service.create(login));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Login>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Login> read(@PathVariable String id) {
         Login login = service.read(id);
@@ -52,7 +59,6 @@ public class LoginController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody LoginRequest request) {
-        System.out.println("Authenticating user: " + request.getUsername());  // ← Debug log
 
         AuthResponse response = service.authenticate(
                 request.getUsername(),
@@ -60,27 +66,9 @@ public class LoginController {
         );
 
         if (response == null) {
-            System.out.println("Authentication failed for: " + request.getUsername());  // ← Debug log
             return ResponseEntity.status(401).build();
         }
 
-        System.out.println("Authentication successful for: " + request.getUsername());  // ← Debug log
         return ResponseEntity.ok(response);
     }
-}
-
-class LoginRequest {
-    private String loginId;
-    private String registrarId;
-    private String username;
-    private String password;
-
-    public String getLoginId() { return loginId; }
-    public void setLoginId(String loginId) { this.loginId = loginId; }
-    public String getRegistrarId() { return registrarId; }
-    public void setRegistrarId(String registrarId) { this.registrarId = registrarId; }
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
 }

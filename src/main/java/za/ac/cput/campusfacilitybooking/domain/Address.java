@@ -48,4 +48,42 @@ public class Address {
                 ", userId='" + userId + '\'' +
                 '}';
     }
+
+    private Address(Builder builder) {
+        this.addressId = builder.addressId;
+        this.address = builder.address;
+        this.description = builder.description;
+        this.userId = builder.userId;
+    }
+
+    public static class Builder {
+        private String addressId;
+        private String address;
+        private String description;
+        private String userId;
+
+        public Builder setAddressId(String addressId) {
+            this.addressId = addressId;
+            return this;
+        }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Address build() {
+            return new Address(this);
+        }
+    }
 }

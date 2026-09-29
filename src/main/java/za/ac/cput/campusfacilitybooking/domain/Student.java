@@ -45,4 +45,35 @@ public class Student {
                 ", userId='" + userId + '\'' +
                 '}';
     }
+
+    private Student(Builder builder) {
+        this.studentId = builder.studentId;
+        this.studentNumber = builder.studentNumber;
+        this.userId = builder.userId;
+    }
+
+    public static class Builder {
+        private String studentId;
+        private String studentNumber;
+        private String userId;
+
+        public Builder setStudentId(String studentId) {
+            this.studentId = studentId;
+            return this;
+        }
+
+        public Builder setStudentNumber(String studentNumber) {
+            this.studentNumber = studentNumber;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Student build() {
+            return new Student(this);
+        }
+    }
 }

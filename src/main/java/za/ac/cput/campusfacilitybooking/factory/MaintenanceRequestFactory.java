@@ -49,14 +49,14 @@ public class MaintenanceRequestFactory {
             throw new IllegalArgumentException("Maintenance status is required");
         }
 
-        return new MaintenanceRequest(
-                requestId,
-                equipmentId,
-                reportedBy,
-                description,
-                dateReported,
-                maintenancePriority,
-                maintenanceStatus
-        );
+        return new MaintenanceRequest.Builder()
+                .setRequestId(requestId)
+                .setEquipmentId(equipmentId)
+                .setReportedBy(reportedBy)
+                .setDescription(description)
+                .setDateReported(dateReported)
+                .setMaintenancePriority(maintenancePriority)
+                .setMaintenanceStatus(maintenanceStatus)
+                .build();
     }
 }

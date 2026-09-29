@@ -32,11 +32,11 @@ public class TimeSlotFactory {
             throw new IllegalArgumentException("End time must be after start time");
         }
 
-        return new TimeSlot(
-                timeSlotId,
-                date,
-                startTime,
-                endTime
-        );
+        return new TimeSlot.Builder()
+                .setTimeSlotId(timeSlotId)
+                .setDate(date)
+                .setStartTime(startTime)
+                .setEndTime(endTime)
+                .build();
     }
 }

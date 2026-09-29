@@ -21,10 +21,10 @@ public class UserRoleFactory {
             throw new IllegalArgumentException("Role is required");
         }
 
-        return new UserRole(
-                userRoleId,
-                userId,
-                role
-        );
+        return new UserRole.Builder()
+                .setUserRoleId(userRoleId)
+                .setUserId(userId)
+                .setRole(role)
+                .build();
     }
 }

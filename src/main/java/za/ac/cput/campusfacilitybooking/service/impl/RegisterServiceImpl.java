@@ -5,6 +5,7 @@ import za.ac.cput.campusfacilitybooking.domain.Register;
 import za.ac.cput.campusfacilitybooking.repository.RegisterRepository;
 import za.ac.cput.campusfacilitybooking.service.RegisterService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class RegisterServiceImpl implements RegisterService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Register> getAll() {
+        return repository.findAll();
     }
 }
