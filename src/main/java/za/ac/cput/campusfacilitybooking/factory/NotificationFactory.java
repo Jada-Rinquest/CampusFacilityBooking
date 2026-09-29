@@ -1,36 +1,45 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 27 June 2026 */
-
 import za.ac.cput.campusfacilitybooking.domain.Notification;
-import java.util.UUID;
+import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
+
+import java.time.LocalDate;
 
 public class NotificationFactory {
 
-    public static Notification createNotification(String recipientId,
-                                                  String message,
-                                                  String type,
-                                                  String sentDate,
-                                                  Boolean isRead) {
+    public static Notification createNotification(
+            String notificationId,
+            String userId,
+            String message,
+            LocalDate sentDate,
+            NotificationType notificationType) {
 
-        if (recipientId == null || recipientId.isEmpty()
-            || message == null || message.isEmpty()
-            || type == null || type.isEmpty()
-            || sentDate == null || sentDate.isEmpty()) {
-            return null;
+        if (notificationId == null || notificationId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Notification ID is required");
         }
 
-        String notificationId = UUID.randomUUID().toString();
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("Message is required");
+        }
+
+        if (sentDate == null) {
+            throw new IllegalArgumentException("Sent date is required");
+        }
+
+        if (notificationType == null) {
+            throw new IllegalArgumentException("Notification type is required");
+        }
 
         return new Notification.Builder()
                 .setNotificationId(notificationId)
-                .setRecipientId(recipientId)
+                .setUserId(userId)
                 .setMessage(message)
-                .setType(type)
                 .setSentDate(sentDate)
-                .setIsRead(isRead)
+                .setNotificationType(notificationType)
                 .build();
     }
-
 }

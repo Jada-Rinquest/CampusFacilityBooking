@@ -6,43 +6,33 @@ Date: 21 June 2026
 
 package za.ac.cput.campusfacilitybooking.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
 
-/**
- * Represents equipment located in a facility.
- */
 @Entity
 @Table(name = "equipment")
 public class Equipment {
 
     @Id
-    @Column(name = "equipment_id")
     private String equipmentId;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "serial_number")
     private String serialNumber;
+    private String facilityId;
 
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "facility")
-    private String facility;
+    @Enumerated(EnumType.STRING)
+    private EquipmentStatus equipmentStatus;
 
     protected Equipment() {
     }
 
-    private Equipment(Builder builder) {
-        this.equipmentId = builder.equipmentId;
-        this.name = builder.name;
-        this.serialNumber = builder.serialNumber;
-        this.status = builder.status;
-        this.facility = builder.facility;
+    public Equipment(String equipmentId, String name,
+                     String serialNumber, String facilityId,
+                     EquipmentStatus equipmentStatus) {
+        this.equipmentId = equipmentId;
+        this.name = name;
+        this.serialNumber = serialNumber;
+        this.facilityId = facilityId;
+        this.equipmentStatus = equipmentStatus;
     }
 
     public String getEquipmentId() {
@@ -57,12 +47,12 @@ public class Equipment {
         return serialNumber;
     }
 
-    public String getStatus() {
-        return status;
+    public String getFacilityId() {
+        return facilityId;
     }
 
-    public String getFacility() {
-        return facility;
+    public EquipmentStatus getEquipmentStatus() {
+        return equipmentStatus;
     }
 
     @Override
@@ -71,24 +61,27 @@ public class Equipment {
                 "equipmentId='" + equipmentId + '\'' +
                 ", name='" + name + '\'' +
                 ", serialNumber='" + serialNumber + '\'' +
-                ", status='" + status + '\'' +
-                ", facility='" + facility + '\'' +
+                ", facilityId='" + facilityId + '\'' +
+                ", equipmentStatus=" + equipmentStatus +
                 '}';
+    }
+
+    private Equipment(Builder builder) {
+        this.equipmentId = builder.equipmentId;
+        this.name = builder.name;
+        this.serialNumber = builder.serialNumber;
+        this.facilityId = builder.facilityId;
+        this.equipmentStatus = builder.equipmentStatus;
     }
 
     public static class Builder {
         private String equipmentId;
         private String name;
         private String serialNumber;
-        private String status;
-        private String facility;
+        private String facilityId;
+        private EquipmentStatus equipmentStatus;
 
         public Builder setEquipmentId(String equipmentId) {
-            this.equipmentId = equipmentId;
-            return this;
-        }
-
-        public Builder equipmentId(String equipmentId) {
             this.equipmentId = equipmentId;
             return this;
         }
@@ -98,38 +91,18 @@ public class Equipment {
             return this;
         }
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
         public Builder setSerialNumber(String serialNumber) {
             this.serialNumber = serialNumber;
             return this;
         }
 
-        public Builder serialNumber(String serialNumber) {
-            this.serialNumber = serialNumber;
+        public Builder setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
             return this;
         }
 
-        public Builder setStatus(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder status(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder setFacility(String facility) {
-            this.facility = facility;
-            return this;
-        }
-
-        public Builder facility(String facility) {
-            this.facility = facility;
+        public Builder setEquipmentStatus(EquipmentStatus equipmentStatus) {
+            this.equipmentStatus = equipmentStatus;
             return this;
         }
 
@@ -138,4 +111,3 @@ public class Equipment {
         }
     }
 }
-

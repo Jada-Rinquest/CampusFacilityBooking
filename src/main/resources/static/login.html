@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Signing out | Campus Facility Booking</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!--
+    The sign-in form lives in index.html.
+
+    Every page links to login.html from the "Logout" button,
+    so this page clears the session and sends the user back
+    to the sign-in screen.
+-->
+
+<noscript>
+    <p>
+        Please <a href="index.html">click here to sign in</a>.
+    </p>
+</noscript>
+
+<script>
+
+    try {
+
+        sessionStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInUser");
+
+    } catch (error) {
+
+        console.error("Could not clear the session:", error);
+
+    }
+
+    window.location.replace("index.html");
+
+</script>
+
+</body>
+
+</html>

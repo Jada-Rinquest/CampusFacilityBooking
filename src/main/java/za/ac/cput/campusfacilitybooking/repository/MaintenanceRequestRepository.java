@@ -1,11 +1,5 @@
 package za.ac.cput.campusfacilitybooking.repository;
 
-/* MaintenanceRequestRepository.java
-   MaintenanceRequestRepository interface
-   Author: Milani Sani (230371574)
-   Date: 21 June 2026
-*/
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
@@ -18,13 +12,15 @@ import java.util.List;
 @Repository
 public interface MaintenanceRequestRepository extends JpaRepository<MaintenanceRequest, String> {
 
-    List<MaintenanceRequest> findByStatus(MaintenanceStatus status);
+    // Changed from findByStatus to findByMaintenanceStatus
+    List<MaintenanceRequest> findByMaintenanceStatus(MaintenanceStatus maintenanceStatus);
 
-    List<MaintenanceRequest> findByPriority(MaintenancePriority priority);
+    // Changed from findByPriority to findByMaintenancePriority
+    List<MaintenanceRequest> findByMaintenancePriority(MaintenancePriority maintenancePriority);
 
-    List<MaintenanceRequest> findByReportedById(String reportedById);
+    List<MaintenanceRequest> findByReportedBy(String reportedBy);
 
-    List<MaintenanceRequest> findByEquipmentEquipmentId(String equipmentId);
+    List<MaintenanceRequest> findByEquipmentId(String equipmentId);
 
     List<MaintenanceRequest> findByDateReported(LocalDate dateReported);
 }

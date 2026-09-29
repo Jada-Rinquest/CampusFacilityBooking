@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Notification CSS -->
+    <link rel="stylesheet" href="notification.css">
+</head>
+
+<body>
+
+<!-- =========================================================
+     STAFF SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>CampusBook</span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="booking.html">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Bookings</span>
+        </a>
+
+        <a href="facility.html">
+            <i class="fa-solid fa-building"></i>
+            <span>Facilities</span>
+        </a>
+
+        <a href="equipment.html">
+            <i class="fa-solid fa-desktop"></i>
+            <span>Equipment</span>
+        </a>
+
+        <a href="maintenance.html">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Maintenance</span>
+        </a>
+
+        <a href="notification.html" class="active">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+
+        <a href="user.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="invoice.html">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>Invoices</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="index.html" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div>
+                <h1>Notifications</h1>
+                <p>Manage campus notifications and communications.</p>
+            </div>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+            <button class="notification-icon" title="Notifications">
+                <i class="fa-solid fa-bell"></i>
+                <span class="notification-count">3</span>
+            </button>
+
+            <div class="staff-profile">
+
+                <div class="staff-avatar">
+                    <span>ST</span>
+                </div>
+
+                <div class="staff-info">
+                    <strong>Staff Member</strong>
+                    <span>Administrator</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+
+    <section class="notification-page">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+                    <i class="fa-solid fa-bell"></i>
+                    COMMUNICATIONS
+                </span>
+
+                <h2>Notification Management</h2>
+
+                <p>
+                    Keep students and staff informed about bookings,
+                    maintenance and important campus updates.
+                </p>
+
+            </div>
+
+            <button class="primary-btn" id="openNotificationModal">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Send Notification
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="notification-stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+
+                <div class="stat-content">
+
+                    <span>Total Notifications</span>
+
+                    <strong id="totalNotifications">
+                        128
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </div>
+
+                <div class="stat-content">
+
+                    <span>Sent Today</span>
+
+                    <strong id="sentToday">
+                        14
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <div class="stat-content">
+
+                    <span>Booking Notifications</span>
+
+                    <strong id="bookingNotifications">
+                        86
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+
+                <div class="stat-content">
+
+                    <span>System Notifications</span>
+
+                    <strong id="systemNotifications">
+                        42
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NOTIFICATION TABLE SECTION
+        ================================================== -->
+
+        <div class="notification-panel">
+
+
+            <!-- =============================================
+                 TABLE HEADER
+            ============================================== -->
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>Recent Notifications</h3>
+
+                    <p>
+                        View and manage notifications sent through
+                        the campus booking system.
+                    </p>
+
+                </div>
+
+
+                <div class="panel-actions">
+
+                    <div class="search-box">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                                type="text"
+                                id="notificationSearch"
+                                placeholder="Search notifications..."
+                        >
+
+                    </div>
+
+
+                    <select id="notificationTypeFilter">
+
+                        <option value="">All Types</option>
+
+                        <option value="booking">
+                            Booking
+                        </option>
+
+                        <option value="maintenance">
+                            Maintenance
+                        </option>
+
+                        <option value="system">
+                            System
+                        </option>
+
+                        <option value="reminder">
+                            Reminder
+                        </option>
+
+                        <option value="announcement">
+                            Announcement
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 TABLE
+            ============================================== -->
+
+            <div class="table-container">
+
+                <table class="notification-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Notification</th>
+
+                        <th>Recipient</th>
+
+                        <th>Type</th>
+
+                        <th>Date Sent</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="notificationTableBody">
+
+                    <!-- =====================================
+                         NOTIFICATION
+                    ====================================== -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="notification-message">
+
+                                <div class="notification-row-icon booking-icon">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Booking Approved
+                                    </strong>
+
+                                    <span>
+                                        Your booking for Room 204
+                                        has been approved.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="recipient">
+
+                                <div class="recipient-avatar">
+                                    JR
+                                </div>
+
+                                <span>
+                                    Jada Rinquest
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="type-badge booking">
+                                Booking
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="date">
+                                24 Aug 2026
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                        class="action-btn view-btn"
+                                        title="View notification">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+
+                                <button
+                                        class="action-btn delete-btn"
+                                        title="Delete notification">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- =====================================
+                         NOTIFICATION
+                    ====================================== -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="notification-message">
+
+                                <div class="notification-row-icon maintenance-icon">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Maintenance Required
+                                    </strong>
+
+                                    <span>
+                                        Projector EQUIP001 requires
+                                        maintenance.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="recipient">
+
+                                <div class="recipient-avatar">
+                                    JS
+                                </div>
+
+                                <span>
+                                    John Smith
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="type-badge maintenance">
+                                Maintenance
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="date">
+                                23 Aug 2026
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                        class="action-btn view-btn"
+                                        title="View notification">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+
+                                <button
+                                        class="action-btn delete-btn"
+                                        title="Delete notification">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- =====================================
+                         NOTIFICATION
+                    ====================================== -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="notification-message">
+
+                                <div class="notification-row-icon booking-icon">
+                                    <i class="fa-solid fa-calendar-xmark"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Booking Cancelled
+                                    </strong>
+
+                                    <span>
+                                        Your booking for Laboratory 2
+                                        has been cancelled.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="recipient">
+
+                                <div class="recipient-avatar">
+                                    SM
+                                </div>
+
+                                <span>
+                                    Sarah Mokoena
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="type-badge booking">
+                                Booking
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="date">
+                                23 Aug 2026
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                        class="action-btn view-btn"
+                                        title="View notification">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+
+                                <button
+                                        class="action-btn delete-btn"
+                                        title="Delete notification">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- =====================================
+                         NOTIFICATION
+                    ====================================== -->
+
+                    <tr>
+
+                        <td>
+
+                            <div class="notification-message">
+
+                                <div class="notification-row-icon system-icon">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        System Maintenance
+                                    </strong>
+
+                                    <span>
+                                        The booking system will undergo
+                                        maintenance tonight.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="recipient">
+
+                                <div class="recipient-avatar">
+                                    AL
+                                </div>
+
+                                <span>
+                                    All Users
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="type-badge system">
+                                System
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="date">
+                                22 Aug 2026
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                        class="action-btn view-btn"
+                                        title="View notification">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </button>
+
+
+                                <button
+                                        class="action-btn delete-btn"
+                                        title="Delete notification">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =============================================
+                 PAGINATION
+            ============================================== -->
+
+            <div class="table-footer">
+
+                <span>
+                    Showing <strong>1–4</strong> of
+                    <strong>128</strong> notifications
+                </span>
+
+                <div class="pagination">
+
+                    <button
+                            class="pagination-btn"
+                            disabled>
+
+                        <i class="fa-solid fa-chevron-left"></i>
+
+                    </button>
+
+                    <button class="pagination-btn active">
+                        1
+                    </button>
+
+                    <button class="pagination-btn">
+                        2
+                    </button>
+
+                    <button class="pagination-btn">
+                        3
+                    </button>
+
+                    <span>...</span>
+
+                    <button class="pagination-btn">
+                        32
+                    </button>
+
+                    <button class="pagination-btn">
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     SEND NOTIFICATION MODAL
+========================================================= -->
+
+<div class="modal-overlay" id="notificationModal">
+
+    <div class="notification-modal">
+
+
+        <!-- =============================================
+             MODAL HEADER
+        ============================================== -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-eyebrow">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    NEW NOTIFICATION
+                </span>
+
+                <h2>Send Notification</h2>
+
+                <p>
+                    Send an important message to a campus user.
+                </p>
+
+            </div>
+
+
+            <button
+                    class="modal-close"
+                    id="closeNotificationModal">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- =============================================
+             FORM
+        ============================================== -->
+
+        <form id="notificationForm">
+
+
+            <!-- Recipient -->
+
+            <div class="form-group">
+
+                <label for="recipient">
+
+                    Recipient
+
+                    <span>*</span>
+
+                </label>
+
+                <select id="recipient" required>
+
+                    <option value="">
+                        Select recipient
+                    </option>
+
+                    <option value="U001">
+                        Jada Rinquest
+                    </option>
+
+                    <option value="U002">
+                        John Smith
+                    </option>
+
+                    <option value="U003">
+                        Sarah Mokoena
+                    </option>
+
+                    <option value="all">
+                        All Users
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Notification Type -->
+
+            <div class="form-group">
+
+                <label for="notificationType">
+
+                    Notification Type
+
+                    <span>*</span>
+
+                </label>
+
+                <select
+                        id="notificationType"
+                        required>
+
+                    <option value="">
+                        Select notification type
+                    </option>
+
+                    <option value="booking">
+                        Booking
+                    </option>
+
+                    <option value="maintenance">
+                        Maintenance
+                    </option>
+
+                    <option value="system">
+                        System
+                    </option>
+
+                    <option value="reminder">
+                        Reminder
+                    </option>
+
+                    <option value="announcement">
+                        Announcement
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Message -->
+
+            <div class="form-group">
+
+                <label for="notificationMessage">
+
+                    Message
+
+                    <span>*</span>
+
+                </label>
+
+                <textarea
+                        id="notificationMessage"
+                        rows="5"
+                        maxlength="500"
+                        placeholder="Enter notification message..."
+                        required></textarea>
+
+                <div class="character-count">
+                    <span id="characterCount">0</span>/500
+                </div>
+
+            </div>
+
+
+            <!-- Form Actions -->
+
+            <div class="modal-actions">
+
+                <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelNotification">
+
+                    Cancel
+
+                </button>
+
+                <button
+                        type="submit"
+                        class="primary-btn">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    Send Notification
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VIEW NOTIFICATION MODAL
+========================================================= -->
+
+<div class="modal-overlay" id="viewNotificationModal">
+
+    <div class="view-notification-modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-eyebrow">
+                    <i class="fa-solid fa-bell"></i>
+                    NOTIFICATION DETAILS
+                </span>
+
+                <h2 id="viewNotificationTitle">
+                    Booking Approved
+                </h2>
+
+            </div>
+
+            <button
+                    class="modal-close"
+                    id="closeViewModal">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="notification-detail">
+
+            <div class="detail-row">
+
+                <span>Recipient</span>
+
+                <strong id="viewRecipient">
+                    Jada Rinquest
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>Notification Type</span>
+
+                <strong id="viewType">
+                    Booking
+                </strong>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>Date Sent</span>
+
+                <strong id="viewDate">
+                    24 Aug 2026
+                </strong>
+
+            </div>
+
+
+            <div class="detail-message">
+
+                <span>Message</span>
+
+                <p id="viewMessage">
+
+                    Your booking for Room 204 has been
+                    approved.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="notification.js"></script>
+
+</body>
+</html>

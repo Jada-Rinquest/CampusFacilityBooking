@@ -1,116 +1,142 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
-/*Author: Milani Sani(230371574)
-Date: 21 June 2026
- */
-
 import jakarta.persistence.*;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
-@Table(name = "maintenance_requests")
+@Table(name = "maintenance_request")
 public class MaintenanceRequest {
 
     @Id
-    @Column(name = "request_id")
     private String requestId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "equipment_id")
-    private Equipment equipment;
-
-    @Column(name = "reported_by_id")
-    private String reportedById;
-
-    @Column(name = "description", length = 1000)
+    private String equipmentId;
+    private String reportedBy;
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "priority")
-    private MaintenancePriority priority;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private MaintenanceStatus status;
-
-    @Column(name = "date_reported")
     private LocalDate dateReported;
+
+    @Enumerated(EnumType.STRING)
+    private MaintenancePriority maintenancePriority;
+
+    @Enumerated(EnumType.STRING)
+    private MaintenanceStatus maintenanceStatus;
 
     protected MaintenanceRequest() {
     }
 
+    public MaintenanceRequest(String requestId, String equipmentId,
+                              String reportedBy, String description,
+                              LocalDate dateReported,
+                              MaintenancePriority maintenancePriority,
+                              MaintenanceStatus maintenanceStatus) {
+        this.requestId = requestId;
+        this.equipmentId = equipmentId;
+        this.reportedBy = reportedBy;
+        this.description = description;
+        this.dateReported = dateReported;
+        this.maintenancePriority = maintenancePriority;
+        this.maintenanceStatus = maintenanceStatus;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public String getEquipmentId() {
+        return equipmentId;
+    }
+
+    public String getReportedBy() {
+        return reportedBy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getDateReported() {
+        return dateReported;
+    }
+
+    public MaintenancePriority getMaintenancePriority() {
+        return maintenancePriority;
+    }
+
+    public MaintenanceStatus getMaintenanceStatus() {
+        return maintenanceStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "MaintenanceRequest{" +
+                "requestId='" + requestId + '\'' +
+                ", equipmentId='" + equipmentId + '\'' +
+                ", reportedBy='" + reportedBy + '\'' +
+                ", description='" + description + '\'' +
+                ", dateReported=" + dateReported +
+                ", maintenancePriority=" + maintenancePriority +
+                ", maintenanceStatus=" + maintenanceStatus +
+                '}';
+    }
+
     private MaintenanceRequest(Builder builder) {
         this.requestId = builder.requestId;
-        this.equipment = builder.equipment;
-        this.reportedById = builder.reportedById;
+        this.equipmentId = builder.equipmentId;
+        this.reportedBy = builder.reportedBy;
         this.description = builder.description;
-        this.priority = builder.priority;
-        this.status = builder.status;
         this.dateReported = builder.dateReported;
+        this.maintenancePriority = builder.maintenancePriority;
+        this.maintenanceStatus = builder.maintenanceStatus;
     }
 
     public static class Builder {
         private String requestId;
-        private Equipment equipment;
-        private String reportedById;
+        private String equipmentId;
+        private String reportedBy;
         private String description;
-        private MaintenancePriority priority = MaintenancePriority.MEDIUM;
-        private MaintenanceStatus status = MaintenanceStatus.OPEN;
         private LocalDate dateReported;
+        private MaintenancePriority maintenancePriority;
+        private MaintenanceStatus maintenanceStatus;
 
-        public Builder requestId(String requestId) { 
-            this.requestId = requestId; 
-            return this; }
-        public Builder equipment(Equipment equipment) { 
-            this.equipment = equipment; 
-            return this; }
-        public Builder reportedById(String reportedById) { 
-            this.reportedById = reportedById; 
-            return this; }
-        public Builder description(String description) { 
-            this.description = description; 
-            return this; }
-        public Builder priority(MaintenancePriority priority) { 
-            this.priority = priority; 
-            return this; }
-        public Builder status(MaintenanceStatus status) { 
-            this.status = status; 
-            return this; }
-        public Builder dateReported(LocalDate dateReported) { 
-            this.dateReported = dateReported; 
-            return this; }
+        public Builder setRequestId(String requestId) {
+            this.requestId = requestId;
+            return this;
+        }
+
+        public Builder setEquipmentId(String equipmentId) {
+            this.equipmentId = equipmentId;
+            return this;
+        }
+
+        public Builder setReportedBy(String reportedBy) {
+            this.reportedBy = reportedBy;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setDateReported(LocalDate dateReported) {
+            this.dateReported = dateReported;
+            return this;
+        }
+
+        public Builder setMaintenancePriority(MaintenancePriority maintenancePriority) {
+            this.maintenancePriority = maintenancePriority;
+            return this;
+        }
+
+        public Builder setMaintenanceStatus(MaintenanceStatus maintenanceStatus) {
+            this.maintenanceStatus = maintenanceStatus;
+            return this;
+        }
 
         public MaintenanceRequest build() {
-            Objects.requireNonNull(requestId, "requestId is required");
-            Objects.requireNonNull(equipment, "equipment is required");
-            Objects.requireNonNull(reportedById, "reportedById is required");
-            Objects.requireNonNull(description, "description is required");
             return new MaintenanceRequest(this);
         }
-    }
-
-    public String getRequestId() { 
-        return requestId; }
-    public Equipment getEquipment() { 
-        return equipment; }
-    public String getReportedById() { 
-        return reportedById; }
-    public String getDescription() { 
-        return description; }
-    public MaintenancePriority getPriority() { 
-        return priority; }
-    public MaintenanceStatus getStatus() { 
-        return status; }
-    public LocalDate getDateReported() { 
-        return dateReported; }
-
-    @Override
-    public String toString() {
-        String equipmentId = (equipment != null) ? equipment.getEquipmentId() : null;
-        return String.format("MaintenanceRequest(requestId=%s, equipmentId=%s, priority=%s, status=%s)", requestId, equipmentId, priority, status);
     }
 }

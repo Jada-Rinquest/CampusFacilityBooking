@@ -10,6 +10,7 @@ import za.ac.cput.campusfacilitybooking.repository.BookingRepository;
 import za.ac.cput.campusfacilitybooking.service.BookingService;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,5 +46,10 @@ public class BookingServiceImpl implements BookingService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Booking> getAll() {
+        return repository.findAll();
     }
 }

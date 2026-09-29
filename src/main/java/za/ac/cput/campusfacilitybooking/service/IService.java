@@ -1,11 +1,18 @@
+//Jada Rinquest 12/07/2026
+//222871296
+
 package za.ac.cput.campusfacilitybooking.service;
 
-import java.util.Set;
-
 public interface IService<T, ID> {
+
+    java.util.List<T> getAll();
+
     T create(T t);
+
     T read(ID id);
+
     T update(T t);
+
     boolean delete(ID id);
-    Set<T> getAll();
+
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import za.ac.cput.campusfacilitybooking.domain.Booking;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 import za.ac.cput.campusfacilitybooking.factory.BookingFactory;
 import za.ac.cput.campusfacilitybooking.repository.BookingRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.BookingServiceImpl;
@@ -30,12 +31,12 @@ public class BookingServiceTest {
     @Test
     void testCreate() {
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                BookingStatus.PENDING
         );
 
         when(repository.save(booking)).thenReturn(booking);
@@ -49,12 +50,12 @@ public class BookingServiceTest {
     @Test
     void testRead() {
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Study Session",
-                "Pending"
+                BookingStatus.PENDING
         );
 
         when(repository.findById(booking.getBookingId()))
@@ -69,19 +70,20 @@ public class BookingServiceTest {
     @Test
     void testUpdate() {
         Booking booking = BookingFactory.createBooking(
+                "B001",
                 "F001",
                 "TS001",
-                "S001",
-                "Student",
+                "U001",
                 "Workshop",
-                "Approved"
+                BookingStatus.APPROVED
         );
 
         when(repository.save(booking)).thenReturn(booking);
 
         Booking updated = service.update(booking);
 
-        assertEquals("Approved", updated.getStatus());
+        assertNotNull(updated);
+        assertEquals(BookingStatus.APPROVED, updated.getBookingStatus());
     }
 
     @Test

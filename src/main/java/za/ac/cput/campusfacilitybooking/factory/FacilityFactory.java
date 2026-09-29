@@ -1,51 +1,48 @@
 package za.ac.cput.campusfacilitybooking.factory;
-/* Author: Ayren Villet (223120030)
-     Date: 28 June 2026 */
-import za.ac.cput.campusfacilitybooking.domain.Department;
+
 import za.ac.cput.campusfacilitybooking.domain.Facility;
+import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
 
 public class FacilityFactory {
 
     public static Facility createFacility(String facilityId,
                                           String name,
-                                          String type,
                                           int capacity,
                                           String location,
-                                          Department department) {
+                                          String departmentId,
+                                          FacilityType facilityType) {
 
         if (facilityId == null || facilityId.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Facility ID is required");
         }
 
         if (name == null || name.isEmpty()) {
-            return null;
-        }
-
-        if (type == null || type.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Facility name is required");
         }
 
         if (capacity <= 0) {
-            return null;
+            throw new IllegalArgumentException("Capacity must be greater than 0");
         }
 
         if (location == null || location.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("Location is required");
         }
 
-        if (department == null) {
-            return null;
+        if (departmentId == null || departmentId.isEmpty()) {
+            throw new IllegalArgumentException("Department ID is required");
         }
 
-        return new Facility(
-                facilityId,
-                name,
-                type,
-                capacity,
-                location,
-                department
-        );
+        if (facilityType == null) {
+            throw new IllegalArgumentException("Facility Type is required");
+        }
+
+        return new Facility.Builder()
+                .setFacilityId(facilityId)
+                .setName(name)
+                .setCapacity(capacity)
+                .setLocation(location)
+                .setDepartmentId(departmentId)
+                .setFacilityType(facilityType)
+                .build();
     }
 }
-
-

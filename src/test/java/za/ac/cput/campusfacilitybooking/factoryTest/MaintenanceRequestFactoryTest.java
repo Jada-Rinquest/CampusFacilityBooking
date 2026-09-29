@@ -1,15 +1,13 @@
 package za.ac.cput.campusfacilitybooking.factoryTest;
 
-/*Author: Milani Sani(230371574)
-Date: 28 June 2026
- */
+/* Author: Milani Sani(230371574)
+   Date: 28 June 2026 */
 
-import za.ac.cput.campusfacilitybooking.domain.Equipment;
-import za.ac.cput.campusfacilitybooking.factory.MaintenanceRequestFactory;
+import org.junit.jupiter.api.Test;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
-import org.junit.jupiter.api.Test;
+import za.ac.cput.campusfacilitybooking.factory.MaintenanceRequestFactory;
 
 import java.time.LocalDate;
 
@@ -17,72 +15,132 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MaintenanceRequestFactoryTest {
 
-    private Equipment buildEquipment() {
-        return new Equipment.Builder()
-                .equipmentId("E001")
-                .name("Projector")
-                .serialNumber("SN-12345")
-                .build();
-    }
-
     @Test
-    void createMaintenanceRequest_validData_returnsMaintenanceRequest() {
-        Equipment equipment = buildEquipment();
+    void testCreateMaintenanceRequest() {
         LocalDate today = LocalDate.of(2026, 6, 28);
 
         MaintenanceRequest request = MaintenanceRequestFactory.createMaintenanceRequest(
-                "MR001", equipment, "S001", "Projector bulb is burnt out",
-                MaintenancePriority.HIGH, MaintenanceStatus.OPEN, today);
+                "MR001",
+                "E001",
+                "S001",
+                "Projector bulb is burnt out",
+                today,
+                MaintenancePriority.HIGH,
+                MaintenanceStatus.OPEN
+        );
 
         assertNotNull(request);
         assertEquals("MR001", request.getRequestId());
-        assertEquals(equipment, request.getEquipment());
-        assertEquals("S001", request.getReportedById());
-        assertEquals(MaintenancePriority.HIGH, request.getPriority());
-        assertEquals(MaintenanceStatus.OPEN, request.getStatus());
+        assertEquals("E001", request.getEquipmentId());
+        assertEquals("S001", request.getReportedBy());
+        assertEquals("Projector bulb is burnt out", request.getDescription());
         assertEquals(today, request.getDateReported());
+        assertEquals(MaintenancePriority.HIGH, request.getMaintenancePriority());
+        assertEquals(MaintenanceStatus.OPEN, request.getMaintenanceStatus());
     }
 
     @Test
-    void createMaintenanceRequest_nullPriorityAndStatus_passThroughAsNull() {
-        MaintenanceRequest request = MaintenanceRequestFactory.createMaintenanceRequest(
-                "MR002", buildEquipment(), "S002", "Aircon is making a noise",
-                null, null, null);
-
-        assertNotNull(request);
-        assertNull(request.getPriority());
-        assertNull(request.getStatus());
-    }
-
-    @Test
-    void createMaintenanceRequest_nullRequestId_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () ->
+    void testCreateMaintenanceRequestWithInvalidRequestId() {
+        assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
-                        null, buildEquipment(), "S003", "Keyboard is not responding",
-                        MaintenancePriority.LOW, MaintenanceStatus.OPEN, LocalDate.now()));
+                        "",
+                        "E001",
+                        "S001",
+                        "Projector bulb is burnt out",
+                        LocalDate.now(),
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
+                )
+        );
     }
 
     @Test
-    void createMaintenanceRequest_nullEquipment_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () ->
+    void testCreateMaintenanceRequestWithInvalidEquipmentId() {
+        assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
-                        "MR003", null, "S004", "Equipment is missing",
-                        MaintenancePriority.LOW, MaintenanceStatus.OPEN, LocalDate.now()));
+                        "MR002",
+                        "",
+                        "S002",
+                        "Aircon is making a noise",
+                        LocalDate.now(),
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
+                )
+        );
     }
 
     @Test
-    void createMaintenanceRequest_missingReportedById_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () ->
+    void testCreateMaintenanceRequestWithInvalidReportedBy() {
+        assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
-                        "MR005", buildEquipment(), null, "A Chair is broken",
-                        MaintenancePriority.LOW, MaintenanceStatus.OPEN, LocalDate.now()));
+                        "MR003",
+                        "E001",
+                        "",
+                        "A chair is broken",
+                        LocalDate.now(),
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
+                )
+        );
     }
 
     @Test
-    void createMaintenanceRequest_missingDescription_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () ->
+    void testCreateMaintenanceRequestWithInvalidDescription() {
+        assertThrows(IllegalArgumentException.class, () ->
                 MaintenanceRequestFactory.createMaintenanceRequest(
-                        "MR006", buildEquipment(), "S006", null,
-                        MaintenancePriority.LOW, MaintenanceStatus.OPEN, LocalDate.now()));
+                        "MR004",
+                        "E001",
+                        "S004",
+                        "",
+                        LocalDate.now(),
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
+                )
+        );
+    }
+
+    @Test
+    void testCreateMaintenanceRequestWithNullDate() {
+        assertThrows(IllegalArgumentException.class, () ->
+                MaintenanceRequestFactory.createMaintenanceRequest(
+                        "MR005",
+                        "E001",
+                        "S005",
+                        "Equipment is missing",
+                        null,
+                        MaintenancePriority.HIGH,
+                        MaintenanceStatus.OPEN
+                )
+        );
+    }
+
+    @Test
+    void testCreateMaintenanceRequestWithNullPriority() {
+        assertThrows(IllegalArgumentException.class, () ->
+                MaintenanceRequestFactory.createMaintenanceRequest(
+                        "MR006",
+                        "E001",
+                        "S006",
+                        "Projector is not working",
+                        LocalDate.now(),
+                        null,
+                        MaintenanceStatus.OPEN
+                )
+        );
+    }
+
+    @Test
+    void testCreateMaintenanceRequestWithNullStatus() {
+        assertThrows(IllegalArgumentException.class, () ->
+                MaintenanceRequestFactory.createMaintenanceRequest(
+                        "MR007",
+                        "E001",
+                        "S007",
+                        "Projector is not working",
+                        LocalDate.now(),
+                        MaintenancePriority.HIGH,
+                        null
+                )
+        );
     }
 }
