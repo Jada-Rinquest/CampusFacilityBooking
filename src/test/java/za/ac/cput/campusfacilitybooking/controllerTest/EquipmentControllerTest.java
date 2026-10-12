@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import za.ac.cput.campusfacilitybooking.controller.EquipmentController;
 import za.ac.cput.campusfacilitybooking.domain.Equipment;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
+import za.ac.cput.campusfacilitybooking.factory.EquipmentFactory;
 import za.ac.cput.campusfacilitybooking.service.EquipmentService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,22 +25,20 @@ public class EquipmentControllerTest {
 
     @BeforeEach
     void setUp() {
-
         service = Mockito.mock(EquipmentService.class);
         controller = new EquipmentController(service);
 
-        equipment = new Equipment.Builder()
-                .setEquipmentId("EQUIP001")
-                .setName("Projector")
-                .setSerialNumber("SN67890")
-                .setStatus("Available")
-                .setFacility("Lab A")
-                .build();
+        equipment = EquipmentFactory.createEquipment(
+                "EQUIP001",
+                "Projector",
+                "SN67890",
+                "F001",
+                EquipmentStatus.AVAILABLE
+        );
     }
 
     @Test
     void testCreate() {
-
         when(service.create(equipment)).thenReturn(equipment);
 
         ResponseEntity<Equipment> response = controller.create(equipment);
@@ -50,18 +50,26 @@ public class EquipmentControllerTest {
 
     @Test
     void testRead() {
-
         when(service.read("EQUIP001")).thenReturn(equipment);
 
         ResponseEntity<Equipment> response = controller.read("EQUIP001");
 
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Projector", response.getBody().getName());
     }
 
     @Test
-    void testUpdate() {
+    void testReadNotFound() {
+        when(service.read("EQUIP999")).thenReturn(null);
 
+        ResponseEntity<Equipment> response = controller.read("EQUIP999");
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void testUpdate() {
         when(service.update(equipment)).thenReturn(equipment);
 
         ResponseEntity<Equipment> response = controller.update(equipment);
@@ -72,12 +80,12 @@ public class EquipmentControllerTest {
 
     @Test
     void testDelete() {
-
         when(service.delete("EQUIP001")).thenReturn(true);
 
         ResponseEntity<Boolean> response = controller.delete("EQUIP001");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());
+        verify(service).delete("EQUIP001");
     }
 }

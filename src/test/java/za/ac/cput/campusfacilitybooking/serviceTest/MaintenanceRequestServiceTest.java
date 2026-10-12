@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenancePriority;
 import za.ac.cput.campusfacilitybooking.domain.enums.MaintenanceStatus;
+import za.ac.cput.campusfacilitybooking.factory.MaintenanceRequestFactory;
 import za.ac.cput.campusfacilitybooking.repository.MaintenanceRequestRepository;
 import za.ac.cput.campusfacilitybooking.service.MaintenanceRequestService;
 import za.ac.cput.campusfacilitybooking.service.impl.MaintenanceRequestServiceImpl;
@@ -24,55 +25,47 @@ class MaintenanceRequestServiceTest {
 
     private MaintenanceRequestRepository repository;
     private MaintenanceRequestService service;
-
     private MaintenanceRequest maintenanceRequest;
 
     @BeforeEach
     void setUp() {
-
         repository = Mockito.mock(MaintenanceRequestRepository.class);
-
         service = new MaintenanceRequestServiceImpl(repository);
 
-        maintenanceRequest = new MaintenanceRequest.Builder()
-                .requestId("MR001")
-                .equipmentId("E001")
-                .reportedById("S001")
-                .description("Projector bulb is burnt out")
-                .priority(MaintenancePriority.HIGH)
-                .status(MaintenanceStatus.OPEN)
-                .dateReported(LocalDate.of(2026, 7, 12))
-                .build();
+        maintenanceRequest = MaintenanceRequestFactory.createMaintenanceRequest(
+                "MR001",
+                "E001",
+                "S001",
+                "Projector bulb is burnt out",
+                LocalDate.of(2026, 7, 12),
+                MaintenancePriority.HIGH,
+                MaintenanceStatus.OPEN
+        );
     }
 
     @Test
-    void create() {
-
+    void testCreate() {
         when(repository.save(maintenanceRequest)).thenReturn(maintenanceRequest);
 
         MaintenanceRequest created = service.create(maintenanceRequest);
 
         assertNotNull(created);
-
         assertEquals("MR001", created.getRequestId());
     }
 
     @Test
-    void read() {
-
+    void testRead() {
         when(repository.findById("MR001"))
                 .thenReturn(Optional.of(maintenanceRequest));
 
         MaintenanceRequest found = service.read("MR001");
 
         assertNotNull(found);
-
         assertEquals("Projector bulb is burnt out", found.getDescription());
     }
 
     @Test
-    void update() {
-
+    void testUpdate() {
         when(repository.save(maintenanceRequest)).thenReturn(maintenanceRequest);
 
         MaintenanceRequest updated = service.update(maintenanceRequest);
@@ -81,14 +74,12 @@ class MaintenanceRequestServiceTest {
     }
 
     @Test
-    void delete() {
-
+    void testDelete() {
         when(repository.existsById("MR001")).thenReturn(true);
 
         boolean deleted = service.delete("MR001");
 
         assertTrue(deleted);
-
         verify(repository).deleteById("MR001");
     }
 }

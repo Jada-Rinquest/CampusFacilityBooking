@@ -1,39 +1,48 @@
 package za.ac.cput.campusfacilitybooking.factory;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 27 June 2026 */
-
 import za.ac.cput.campusfacilitybooking.domain.Booking;
-import java.util.UUID;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
 
 public class BookingFactory {
 
-    public static Booking createBooking(String facilityId,
+    public static Booking createBooking(String bookingId,
+                                        String facilityId,
                                         String timeSlotId,
-                                        String requesterId,
-                                        String requesterType,
+                                        String userId,
                                         String purpose,
-                                        String status) {
+                                        BookingStatus bookingStatus) {
 
-        if (facilityId == null || facilityId.isEmpty()
-        || timeSlotId == null || timeSlotId.isEmpty()
-        || requesterId == null || requesterId.isEmpty()
-        || requesterType == null || requesterType.isEmpty()
-                || purpose == null || purpose.isEmpty()
-                || status == null || status.isEmpty()) {
-            return null;
+        if (bookingId == null || bookingId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Booking ID is required");
         }
 
-        String bookingId = UUID.randomUUID().toString();
+        if (facilityId == null || facilityId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Facility ID is required");
+        }
+
+        if (timeSlotId == null || timeSlotId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Time Slot ID is required");
+        }
+
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is required");
+        }
+
+        if (purpose == null || purpose.trim().isEmpty()) {
+            throw new IllegalArgumentException("Purpose is required");
+        }
+
+        if (bookingStatus == null) {
+            throw new IllegalArgumentException("Booking Status is required");
+        }
 
         return new Booking.Builder()
                 .setBookingId(bookingId)
                 .setFacilityId(facilityId)
                 .setTimeSlotId(timeSlotId)
-                .setRequesterId(requesterId)
-                .setRequesterType(requesterType)
+                .setUserId(userId)
                 .setPurpose(purpose)
-                .setStatus(status)
+                .setBookingStatus(bookingStatus)
                 .build();
     }
 }

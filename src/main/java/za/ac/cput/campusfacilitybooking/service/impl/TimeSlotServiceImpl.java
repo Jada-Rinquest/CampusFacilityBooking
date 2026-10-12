@@ -8,6 +8,9 @@ import za.ac.cput.campusfacilitybooking.domain.TimeSlot;
 import za.ac.cput.campusfacilitybooking.repository.TimeSlotRepository;
 import za.ac.cput.campusfacilitybooking.service.TimeSlotService;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TimeSlotServiceImpl implements TimeSlotService {
 
@@ -24,7 +27,8 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
     @Override
     public TimeSlot read(String id) {
-        return repository.findById(id).orElse(null);
+        Optional<TimeSlot> timeSlot = repository.findById(id);
+        return timeSlot.orElse(null);
     }
 
     @Override
@@ -34,7 +38,15 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
     @Override
     public boolean delete(String id) {
-        repository.deleteById(id);
-        return true;
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<TimeSlot> getAll() {
+        return repository.findAll();
     }
 }

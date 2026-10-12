@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Campus Facility Booking</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Profile CSS -->
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <!-- Logo -->
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building-columns"></i>
+
+        <span>CampusBook</span>
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="booking.html">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Bookings</span>
+        </a>
+
+        <a href="facility.html">
+            <i class="fa-solid fa-building"></i>
+            <span>Facilities</span>
+        </a>
+
+        <a href="equipment.html">
+            <i class="fa-solid fa-desktop"></i>
+            <span>Equipment</span>
+        </a>
+
+        <a href="maintenance.html">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Maintenance</span>
+        </a>
+
+        <a href="notification.html">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+
+        <a href="user.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="invoice.html">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>Invoices</span>
+        </a>
+
+    </nav>
+
+
+    <!-- Bottom Navigation -->
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html" class="active">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="index.html" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    type="button">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>My Profile</h1>
+
+                <p>
+                    View and manage your account information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Topbar Actions -->
+
+        <div class="topbar-actions">
+
+            <button
+                    class="notification-icon"
+                    type="button"
+                    title="Notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <!-- Logged-in user -->
+
+            <div class="staff-profile">
+
+                <div class="staff-avatar" id="topbarAvatar">
+                    <span>U</span>
+                </div>
+
+                <div class="staff-info">
+
+                    <strong id="topbarName">
+                        User
+                    </strong>
+
+                    <span id="topbarRole">
+                        User
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PROFILE PAGE
+    ====================================================== -->
+
+    <section class="profile-page">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    ACCOUNT
+
+                </span>
+
+
+                <h2>Profile</h2>
+
+
+                <p>
+                    View your personal information and account
+                    details for the Campus Facility Booking System.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PROFILE LAYOUT
+        ================================================== -->
+
+        <div class="profile-layout">
+
+
+            <!-- =================================================
+                 PROFILE SUMMARY
+            ================================================== -->
+
+            <div class="profile-card">
+
+
+                <!-- Avatar -->
+
+                <div class="profile-avatar" id="profileAvatar">
+
+                    <span id="avatarInitials">
+                        U
+                    </span>
+
+                </div>
+
+
+                <!-- Name -->
+
+                <h3 id="profileName">
+                    User Name
+                </h3>
+
+
+                <!-- Role -->
+
+                <p class="role" id="profileRole">
+                    User
+                </p>
+
+
+                <!-- Status -->
+
+                <div class="profile-status">
+
+                    Active
+
+                </div>
+
+
+
+                <!-- Summary -->
+
+                <div class="profile-summary">
+
+
+                    <!-- Email -->
+
+                    <div class="summary-item">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <span id="profileEmail">
+                            user@cput.ac.za
+                        </span>
+
+                    </div>
+
+
+                    <!-- Department -->
+
+                    <div class="summary-item">
+
+                        <i class="fa-solid fa-building"></i>
+
+                        <span id="profileDepartment">
+                            Department
+                        </span>
+
+                    </div>
+
+
+                    <!-- User ID -->
+
+                    <div class="summary-item">
+
+                        <i class="fa-solid fa-id-card"></i>
+
+                        <span id="profileUserId">
+                            U001
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PROFILE DETAILS
+            ================================================== -->
+
+            <div class="profile-details">
+
+
+                <!-- =================================================
+                     PERSONAL INFORMATION
+                ================================================== -->
+
+                <div class="profile-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h3>
+                                Personal Information
+                            </h3>
+
+                            <p>
+                                Your basic account information.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-grid">
+
+
+                        <!-- First Name -->
+
+                        <div class="form-group">
+
+                            <label for="firstName">
+                                First Name
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="firstName"
+                                    readonly>
+
+                        </div>
+
+
+                        <!-- Last Name -->
+
+                        <div class="form-group">
+
+                            <label for="lastName">
+                                Last Name
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="lastName"
+                                    readonly>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <input
+                                    type="email"
+                                    id="email"
+                                    readonly>
+
+                        </div>
+
+
+                        <!-- Date of Birth -->
+
+                        <div class="form-group">
+
+                            <label for="dateOfBirth">
+                                Date of Birth
+                            </label>
+
+                            <input
+                                    type="date"
+                                    id="dateOfBirth"
+                                    readonly>
+
+                        </div>
+
+
+                        <!-- Department -->
+
+                        <div class="form-group">
+
+                            <label for="department">
+                                Department
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="department"
+                                    readonly>
+
+                        </div>
+
+
+                        <!-- User ID -->
+
+                        <div class="form-group">
+
+                            <label for="userId">
+                                User ID
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="userId"
+                                    readonly>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ROLE INFORMATION
+                ================================================== -->
+
+                <div class="profile-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h3>
+                                Account Role
+                            </h3>
+
+                            <p>
+                                Information specific to your
+                                account type.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-grid">
+
+
+                        <!-- Role -->
+
+                        <div class="form-group">
+
+                            <label for="accountRole">
+                                Role
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="accountRole"
+                                    readonly>
+
+                        </div>
+
+
+
+                        <!-- Student Information -->
+
+                        <div
+                                class="form-group"
+                                id="studentNumberGroup">
+
+                            <label for="studentNumber">
+                                Student Number
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="studentNumber"
+                                    readonly>
+
+                        </div>
+
+
+
+                        <!-- Staff Information -->
+
+                        <div
+                                class="form-group"
+                                id="staffIdGroup">
+
+                            <label for="staffId">
+                                Staff ID
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="staffId"
+                                    readonly>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ACCOUNT INFORMATION
+                ================================================== -->
+
+                <div class="profile-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h3>
+                                Account Information
+                            </h3>
+
+                            <p>
+                                Details about your CampusBook account.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="info-grid">
+
+
+                        <!-- Account Status -->
+
+                        <div class="info-box">
+
+                            <span>
+                                Account Status
+                            </span>
+
+                            <strong>
+                                Active
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Account Type -->
+
+                        <div class="info-box">
+
+                            <span>
+                                Account Type
+                            </span>
+
+                            <strong id="accountType">
+                                User
+                            </strong>
+
+                        </div>
+
+
+                        <!-- User ID -->
+
+                        <div class="info-box">
+
+                            <span>
+                                User ID
+                            </span>
+
+                            <strong id="accountUserId">
+                                U001
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SECURITY
+                ================================================== -->
+
+                <div class="profile-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <h3>
+                                Account Security
+                            </h3>
+
+                            <p>
+                                Manage your account security settings.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Password -->
+
+                    <div class="security-item">
+
+                        <div class="security-info">
+
+                            <div class="security-icon">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Password
+                                </strong>
+
+                                <span>
+                                    Your password is securely protected.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                                type="button"
+                                class="secondary-btn"
+                                id="changePasswordButton">
+
+                            <i class="fa-solid fa-key"></i>
+
+                            Change Password
+
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- Logout -->
+
+                    <div class="security-item">
+
+                        <div class="security-info">
+
+                            <div class="security-icon">
+
+                                <i class="fa-solid fa-right-from-bracket"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Sign Out
+                                </strong>
+
+                                <span>
+                                    Sign out of your CampusBook account.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                                type="button"
+                                class="secondary-btn"
+                                onclick="window.location.href='index.html'">
+                            Logout
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     STATUS MESSAGE
+========================================================= -->
+
+<div
+        id="statusMessage"
+        class="status-message hidden">
+
+    <span id="statusText"></span>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="profile.js"></script>
+
+</body>
+
+</html>

@@ -8,6 +8,7 @@ import za.ac.cput.campusfacilitybooking.domain.Student;
 import za.ac.cput.campusfacilitybooking.repository.StudentRepository;
 import za.ac.cput.campusfacilitybooking.service.StudentService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,10 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Student> getAll() {
+        return repository.findAll();
     }
 }

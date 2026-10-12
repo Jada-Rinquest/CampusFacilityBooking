@@ -1,8 +1,3 @@
-/* Department.java
-   Department Entity using Builder Pattern
-   Author: Jada Rinquest 222871296
-   Date: 21 June 2026
-*/
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.Entity;

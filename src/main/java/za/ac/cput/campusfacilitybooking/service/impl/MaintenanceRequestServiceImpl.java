@@ -9,6 +9,7 @@ import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.repository.MaintenanceRequestRepository;
 import za.ac.cput.campusfacilitybooking.service.MaintenanceRequestService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,10 @@ public class MaintenanceRequestServiceImpl implements MaintenanceRequestService 
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<MaintenanceRequest> getAll() {
+        return repository.findAll();
     }
 }

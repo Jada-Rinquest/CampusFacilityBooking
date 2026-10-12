@@ -1,75 +1,58 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
+import jakarta.persistence.*;
+import za.ac.cput.campusfacilitybooking.domain.enums.FacilityType;
+
+@Entity
+@Table(name = "facility")
 public class Facility {
 
+    @Id
     private String facilityId;
     private String name;
-    private String type;
     private int capacity;
     private String location;
-    private Department department;
+    private String departmentId;
 
-    // Default Constructor
-    public Facility() {
+    @Enumerated(EnumType.STRING)
+    private FacilityType facilityType;
+
+    protected Facility() {
     }
 
-    // Parameterized Constructor
-    public Facility(String facilityId, String name, String type, int capacity, String location, Department department) {
+    public Facility(String facilityId, String name, int capacity,
+                    String location, String departmentId,
+                    FacilityType facilityType) {
         this.facilityId = facilityId;
         this.name = name;
-        this.type = type;
         this.capacity = capacity;
         this.location = location;
-        this.department = department;
+        this.departmentId = departmentId;
+        this.facilityType = facilityType;
     }
 
-    // Getters and Setters
     public String getFacilityId() {
         return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
-        this.facilityId = facilityId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
+    public FacilityType getFacilityType() {
+        return facilityType;
     }
 
     @Override
@@ -77,10 +60,62 @@ public class Facility {
         return "Facility{" +
                 "facilityId='" + facilityId + '\'' +
                 ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
                 ", capacity=" + capacity +
                 ", location='" + location + '\'' +
-                ", department=" + department +
+                ", departmentId='" + departmentId + '\'' +
+                ", facilityType=" + facilityType +
                 '}';
+    }
+
+    private Facility(Builder builder) {
+        this.facilityId = builder.facilityId;
+        this.name = builder.name;
+        this.capacity = builder.capacity;
+        this.location = builder.location;
+        this.departmentId = builder.departmentId;
+        this.facilityType = builder.facilityType;
+    }
+
+    public static class Builder {
+        private String facilityId;
+        private String name;
+        private int capacity;
+        private String location;
+        private String departmentId;
+        private FacilityType facilityType;
+
+        public Builder setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setCapacity(int capacity) {
+            this.capacity = capacity;
+            return this;
+        }
+
+        public Builder setLocation(String location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder setDepartmentId(String departmentId) {
+            this.departmentId = departmentId;
+            return this;
+        }
+
+        public Builder setFacilityType(FacilityType facilityType) {
+            this.facilityType = facilityType;
+            return this;
+        }
+
+        public Facility build() {
+            return new Facility(this);
+        }
     }
 }

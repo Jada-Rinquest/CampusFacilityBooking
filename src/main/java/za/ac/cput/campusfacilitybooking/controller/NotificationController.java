@@ -1,12 +1,12 @@
 package za.ac.cput.campusfacilitybooking.controller;
 
-/* Author: Nuyra Swanson (221290524)
-     Date: 19 July 2026 */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Notification;
+import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 import za.ac.cput.campusfacilitybooking.service.NotificationService;
 
 @RestController
@@ -21,9 +21,21 @@ public class NotificationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Notification> create(@RequestBody Notification notification) {
-        Notification createdNotification = service.create(notification);
-        return ResponseEntity.ok(createdNotification);
+    public ResponseEntity<Notification> create(@RequestBody NotificationRequest request) {
+        Notification notification = NotificationFactory.createNotification(
+                request.getNotificationId(),
+                request.getUserId(),
+                request.getMessage(),
+                request.getSentDate(),
+                request.getNotificationType()
+        );
+
+        return ResponseEntity.ok(service.create(notification));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Notification>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/read/{id}")

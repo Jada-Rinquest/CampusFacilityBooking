@@ -3,9 +3,11 @@ package za.ac.cput.campusfacilitybooking.controllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import za.ac.cput.campusfacilitybooking.controller.StudentController;
-import za.ac.cput.campusfacilitybooking.domain.Department;
 import za.ac.cput.campusfacilitybooking.domain.Student;
+import za.ac.cput.campusfacilitybooking.factory.StudentFactory;
 import za.ac.cput.campusfacilitybooking.service.StudentService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,73 +21,73 @@ class StudentControllerTest {
 
     @BeforeEach
     void setUp() {
-
         service = Mockito.mock(StudentService.class);
+        controller = new StudentController(service);
 
-        controller = new StudentController();
-
-        try {
-            var field = StudentController.class.getDeclaredField("service");
-            field.setAccessible(true);
-            field.set(controller, service);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Department department = new Department.Builder()
-                .setDepartmentId("D001")
-                .setName("IT")
-                .setBuilding("Block A")
-                .setHeadOfDepartment("Mr Adams")
-                .build();
-
-        student = new Student.Builder()
-                .setStudentId("S001")
-                .setFirstName("Jada")
-                .setLastName("Rinquest")
-                .setEmail("jada@gmail.com")
-                .setStudentNumber("222871296")
-                .setDepartment(department)
-                .build();
+        student = StudentFactory.createStudent(
+                "S001",
+                "222871296",
+                "U001"
+        );
     }
 
     @Test
-    void create() {
-
+    void testCreate() {
         when(service.create(student)).thenReturn(student);
 
-        Student created = controller.create(student);
+        ResponseEntity<Student> response = controller.create(student);
 
-        assertNotNull(created);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("S001", response.getBody().getStudentId());
     }
 
     @Test
-    void read() {
-
+    void testRead() {
         when(service.read("S001")).thenReturn(student);
 
-        Student found = controller.read("S001");
+        ResponseEntity<Student> response = controller.read("S001");
 
-        assertNotNull(found);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("S001", response.getBody().getStudentId());
     }
 
     @Test
-    void update() {
+    void testReadNotFound() {
+        when(service.read("S999")).thenReturn(null);
 
-        when(service.update(student)).thenReturn(student);
+        ResponseEntity<Student> response = controller.read("S999");
 
-        Student updated = controller.update(student);
-
-        assertNotNull(updated);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
     @Test
-    void delete() {
+    void testUpdate() {
+        Student updatedStudent = StudentFactory.createStudent(
+                "S001",
+                "222871297",
+                "U001"
+        );
 
+        when(service.update(updatedStudent)).thenReturn(updatedStudent);
+
+        ResponseEntity<Student> response = controller.update(updatedStudent);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("222871297", response.getBody().getStudentNumber());
+    }
+
+    @Test
+    void testDelete() {
         when(service.delete("S001")).thenReturn(true);
 
-        boolean deleted = controller.delete("S001");
+        ResponseEntity<Boolean> response = controller.delete("S001");
 
-        assertTrue(deleted);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody());
+        verify(service).delete("S001");
     }
 }

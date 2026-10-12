@@ -1,12 +1,14 @@
+package za.ac.cput.campusfacilitybooking.serviceTest;
+
 //Angelia Van der Westhuizen 12/07/2026
 //221420649
-
-package za.ac.cput.campusfacilitybooking.serviceTest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import za.ac.cput.campusfacilitybooking.domain.Equipment;
+import za.ac.cput.campusfacilitybooking.domain.enums.EquipmentStatus;
+import za.ac.cput.campusfacilitybooking.factory.EquipmentFactory;
 import za.ac.cput.campusfacilitybooking.repository.EquipmentRepository;
 import za.ac.cput.campusfacilitybooking.service.EquipmentService;
 import za.ac.cput.campusfacilitybooking.service.impl.EquipmentServiceImpl;
@@ -27,17 +29,17 @@ public class EquipmentServiceTest {
         repository = Mockito.mock(EquipmentRepository.class);
         service = new EquipmentServiceImpl(repository);
 
-        equipment = new Equipment.Builder()
-                .setEquipmentId("EQUIP001")
-                .setName("Projector")
-                .setSerialNumber("SN67890")
-                .setStatus("Available")
-                .setFacility("Hall A")
-                .build();
+        equipment = EquipmentFactory.createEquipment(
+                "EQUIP001",
+                "Projector",
+                "SN67890",
+                "F001",
+                EquipmentStatus.AVAILABLE
+        );
     }
 
     @Test
-    void create() {
+    void testCreate() {
         when(repository.save(equipment)).thenReturn(equipment);
 
         Equipment created = service.create(equipment);
@@ -47,7 +49,7 @@ public class EquipmentServiceTest {
     }
 
     @Test
-    void read() {
+    void testRead() {
         when(repository.findById("EQUIP001"))
                 .thenReturn(Optional.of(equipment));
 
@@ -58,7 +60,7 @@ public class EquipmentServiceTest {
     }
 
     @Test
-    void update() {
+    void testUpdate() {
         when(repository.save(equipment)).thenReturn(equipment);
 
         Equipment updated = service.update(equipment);
@@ -67,13 +69,12 @@ public class EquipmentServiceTest {
     }
 
     @Test
-    void delete() {
+    void testDelete() {
         when(repository.existsById("EQUIP001")).thenReturn(true);
 
         boolean deleted = service.delete("EQUIP001");
 
         assertTrue(deleted);
-
         verify(repository).deleteById("EQUIP001");
     }
 }
