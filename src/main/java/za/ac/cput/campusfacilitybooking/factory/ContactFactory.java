@@ -25,11 +25,11 @@ public class ContactFactory {
             throw new IllegalArgumentException("User ID is required");
         }
 
-        return new Contact(
-                contactId,
-                contact,
-                description,
-                userId
-        );
+        return new Contact.Builder()
+                .setContactId(contactId)
+                .setContact(contact)
+                .setDescription(description)
+                .setUserId(userId)
+                .build();
     }
 }

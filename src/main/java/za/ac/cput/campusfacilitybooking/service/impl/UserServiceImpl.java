@@ -5,6 +5,7 @@ import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.repository.UserRepository;
 import za.ac.cput.campusfacilitybooking.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,15 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return repository.findAll();
     }
 }

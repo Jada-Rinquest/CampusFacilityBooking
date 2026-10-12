@@ -37,13 +37,13 @@ public class UserFactory {
             throw new IllegalArgumentException("Department ID is required");
         }
 
-        return new User(
-                userId,
-                firstName,
-                lastName,
-                email,
-                dateOfBirth,
-                departmentId
-        );
+        return new User.Builder()
+                .setUserId(userId)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setEmail(email)
+                .setDateOfBirth(dateOfBirth)
+                .setDepartmentId(departmentId)
+                .build();
     }
 }

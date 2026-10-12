@@ -48,4 +48,42 @@ public class Contact {
                 ", userId='" + userId + '\'' +
                 '}';
     }
+
+    private Contact(Builder builder) {
+        this.contactId = builder.contactId;
+        this.contact = builder.contact;
+        this.description = builder.description;
+        this.userId = builder.userId;
+    }
+
+    public static class Builder {
+        private String contactId;
+        private String contact;
+        private String description;
+        private String userId;
+
+        public Builder setContactId(String contactId) {
+            this.contactId = contactId;
+            return this;
+        }
+
+        public Builder setContact(String contact) {
+            this.contact = contact;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Contact build() {
+            return new Contact(this);
+        }
+    }
 }

@@ -3,7 +3,10 @@ package za.ac.cput.campusfacilitybooking.serviceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import za.ac.cput.campusfacilitybooking.domain.Booking;
 import za.ac.cput.campusfacilitybooking.domain.Invoice;
+import za.ac.cput.campusfacilitybooking.domain.enums.BookingStatus;
+import za.ac.cput.campusfacilitybooking.factory.BookingFactory;
 import za.ac.cput.campusfacilitybooking.factory.InvoiceFactory;
 import za.ac.cput.campusfacilitybooking.repository.InvoiceRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.InvoiceServiceImpl;
@@ -19,15 +22,26 @@ public class InvoiceServiceTest {
     private InvoiceRepository repository;
     private InvoiceServiceImpl service;
     private Invoice invoice;
+    private Booking booking;
 
     @BeforeEach
     void setUp() {
         repository = Mockito.mock(InvoiceRepository.class);
         service = new InvoiceServiceImpl(repository);
 
+        // Create a Booking first
+        booking = BookingFactory.createBooking(
+                "B001",
+                "F001",
+                "TS001",
+                "U001",
+                "Study Session",
+                BookingStatus.PENDING
+        );
+
         invoice = InvoiceFactory.createInvoice(
                 "INV001",
-                "B001",
+                booking,  // ← Pass Booking object
                 150.00,
                 LocalDate.of(2026, 7, 12),
                 LocalDate.of(2026, 8, 12)
@@ -53,6 +67,8 @@ public class InvoiceServiceTest {
 
         assertNotNull(found);
         assertEquals(150.00, found.getAmount());
+        assertNotNull(found.getBooking());
+        assertEquals("B001", found.getBooking().getBookingId());
     }
 
     @Test

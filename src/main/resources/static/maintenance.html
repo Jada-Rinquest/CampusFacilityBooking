@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Maintenance Requests | Campus Facility Booking</title>
+
+    <link rel="stylesheet" href="maintenance.css">
+
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <i class="fa-solid fa-building"></i>
+
+        <span>
+            Campus Booking
+        </span>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="staff-dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="booking.html">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Bookings</span>
+        </a>
+
+        <a href="facility.html">
+            <i class="fa-solid fa-building"></i>
+            <span>Facilities</span>
+        </a>
+
+        <a href="equipment.html">
+            <i class="fa-solid fa-toolbox"></i>
+            <span>Equipment</span>
+        </a>
+
+        <a href="maintenance.html" class="active">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Maintenance</span>
+        </a>
+
+        <a href="notification.html">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+
+        <a href="user.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="invoice.html">
+
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+
+            <span>Invoices</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="profile.html">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="login.html" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button
+                    type="button"
+                    id="mobileMenuBtn"
+                    class="mobile-menu-btn">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h1>
+                    Maintenance Requests
+                </h1>
+
+                <p>
+                    Log and track equipment maintenance across campus.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+            <button
+                    type="button"
+                    class="notification-icon"
+                    onclick="window.location.href='notification.html'">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span class="notification-count">
+                    3
+                </span>
+
+            </button>
+
+
+            <div class="staff-profile">
+
+                <div class="staff-avatar">
+                    ST
+                </div>
+
+                <div class="staff-info">
+
+                    <strong>
+                        Staff Member
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PAGE
+    ====================================================== -->
+
+    <section class="maintenance-page">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                    EQUIPMENT MAINTENANCE
+
+                </span>
+
+                <h2>
+                    Manage Maintenance Requests
+                </h2>
+
+                <p>
+                    Report faulty equipment, monitor repair progress,
+                    and close out completed maintenance work.
+                </p>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="newRequestBtn"
+                    class="primary-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                New Request
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="maintenance-stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+
+                    <i class="fa-solid fa-clipboard-list"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Requests</span>
+
+                    <strong id="totalRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon red">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Open</span>
+
+                    <strong id="openRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+
+                    <i class="fa-solid fa-spinner"></i>
+
+                </div>
+
+                <div>
+
+                    <span>In Progress</span>
+
+                    <strong id="inProgressRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Resolved</span>
+
+                    <strong id="resolvedRequests">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CREATE MAINTENANCE REQUEST FORM
+        ================================================== -->
+
+        <section
+                id="requestFormSection"
+                class="maintenance-card hidden">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        NEW REQUEST
+                    </span>
+
+                    <h3 id="formTitle">
+                        Log a Maintenance Request
+                    </h3>
+
+                    <p>
+                        Complete the details below to report faulty equipment.
+                    </p>
+
+                </div>
+
+
+                <button
+                        type="button"
+                        id="closeFormBtn"
+                        class="close-btn">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <form id="requestForm">
+
+
+                <!-- =========================================
+                     REQUEST ID
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="requestId">
+                        Request ID
+                        <span>*</span>
+                    </label>
+
+                    <input
+                            type="text"
+                            id="requestId"
+                            name="requestId"
+                            placeholder="e.g. MR001"
+                            required>
+
+                    <small>
+                        A unique reference for this maintenance request.
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     EQUIPMENT
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="equipmentId">
+                        Equipment
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="equipmentId"
+                            name="equipmentId"
+                            required>
+
+                        <option value="">
+                            Select equipment
+                        </option>
+
+                        <!--
+                            JavaScript will populate equipment
+                            from the backend.
+                        -->
+
+                    </select>
+
+                    <small>
+                        Select the item that requires maintenance.
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     REPORTED BY
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="reportedBy">
+                        Reported By
+                        <span>*</span>
+                    </label>
+
+                    <input
+                            type="text"
+                            id="reportedBy"
+                            name="reportedBy"
+                            placeholder="e.g. S001"
+                            required>
+
+                    <small>
+                        The staff member logging this request.
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     DATE REPORTED
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="dateReported">
+                        Date Reported
+                        <span>*</span>
+                    </label>
+
+                    <input
+                            type="date"
+                            id="dateReported"
+                            name="dateReported"
+                            required>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     PRIORITY
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="maintenancePriority">
+                        Priority
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="maintenancePriority"
+                            name="maintenancePriority"
+                            required>
+
+                        <option value="">
+                            Select a priority
+                        </option>
+
+                        <option value="LOW">
+                            Low
+                        </option>
+
+                        <option value="MEDIUM">
+                            Medium
+                        </option>
+
+                        <option value="HIGH">
+                            High
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     STATUS
+                ========================================== -->
+
+                <div class="form-group">
+
+                    <label for="maintenanceStatus">
+                        Status
+                        <span>*</span>
+                    </label>
+
+                    <select
+                            id="maintenanceStatus"
+                            name="maintenanceStatus"
+                            required>
+
+                        <option value="OPEN">
+                            Open
+                        </option>
+
+                        <option value="IN_PROGRESS">
+                            In Progress
+                        </option>
+
+                        <option value="RESOLVED">
+                            Resolved
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     DESCRIPTION
+                ========================================== -->
+
+                <div class="form-group full-width">
+
+                    <label for="description">
+                        Description of Fault
+                        <span>*</span>
+                    </label>
+
+                    <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            maxlength="500"
+                            placeholder="Describe the fault or maintenance required..."
+                            required></textarea>
+
+                    <small
+                            id="descriptionCount">
+                        0 / 500
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     ACTIONS
+                ========================================== -->
+
+                <div class="form-actions">
+
+                    <button
+                            type="button"
+                            id="cancelRequestBtn"
+                            class="secondary-btn">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                            type="submit"
+                            id="submitRequestBtn"
+                            class="primary-btn">
+
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                        Submit Request
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =================================================
+             MAINTENANCE REQUESTS LIST
+        ================================================== -->
+
+        <section class="maintenance-card">
+
+
+            <!-- Card header -->
+
+            <div class="card-header maintenance-list-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        RECORDS
+                    </span>
+
+                    <h3>
+                        All Maintenance Requests
+                    </h3>
+
+                    <p>
+                        View and manage reported equipment faults.
+                    </p>
+
+                </div>
+
+
+                <button
+                        type="button"
+                        id="refreshBtn"
+                        class="secondary-btn">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+
+
+            <!-- Filters -->
+
+            <div class="maintenance-filters">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                            type="text"
+                            id="requestSearch"
+                            placeholder="Search requests...">
+
+                </div>
+
+
+                <select id="statusFilter">
+
+                    <option value="all">
+                        All Statuses
+                    </option>
+
+                    <option value="OPEN">
+                        Open
+                    </option>
+
+                    <option value="IN_PROGRESS">
+                        In Progress
+                    </option>
+
+                    <option value="RESOLVED">
+                        Resolved
+                    </option>
+
+                </select>
+
+
+                <select id="priorityFilter">
+
+                    <option value="all">
+                        All Priorities
+                    </option>
+
+                    <option value="LOW">
+                        Low
+                    </option>
+
+                    <option value="MEDIUM">
+                        Medium
+                    </option>
+
+                    <option value="HIGH">
+                        High
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Table -->
+
+            <div class="table-container">
+
+                <table class="maintenance-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Request
+                        </th>
+
+                        <th>
+                            Equipment
+                        </th>
+
+                        <th>
+                            Reported By
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Priority
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="requestTableBody">
+
+                    <!-- JavaScript inserts maintenance requests here -->
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- Empty state -->
+
+                <div
+                        id="emptyState"
+                        class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                    </div>
+
+                    <h4>
+                        No maintenance requests found
+                    </h4>
+
+                    <p>
+                        There are currently no requests matching your search.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Table footer -->
+
+            <div class="table-footer">
+
+                <span id="requestCount">
+                    Showing 0 requests
+                </span>
+
+
+                <div class="pagination">
+
+                    <button
+                            type="button"
+                            id="previousPage"
+                            class="pagination-btn"
+                            disabled>
+
+                        <i class="fa-solid fa-chevron-left"></i>
+
+                    </button>
+
+
+                    <span id="currentPage">
+                        1
+                    </span>
+
+
+                    <button
+                            type="button"
+                            id="nextPage"
+                            class="pagination-btn"
+                            disabled>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     VIEW MAINTENANCE REQUEST MODAL
+========================================================= -->
+
+<div
+        id="viewRequestModal"
+        class="modal-overlay">
+
+    <div class="maintenance-modal">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="card-eyebrow">
+                    REQUEST DETAILS
+                </span>
+
+                <h3>
+                    Maintenance Information
+                </h3>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    id="closeViewModalBtn"
+                    class="close-btn">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="maintenance-details">
+
+
+            <div class="detail-item">
+
+                <span>
+                    Request ID
+                </span>
+
+                <strong id="viewRequestId">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Equipment
+                </span>
+
+                <strong id="viewEquipment">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Reported By
+                </span>
+
+                <strong id="viewReportedBy">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Date Reported
+                </span>
+
+                <strong id="viewDateReported">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Priority
+                </span>
+
+                <strong id="viewPriority">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Status
+                </span>
+
+                <strong id="viewStatus">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail-description">
+
+                <span>
+                    Description
+                </span>
+
+                <p id="viewDescription">
+                    -
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="maintenance.js"></script>
+
+</body>
+
+</html>

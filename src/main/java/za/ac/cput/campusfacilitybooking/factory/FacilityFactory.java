@@ -36,13 +36,13 @@ public class FacilityFactory {
             throw new IllegalArgumentException("Facility Type is required");
         }
 
-        return new Facility(
-                facilityId,
-                name,
-                capacity,
-                location,
-                departmentId,
-                facilityType
-        );
+        return new Facility.Builder()
+                .setFacilityId(facilityId)
+                .setName(name)
+                .setCapacity(capacity)
+                .setLocation(location)
+                .setDepartmentId(departmentId)
+                .setFacilityType(facilityType)
+                .build();
     }
 }

@@ -25,11 +25,11 @@ public class LoginFactory {
             throw new IllegalArgumentException("Password is required");
         }
 
-        return new Login(
-                loginId,
-                registrarId,
-                username,
-                password
-        );
+        return new Login.Builder()
+                .setLoginId(loginId)
+                .setRegistrarId(registrarId)
+                .setUsername(username)
+                .setPassword(password)
+                .build();
     }
 }

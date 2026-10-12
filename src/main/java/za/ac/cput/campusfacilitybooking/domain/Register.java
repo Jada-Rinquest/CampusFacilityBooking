@@ -43,4 +43,35 @@ public class Register {
                 ", dateRegistered=" + dateRegistered +
                 '}';
     }
+
+    private Register(Builder builder) {
+        this.registrarId = builder.registrarId;
+        this.email = builder.email;
+        this.dateRegistered = builder.dateRegistered;
+    }
+
+    public static class Builder {
+        private String registrarId;
+        private String email;
+        private LocalDate dateRegistered;
+
+        public Builder setRegistrarId(String registrarId) {
+            this.registrarId = registrarId;
+            return this;
+        }
+
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setDateRegistered(LocalDate dateRegistered) {
+            this.dateRegistered = dateRegistered;
+            return this;
+        }
+
+        public Register build() {
+            return new Register(this);
+        }
+    }
 }

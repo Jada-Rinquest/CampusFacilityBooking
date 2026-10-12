@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import za.ac.cput.campusfacilitybooking.domain.Facility;
 import za.ac.cput.campusfacilitybooking.repository.FacilityRepository;
 import za.ac.cput.campusfacilitybooking.service.FacilityService;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +43,10 @@ public class FacilityServiceImpl implements FacilityService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Facility> getAll() {
+        return repository.findAll();
     }
 }

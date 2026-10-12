@@ -6,6 +6,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Staff;
 import za.ac.cput.campusfacilitybooking.service.StaffService;
 
@@ -24,6 +26,11 @@ public class StaffController {
     public ResponseEntity<Staff> create(@RequestBody Staff staff) {
         Staff createdStaff = service.create(staff);
         return ResponseEntity.ok(createdStaff);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Staff>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/read/{id}")

@@ -25,11 +25,11 @@ public class AddressFactory {
             throw new IllegalArgumentException("User ID is required");
         }
 
-        return new Address(
-                addressId,
-                address,
-                description,
-                userId
-        );
+        return new Address.Builder()
+                .setAddressId(addressId)
+                .setAddress(address)
+                .setDescription(description)
+                .setUserId(userId)
+                .build();
     }
 }
