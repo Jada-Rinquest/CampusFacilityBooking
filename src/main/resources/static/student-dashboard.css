@@ -3,30 +3,34 @@
 ========================================================= */
 
 :root {
-    --navy: #17243b;
-    --navy-light: #243653;
-    --blue: #315a8a;
-    --blue-light: #eaf1f8;
+    --navy: #172033;
+    --navy-light: #202b42;
 
-    --ivory: #f7f6f2;
+    --blue: #3b82f6;
+    --blue-dark: #2563eb;
+    --blue-soft: #eff6ff;
+
     --white: #ffffff;
+    --ivory: #f8fafc;
+    --light-gray: #f1f5f9;
+    --border: #e2e8f0;
 
-    --charcoal: #263238;
-    --gray: #6b7280;
-    --light-gray: #e5e7eb;
-    --lighter-gray: #f1f3f5;
+    --text: #1e293b;
+    --muted: #64748b;
 
-    --green: #2f7d5a;
-    --green-light: #e7f4ed;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
 
-    --orange: #c47a32;
-    --orange-light: #fff1df;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
 
-    --red: #b94a48;
-    --red-light: #fbeaea;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
 
-    --shadow-sm: 0 2px 10px rgba(23, 36, 59, 0.06);
-    --shadow-md: 0 8px 25px rgba(23, 36, 59, 0.08);
+    --sidebar-width: 250px;
+
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
 
     --radius: 14px;
 }
@@ -42,25 +46,21 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: var(--ivory);
-    color: var(--charcoal);
+    color: var(--text);
     min-height: 100vh;
 }
-
 
 a {
     text-decoration: none;
     color: inherit;
 }
-
 
 button,
 input,
@@ -79,51 +79,59 @@ textarea {
     top: 0;
     left: 0;
 
-    width: 250px;
+    width: var(--sidebar-width);
     height: 100vh;
 
     background: var(--navy);
+    color: var(--white);
 
     display: flex;
     flex-direction: column;
 
-    padding: 28px 18px;
-
     z-index: 1000;
+
+    box-shadow: 4px 0 20px rgba(15, 23, 42, 0.12);
 }
 
 
 /* Logo */
 
 .sidebar-logo {
+    height: 82px;
+
     display: flex;
     align-items: center;
 
     gap: 12px;
 
-    padding: 0 12px 30px;
+    padding: 0 28px;
 
-    color: var(--white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 700;
 }
 
-
 .sidebar-logo i {
-    font-size: 22px;
+    font-size: 25px;
+    color: #60a5fa;
 }
 
 
 /* Navigation */
 
 .sidebar-nav {
+    flex: 1;
+
+    padding: 25px 14px;
+
     display: flex;
     flex-direction: column;
 
     gap: 6px;
-}
 
+    overflow-y: auto;
+}
 
 .sidebar-nav a,
 .sidebar-bottom a {
@@ -132,21 +140,19 @@ textarea {
 
     gap: 14px;
 
-    padding: 13px 14px;
+    padding: 13px 16px;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
-    color: #c7cfdb;
+    color: #cbd5e1;
+
+    text-decoration: none;
 
     font-size: 14px;
     font-weight: 500;
 
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
+    transition: all 0.2s ease;
 }
-
 
 .sidebar-nav a i,
 .sidebar-bottom a i {
@@ -157,7 +163,6 @@ textarea {
     font-size: 16px;
 }
 
-
 .sidebar-nav a:hover,
 .sidebar-bottom a:hover {
     background: rgba(255, 255, 255, 0.08);
@@ -167,22 +172,21 @@ textarea {
     transform: translateX(2px);
 }
 
-
 .sidebar-nav a.active {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--blue);
 
     color: var(--white);
+
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.25);
 }
 
 
 /* Bottom */
 
 .sidebar-bottom {
-    margin-top: auto;
+    padding: 16px 14px 22px;
 
-    padding-top: 20px;
-
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 
     display: flex;
     flex-direction: column;
@@ -190,15 +194,14 @@ textarea {
     gap: 6px;
 }
 
-
 .sidebar-bottom .logout {
-    color: #d7a7a7;
+    color: #fca5a5;
 }
 
-
 .sidebar-bottom .logout:hover {
-    color: #ffffff;
-    background: rgba(185, 74, 72, 0.2);
+    background: rgba(220, 38, 38, 0.12);
+
+    color: #fecaca;
 }
 
 
@@ -207,9 +210,11 @@ textarea {
 ========================================================= */
 
 .main-content {
-    margin-left: 250px;
+    margin-left: var(--sidebar-width);
 
     min-height: 100vh;
+
+    background: var(--ivory);
 
     padding-bottom: 60px;
 }
@@ -220,59 +225,60 @@ textarea {
 ========================================================= */
 
 .topbar {
-    height: 86px;
+    height: 82px;
 
     background: var(--white);
 
-    border-bottom: 1px solid var(--light-gray);
+    border-bottom: 1px solid var(--border);
 
     padding: 0 40px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
 
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
 
 .topbar-title {
     display: flex;
     align-items: center;
 
-    gap: 15px;
+    gap: 16px;
 }
 
-
 .topbar-title h1 {
-    font-size: 21px;
+    font-size: 22px;
 
-    color: var(--navy);
+    color: var(--text);
 
     margin-bottom: 4px;
 }
 
-
 .topbar-title p {
-    color: var(--gray);
-
     font-size: 13px;
-}
 
+    color: var(--muted);
+}
 
 .mobile-menu-btn {
     display: none;
 
-    border: none;
-
-    background: var(--lighter-gray);
-
     width: 40px;
     height: 40px;
 
-    border-radius: 9px;
+    border: none;
+
+    background: var(--light-gray);
+
+    border-radius: 8px;
 
     cursor: pointer;
 
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 18px;
 }
@@ -298,50 +304,49 @@ textarea {
     width: 42px;
     height: 42px;
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
     background: var(--white);
 
-    border-radius: 50%;
+    border-radius: 10px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: var(--navy);
+    color: var(--muted);
 
     cursor: pointer;
 
     transition: 0.2s ease;
 }
 
-
 .notification-icon:hover {
-    background: var(--blue-light);
+    background: var(--blue-soft);
 
-    border-color: #d4dfeb;
+    color: var(--blue);
+
+    border-color: #bfdbfe;
 }
-
 
 .notification-icon > i {
-    font-size: 16px;
+    font-size: 17px;
 }
-
 
 .notification-count {
     position: absolute;
 
-    top: -3px;
-    right: -3px;
+    top: -5px;
+    right: -5px;
 
     width: 18px;
     height: 18px;
 
     border-radius: 50%;
 
-    background: var(--red);
+    background: var(--danger);
 
-    color: white;
+    color: var(--white);
 
     font-size: 10px;
     font-weight: 700;
@@ -350,7 +355,7 @@ textarea {
     align-items: center;
     justify-content: center;
 
-    border: 2px solid white;
+    border: 2px solid var(--white);
 }
 
 
@@ -360,20 +365,18 @@ textarea {
     display: flex;
     align-items: center;
 
-    gap: 10px;
+    gap: 11px;
 
-    padding: 6px 10px;
+    padding: 6px 8px;
 
     border-radius: 10px;
 
     transition: background 0.2s ease;
 }
 
-
 .student-profile:hover {
-    background: var(--lighter-gray);
+    background: var(--light-gray);
 }
-
 
 .student-avatar {
     width: 40px;
@@ -383,16 +386,15 @@ textarea {
 
     background: var(--blue);
 
-    color: white;
+    color: var(--white);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
 }
-
 
 .student-info {
     display: flex;
@@ -401,27 +403,16 @@ textarea {
     gap: 3px;
 }
 
-
 .student-info strong {
     font-size: 13px;
 
-    color: var(--navy);
+    color: var(--text);
 }
-
 
 .student-info span {
     font-size: 11px;
 
-    color: var(--gray);
-}
-
-
-.student-profile > i {
-    margin-left: 5px;
-
-    color: var(--gray);
-
-    font-size: 11px;
+    color: var(--muted);
 }
 
 
@@ -434,7 +425,7 @@ textarea {
 
     margin: 0 auto;
 
-    padding: 35px 40px;
+    padding: 42px 40px 60px;
 }
 
 
@@ -445,7 +436,7 @@ textarea {
 .welcome-section {
     background: var(--navy);
 
-    border-radius: 18px;
+    border-radius: 14px;
 
     padding: 35px 40px;
 
@@ -461,7 +452,6 @@ textarea {
 
     position: relative;
 }
-
 
 .welcome-section::after {
     content: "";
@@ -479,7 +469,6 @@ textarea {
     top: -150px;
 }
 
-
 .welcome-content {
     position: relative;
 
@@ -487,7 +476,6 @@ textarea {
 
     max-width: 700px;
 }
-
 
 .welcome-eyebrow {
     display: inline-flex;
@@ -500,14 +488,13 @@ textarea {
     font-size: 11px;
     font-weight: 700;
 
-    letter-spacing: 1.5px;
+    letter-spacing: 1.3px;
 
     margin-bottom: 10px;
 }
 
-
 .welcome-content h2 {
-    color: white;
+    color: var(--white);
 
     font-size: 30px;
 
@@ -516,11 +503,9 @@ textarea {
     margin-bottom: 10px;
 }
 
-
 .welcome-content h2 span {
     color: #b9cbe0;
 }
-
 
 .welcome-content p {
     color: #c5cfdb;
@@ -550,7 +535,7 @@ textarea {
 
     padding: 13px 20px;
 
-    background: white;
+    background: var(--white);
 
     color: var(--navy);
 
@@ -563,18 +548,14 @@ textarea {
 
     cursor: pointer;
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
-
 
 .primary-button:hover {
     transform: translateY(-2px);
 
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
-
 
 .secondary-button {
     display: inline-flex;
@@ -584,25 +565,24 @@ textarea {
 
     padding: 11px 17px;
 
-    background: white;
+    background: var(--white);
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
     border-radius: 9px;
 
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
 
     transition: 0.2s ease;
 }
 
-
 .secondary-button:hover {
-    background: var(--blue-light);
+    background: var(--light-gray);
 
-    border-color: #ccd9e6;
+    border-color: #cbd5e1;
 }
 
 
@@ -613,53 +593,47 @@ textarea {
 .summary-grid {
     display: grid;
 
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
-    gap: 18px;
+    gap: 20px;
 
     margin-bottom: 25px;
 }
 
-
 .summary-card {
     background: var(--white);
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
-    border-radius: var(--radius);
+    border-radius: 14px;
 
-    padding: 21px;
+    padding: 23px;
 
     display: flex;
     align-items: center;
 
-    gap: 15px;
+    gap: 17px;
 
     box-shadow: var(--shadow-sm);
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-
 .summary-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 
     box-shadow: var(--shadow-md);
 }
 
-
 .summary-icon {
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
 
     flex-shrink: 0;
 
     border-radius: 11px;
 
-    background: var(--blue-light);
+    background: var(--blue-soft);
 
     color: var(--blue);
 
@@ -667,9 +641,8 @@ textarea {
     align-items: center;
     justify-content: center;
 
-    font-size: 18px;
+    font-size: 19px;
 }
-
 
 .summary-content {
     display: flex;
@@ -678,18 +651,18 @@ textarea {
     gap: 4px;
 }
 
-
 .summary-content span {
-    color: var(--gray);
+    color: var(--muted);
 
-    font-size: 11px;
+    font-size: 12px;
 }
 
-
 .summary-content strong {
-    color: var(--navy);
+    color: var(--text);
 
-    font-size: 23px;
+    font-size: 25px;
+
+    line-height: 1;
 }
 
 
@@ -700,9 +673,7 @@ textarea {
 .dashboard-grid {
     display: grid;
 
-    grid-template-columns:
-        minmax(0, 1.5fr)
-        minmax(350px, 1fr);
+    grid-template-columns: minmax(0, 1.5fr) minmax(350px, 1fr);
 
     gap: 22px;
 
@@ -717,57 +688,52 @@ textarea {
 .dashboard-panel {
     background: var(--white);
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
-    border-radius: var(--radius);
+    border-radius: 14px;
 
     box-shadow: var(--shadow-sm);
 
     overflow: hidden;
 }
 
-
 .panel-header {
-    padding: 22px 25px;
+    padding: 25px 28px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    border-bottom: 1px solid var(--lighter-gray);
+    border-bottom: 1px solid var(--border);
 }
 
-
 .panel-header h3 {
-    color: var(--navy);
+    color: var(--text);
 
-    font-size: 17px;
+    font-size: 19px;
 
     margin-top: 4px;
 }
-
 
 .panel-header > a {
     color: var(--blue);
 
     font-size: 12px;
 
-    font-weight: 700;
+    font-weight: 600;
 }
-
 
 .panel-header > a:hover {
     text-decoration: underline;
 }
 
-
 .section-label {
     color: var(--blue);
 
     font-size: 10px;
-    font-weight: 800;
+    font-weight: 700;
 
-    letter-spacing: 1.3px;
+    letter-spacing: 1.2px;
 }
 
 
@@ -781,23 +747,20 @@ textarea {
 
     gap: 17px;
 
-    padding: 20px 25px;
+    padding: 20px 28px;
 
-    border-bottom: 1px solid var(--lighter-gray);
+    border-bottom: 1px solid var(--border);
 
     transition: background 0.2s ease;
 }
 
-
 .booking-item:hover {
-    background: #fafbfc;
+    background: #f8fafc;
 }
-
 
 .booking-item:last-of-type {
     border-bottom: none;
 }
-
 
 .booking-date {
     width: 52px;
@@ -805,7 +768,7 @@ textarea {
 
     flex-shrink: 0;
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
     border-radius: 10px;
 
@@ -817,18 +780,17 @@ textarea {
     flex-direction: column;
 }
 
-
 .booking-date span {
     background: var(--navy);
 
-    color: white;
+    color: var(--white);
 
     font-size: 9px;
     font-weight: 700;
 
     padding: 5px 0;
+    text-transform: uppercase;
 }
-
 
 .booking-date strong {
     flex: 1;
@@ -837,11 +799,10 @@ textarea {
     align-items: center;
     justify-content: center;
 
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 18px;
 }
-
 
 .booking-info {
     display: flex;
@@ -852,20 +813,17 @@ textarea {
     flex: 1;
 }
 
-
 .booking-info strong {
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 14px;
 }
 
-
 .booking-info span {
-    color: var(--gray);
+    color: var(--muted);
 
-    font-size: 11px;
+    font-size: 12px;
 }
-
 
 .booking-info span i {
     width: 14px;
@@ -874,7 +832,6 @@ textarea {
 
     color: var(--blue);
 }
-
 
 .status-badge {
     padding: 6px 10px;
@@ -885,29 +842,25 @@ textarea {
     font-weight: 700;
 }
 
-
 .status-badge.confirmed {
-    background: var(--green-light);
+    background: var(--success-light);
 
-    color: var(--green);
+    color: var(--success);
 }
-
 
 .status-badge.pending {
-    background: var(--orange-light);
+    background: var(--warning-light);
 
-    color: var(--orange);
+    color: var(--warning);
 }
-
 
 .empty-bookings {
     padding: 40px 20px;
 
     text-align: center;
 
-    color: var(--gray);
+    color: var(--muted);
 }
-
 
 .empty-bookings i {
     font-size: 30px;
@@ -917,20 +870,18 @@ textarea {
     color: #b7bec7;
 }
 
-
 .empty-bookings p {
     font-size: 13px;
 
     margin-bottom: 10px;
 }
 
-
 .empty-bookings a {
     color: var(--blue);
 
     font-size: 12px;
 
-    font-weight: 700;
+    font-weight: 600;
 }
 
 
@@ -942,34 +893,28 @@ textarea {
     padding: 7px 0;
 }
 
-
 .quick-action {
     display: flex;
     align-items: center;
 
     gap: 14px;
 
-    padding: 16px 25px;
+    padding: 16px 28px;
 
-    border-bottom: 1px solid var(--lighter-gray);
+    border-bottom: 1px solid var(--border);
 
-    transition:
-        background 0.2s ease,
-        padding-left 0.2s ease;
+    transition: all 0.2s ease;
 }
-
 
 .quick-action:last-child {
     border-bottom: none;
 }
 
-
 .quick-action:hover {
-    background: #fafbfc;
+    background: #f8fafc;
 
-    padding-left: 29px;
+    padding-left: 32px;
 }
-
 
 .quick-action-icon {
     width: 40px;
@@ -977,7 +922,7 @@ textarea {
 
     flex-shrink: 0;
 
-    background: var(--blue-light);
+    background: var(--blue-soft);
 
     color: var(--blue);
 
@@ -986,8 +931,9 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
+    font-size: 16px;
+}
 
 .quick-action > div:nth-child(2) {
     flex: 1;
@@ -998,22 +944,19 @@ textarea {
     gap: 4px;
 }
 
-
 .quick-action strong {
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 13px;
 }
 
-
 .quick-action span {
-    color: var(--gray);
+    color: var(--muted);
 
     font-size: 11px;
 
     line-height: 1.4;
 }
-
 
 .quick-action > i {
     color: #aab1ba;
@@ -1030,12 +973,10 @@ textarea {
     margin-bottom: 22px;
 }
 
-
 .notification-list {
     display: flex;
     flex-direction: column;
 }
-
 
 .notification-item {
     display: flex;
@@ -1043,25 +984,22 @@ textarea {
 
     gap: 15px;
 
-    padding: 18px 25px;
+    padding: 18px 28px;
 
-    border-bottom: 1px solid var(--lighter-gray);
+    border-bottom: 1px solid var(--border);
 
     position: relative;
 }
-
 
 .notification-item:last-child {
     border-bottom: none;
 }
 
-
 .notification-item:hover {
-    background: #fafbfc;
+    background: #f8fafc;
 }
 
-
-.notification-icon {
+.notification-icon-small {
     width: 40px;
     height: 40px;
 
@@ -1072,29 +1010,27 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    font-size: 16px;
 }
 
-
-.notification-icon.booking {
-    background: var(--blue-light);
+.notification-icon-small.booking {
+    background: var(--blue-soft);
 
     color: var(--blue);
 }
 
+.notification-icon-small.reminder {
+    background: var(--warning-light);
 
-.notification-icon.reminder {
-    background: var(--orange-light);
-
-    color: var(--orange);
+    color: var(--warning);
 }
 
+.notification-icon-small.system {
+    background: var(--light-gray);
 
-.notification-icon.system {
-    background: var(--lighter-gray);
-
-    color: var(--gray);
+    color: var(--muted);
 }
-
 
 .notification-content {
     flex: 1;
@@ -1105,22 +1041,19 @@ textarea {
     gap: 4px;
 }
 
-
 .notification-content strong {
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 13px;
 }
 
-
 .notification-content p {
-    color: var(--gray);
+    color: var(--muted);
 
-    font-size: 11px;
+    font-size: 12px;
 
     line-height: 1.5;
 }
-
 
 .notification-content span {
     color: #9aa1aa;
@@ -1129,7 +1062,6 @@ textarea {
 
     margin-top: 2px;
 }
-
 
 .unread-dot {
     width: 7px;
@@ -1150,9 +1082,9 @@ textarea {
 .facility-banner {
     background: var(--white);
 
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--border);
 
-    border-radius: var(--radius);
+    border-radius: 14px;
 
     box-shadow: var(--shadow-sm);
 
@@ -1164,7 +1096,6 @@ textarea {
     gap: 20px;
 }
 
-
 .facility-banner-icon {
     width: 55px;
     height: 55px;
@@ -1173,7 +1104,7 @@ textarea {
 
     border-radius: 12px;
 
-    background: var(--blue-light);
+    background: var(--blue-soft);
 
     color: var(--blue);
 
@@ -1184,35 +1115,31 @@ textarea {
     font-size: 22px;
 }
 
-
 .facility-banner-content {
     flex: 1;
 }
 
-
 .facility-banner-content > span {
     color: var(--blue);
 
-    font-size: 9px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 700;
 
     letter-spacing: 1.2px;
 }
 
-
 .facility-banner-content h3 {
-    color: var(--navy);
+    color: var(--text);
 
     font-size: 17px;
 
     margin: 4px 0;
 }
 
-
 .facility-banner-content p {
-    color: var(--gray);
+    color: var(--muted);
 
-    font-size: 11px;
+    font-size: 13px;
 
     line-height: 1.5;
 }
@@ -1225,54 +1152,36 @@ textarea {
 @media (max-width: 1100px) {
 
     .summary-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
 
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
-
 }
 
 
 @media (max-width: 850px) {
 
+    :root {
+        --sidebar-width: 220px;
+    }
+
     .sidebar {
-        transform: translateX(-100%);
-
-        transition: transform 0.25s ease;
+        width: 220px;
     }
-
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
 
     .main-content {
-        margin-left: 0;
+        margin-left: 220px;
     }
-
-
-    .mobile-menu-btn {
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-    }
-
 
     .topbar {
-        padding: 0 20px;
+        padding: 0 25px;
     }
-
 
     .dashboard {
-        padding: 25px 20px;
+        padding: 32px 25px 50px;
     }
-
 
     .welcome-section {
         align-items: flex-start;
@@ -1281,87 +1190,95 @@ textarea {
 
         padding: 30px;
     }
-
 }
 
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
+
+    .sidebar {
+        left: -250px;
+
+        transition: left 0.25s ease;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+    }
 
     .topbar {
         height: auto;
 
-        min-height: 76px;
+        min-height: 75px;
 
-        padding: 15px 18px;
+        padding: 15px 20px;
     }
-
 
     .topbar-title p {
         display: none;
     }
 
-
     .student-info {
         display: none;
     }
 
-
-    .student-profile > i {
-        display: none;
+    .topbar-actions {
+        gap: 10px;
     }
 
+    .dashboard {
+        padding: 28px 20px 45px;
+    }
 
     .summary-grid {
         grid-template-columns: 1fr;
-    }
 
+        gap: 14px;
+    }
 
     .welcome-content h2 {
         font-size: 25px;
     }
 
-
     .welcome-section {
         padding: 25px;
     }
 
-
-    .dashboard {
-        padding: 20px 15px;
-    }
-
-
     .panel-header {
-        padding: 18px;
+        padding: 18px 20px;
     }
-
 
     .booking-item {
-        padding: 17px 18px;
+        padding: 17px 20px;
 
         flex-wrap: wrap;
     }
-
 
     .booking-info {
         min-width: 150px;
     }
 
-
     .status-badge {
         margin-left: 69px;
     }
 
-
     .quick-action {
-        padding: 15px 18px;
+        padding: 15px 20px;
     }
-
 
     .notification-item {
-        padding: 16px 18px;
+        padding: 16px 20px;
     }
-
 
     .facility-banner {
         flex-direction: column;
@@ -1371,51 +1288,59 @@ textarea {
         padding: 25px;
     }
 
-
     .facility-banner .secondary-button {
         width: 100%;
     }
-
 }
 
 
 @media (max-width: 430px) {
 
     .topbar-title h1 {
-        font-size: 17px;
+        font-size: 19px;
     }
 
+    .topbar-title p {
+        display: none;
+    }
 
     .notification-icon {
         width: 38px;
         height: 38px;
     }
 
-
     .student-avatar {
         width: 36px;
         height: 36px;
     }
 
-
     .summary-card {
         padding: 18px;
     }
 
-
     .welcome-section .primary-button {
         width: 100%;
     }
-
 
     .booking-date {
         width: 48px;
         height: 54px;
     }
 
-
     .booking-info strong {
         font-size: 13px;
     }
 
+    .dashboard {
+        padding: 24px 15px 40px;
+    }
+
+    .page-header h2 {
+        font-size: 23px;
+    }
+
+    .staff-avatar {
+        width: 36px;
+        height: 36px;
+    }
 }

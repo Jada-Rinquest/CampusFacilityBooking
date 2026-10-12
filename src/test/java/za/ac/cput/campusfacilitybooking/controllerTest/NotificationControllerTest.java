@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import za.ac.cput.campusfacilitybooking.controller.NotificationController;
+import za.ac.cput.campusfacilitybooking.controller.NotificationRequest;
 import za.ac.cput.campusfacilitybooking.domain.Notification;
 import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;

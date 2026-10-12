@@ -1,447 +1,235 @@
-document.addEventListener("DOMContentLoaded", () => {
+// =========================================================
+// LOGIN JAVASCRIPT - COMPLETE FIXED VERSION
+// Campus Facility Booking System
+// =========================================================
 
-    // =========================================================
-    // ELEMENTS
-    // =========================================================
+const API_BASE_URL = "http://localhost:8080";
+
+document.addEventListener("DOMContentLoaded", function () {
 
     const loginForm = document.getElementById("loginForm");
 
-    const usernameInput = document.getElementById("username");
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            loginUser();
+        });
+    }
+
+    // Password toggle
+    const togglePassword = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("password");
 
-    const usernameError =
-        document.getElementById("usernameError");
-
-    const passwordError =
-        document.getElementById("passwordError");
-
-    const loginError =
-        document.getElementById("loginError");
-
-    const togglePassword =
-        document.getElementById("togglePassword");
-
-    const forgotPassword =
-        document.getElementById("forgotPassword");
-
-    const loginButton =
-        document.getElementById("loginButton");
-
-    const loginButtonText =
-        document.getElementById("loginButtonText");
-
-    const loginButtonIcon =
-        document.getElementById("loginButtonIcon");
-
-
-    // =========================================================
-    // PASSWORD VISIBILITY
-    // =========================================================
-
-    if (togglePassword) {
-
-        togglePassword.addEventListener("click", () => {
-
-            const isPassword =
-                passwordInput.type === "password";
-
-            passwordInput.type =
-                isPassword ? "text" : "password";
-
-
-            const icon =
-                togglePassword.querySelector("i");
-
-            if (icon) {
-
-                icon.classList.toggle(
-                    "fa-eye",
-                    !isPassword
-                );
-
-                icon.classList.toggle(
-                    "fa-eye-slash",
-                    isPassword
-                );
-
-            }
-
-
-            togglePassword.setAttribute(
-                "aria-label",
-                isPassword
-                    ? "Hide password"
-                    : "Show password"
-            );
-
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener("click", function () {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            this.querySelector("i").classList.toggle("fa-eye");
+            this.querySelector("i").classList.toggle("fa-eye-slash");
         });
-
     }
 
-
-    // =========================================================
-    // CLEAR ERRORS
-    // =========================================================
-
-    function clearErrors() {
-
-        usernameError.textContent = "";
-        passwordError.textContent = "";
-
-        usernameInput.classList.remove("input-error");
-        passwordInput.classList.remove("input-error");
-
-        loginError.classList.remove("show");
-
-    }
-
-
-    // =========================================================
-    // SHOW FIELD ERROR
-    // =========================================================
-
-    function showFieldError(input, errorElement, message) {
-
-        input.classList.add("input-error");
-
-        errorElement.textContent = message;
-
-    }
-
-
-    // =========================================================
-    // SHOW GENERAL LOGIN ERROR
-    // =========================================================
-
-    function showLoginError(message) {
-
-        const errorText =
-            loginError.querySelector("span");
-
-        if (errorText) {
-            errorText.textContent = message;
-        }
-
-        loginError.classList.add("show");
-
-    }
-
-
-    // =========================================================
-    // BUTTON LOADING
-    // =========================================================
-
-    function setLoading(loading) {
-
-        if (!loginButton) {
-            return;
-        }
-
-        loginButton.disabled = loading;
-
-        if (loading) {
-
-            loginButtonText.textContent =
-                "Signing In...";
-
-            loginButtonIcon.className =
-                "fa-solid fa-spinner fa-spin";
-
-        } else {
-
-            loginButtonText.textContent =
-                "Sign In";
-
-            loginButtonIcon.className =
-                "fa-solid fa-arrow-right";
-
-        }
-
-    }
-
-
-    // =========================================================
-    // LOGIN
-    // =========================================================
-
-    loginForm.addEventListener("submit", async (event) => {
-
-        event.preventDefault();
-
-        clearErrors();
-
-
-        // =====================================================
-        // GET VALUES
-        // =====================================================
-
-        const email =
-            usernameInput.value.trim();
-
-        const userId =
-            passwordInput.value.trim();
-
-
-        // =====================================================
-        // VALIDATION
-        // =====================================================
-
-        let hasError = false;
-
-
-        if (!email) {
-
-            showFieldError(
-                usernameInput,
-                usernameError,
-                "Please enter your email address."
-            );
-
-            hasError = true;
-
-        }
-
-
-        if (!userId) {
-
-            showFieldError(
-                passwordInput,
-                passwordError,
-                "Please enter your User ID."
-            );
-
-            hasError = true;
-
-        }
-
-
-        if (hasError) {
-            return;
-        }
-
-
-        // =====================================================
-        // EMAIL FORMAT
-        // =====================================================
-
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (!emailPattern.test(email)) {
-
-            showFieldError(
-                usernameInput,
-                usernameError,
-                "Please enter a valid email address."
-            );
-
-            return;
-
-        }
-
-
-        // =====================================================
-        // START LOGIN
-        // =====================================================
-
-        setLoading(true);
-
-
-        try {
-
-            /*
-             * The current backend does not have a login endpoint.
-             *
-             * We therefore use:
-             *
-             * GET /user/read/{userId}
-             *
-             * The User ID acts as the password.
-             */
-
-            const response = await fetch(
-                `http://localhost:8080/user/read/${encodeURIComponent(userId)}`
-            );
-
-
-            // =================================================
-            // USER NOT FOUND
-            // =================================================
-
-            if (response.status === 404) {
-
-                showLoginError(
-                    "Invalid email or User ID."
-                );
-
-                return;
-            }
-
-
-            // =================================================
-            // SERVER ERROR
-            // =================================================
-
-            if (!response.ok) {
-
-                showLoginError(
-                    "Unable to connect to the login service."
-                );
-
-                return;
-            }
-
-
-            // =================================================
-            // GET USER
-            // =================================================
-
-            const user =
-                await response.json();
-
-
-            console.log(
-                "User returned from backend:",
-                user
-            );
-
-
-            // =================================================
-            // CHECK EMAIL
-            // =================================================
-
-            if (
-                !user.email ||
-                user.email.toLowerCase() !== email.toLowerCase()
-            ) {
-
-                showLoginError(
-                    "Invalid email or User ID."
-                );
-
-                return;
-            }
-
-
-            // =================================================
-            // LOGIN SUCCESSFUL
-            // =================================================
-
-            console.log(
-                "Login successful:",
-                user
-            );
-
-
-            // =================================================
-            // SAVE LOGGED-IN USER
-            // =================================================
-
-            const loggedInUser = {
-
-                userId: user.userId,
-
-                firstName: user.firstName,
-
-                lastName: user.lastName,
-
-                email: user.email,
-
-                dateOfBirth: user.dateOfBirth,
-
-                departmentId: user.departmentId
-
-            };
-
-
-            /*
-             * Remember Me determines whether the user
-             * information survives after the browser closes.
-             */
-
-            const rememberMe =
-                document.getElementById("rememberMe");
-
-
-            if (
-                rememberMe &&
-                rememberMe.checked
-            ) {
-
-                localStorage.setItem(
-                    "loggedInUser",
-                    JSON.stringify(loggedInUser)
-                );
-
-            } else {
-
-                sessionStorage.setItem(
-                    "loggedInUser",
-                    JSON.stringify(loggedInUser)
-                );
-
-            }
-
-
-            // =================================================
-            // REDIRECT
-            // =================================================
-
-            loginButtonText.textContent =
-                "Success!";
-
-            loginButtonIcon.className =
-                "fa-solid fa-check";
-
-
-            setTimeout(() => {
-
-                window.location.href =
-                    "student-dashboard.html";
-
-            }, 700);
-
-
-        } catch (error) {
-
-            console.error(
-                "Login error:",
-                error
-            );
-
-
-            showLoginError(
-                "Unable to connect to the server. Make sure Spring Boot is running."
-            );
-
-        } finally {
-
-            setTimeout(() => {
-                setLoading(false);
-            }, 700);
-
-        }
-
-    });
-
-
-    // =========================================================
-    // FORGOT PASSWORD
-    // =========================================================
-
+    // Forgot password
+    const forgotPassword = document.getElementById("forgotPassword");
     if (forgotPassword) {
-
-        forgotPassword.addEventListener("click", (event) => {
-
+        forgotPassword.addEventListener("click", function (event) {
             event.preventDefault();
-
-            alert(
-                "Your password is your User ID. Please contact the campus administrator if you have forgotten it."
-            );
-
+            alert("Your password is your User ID. Please contact the campus administrator if you have forgotten it.");
         });
-
     }
 
 });
+
+
+// =========================================================
+// LOGIN USER
+// =========================================================
+
+async function loginUser() {
+
+    clearErrors();
+
+
+    // -----------------------------------------------------
+    // Get values
+    // -----------------------------------------------------
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+
+    // -----------------------------------------------------
+    // Validation
+    // -----------------------------------------------------
+
+    let hasError = false;
+
+    if (!username) {
+        showFieldError(
+            document.getElementById("username"),
+            document.getElementById("usernameError"),
+            "Please enter your username."
+        );
+        hasError = true;
+    }
+
+    if (!password) {
+        showFieldError(
+            document.getElementById("password"),
+            document.getElementById("passwordError"),
+            "Please enter your password."
+        );
+        hasError = true;
+    }
+
+    if (hasError) {
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // Disable button
+    // -----------------------------------------------------
+
+    const loginButton = document.getElementById("loginButton");
+    const loginButtonText = document.getElementById("loginButtonText");
+    const loginButtonIcon = document.getElementById("loginButtonIcon");
+
+    if (loginButton) {
+        loginButton.disabled = true;
+        loginButtonText.textContent = "Signing In...";
+        loginButtonIcon.className = "fa-solid fa-spinner fa-spin";
+    }
+
+
+    try {
+
+        // =================================================
+        // AUTHENTICATE USING LOGIN ENDPOINT
+        // =================================================
+
+        const response = await fetch(`${API_BASE_URL}/login/authenticate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+
+        // =================================================
+        // AUTHENTICATION FAILED
+        // =================================================
+
+        if (response.status === 401) {
+            showLoginError("Invalid username or password.");
+            return;
+        }
+
+
+        // =================================================
+        // SERVER ERROR
+        // =================================================
+
+        if (!response.ok) {
+            showLoginError("Unable to connect to the login service.");
+            return;
+        }
+
+
+        // =================================================
+        // AUTHENTICATION SUCCESSFUL
+        // =================================================
+
+        const authResponse = await response.json();
+
+        console.log("Login successful:", authResponse);
+
+
+        // =================================================
+        // SAVE LOGGED-IN USER
+        // =================================================
+
+        const loggedInUser = {
+            userId: authResponse.userId,
+            username: authResponse.username,
+            email: authResponse.email,
+            role: authResponse.role,
+            firstName: authResponse.firstName,
+            lastName: authResponse.lastName
+        };
+
+        const rememberMe = document.getElementById("rememberMe");
+
+        if (rememberMe && rememberMe.checked) {
+            localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+        } else {
+            sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+        }
+
+
+        // =================================================
+        // REDIRECT TO DASHBOARD
+        // =================================================
+
+        loginButtonText.textContent = "Success!";
+        loginButtonIcon.className = "fa-solid fa-check";
+
+        // Redirect based on role
+        let redirectUrl = "student-dashboard.html";
+        if (authResponse.role === "ADMIN" || authResponse.role === "LECTURER") {
+            redirectUrl = "staff-dashboard.html";
+        }
+
+        setTimeout(function () {
+            window.location.href = redirectUrl;
+        }, 700);
+
+
+    } catch (error) {
+
+        console.error("Login error:", error);
+        showLoginError("Unable to connect to the server. Make sure Spring Boot is running.");
+
+    } finally {
+
+        setTimeout(function () {
+            if (loginButton) {
+                loginButton.disabled = false;
+                loginButtonText.textContent = "Sign In";
+                loginButtonIcon.className = "fa-solid fa-arrow-right";
+            }
+        }, 700);
+
+    }
+
+}
+
+
+// =========================================================
+// HELPER FUNCTIONS
+// =========================================================
+
+function showFieldError(input, errorElement, message) {
+    input.classList.add("input-error");
+    errorElement.textContent = message;
+}
+
+function clearErrors() {
+    document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+    document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
+    const loginError = document.getElementById("loginError");
+    if (loginError) loginError.classList.remove("show");
+}
+
+function showLoginError(message) {
+    const loginError = document.getElementById("loginError");
+    const errorText = loginError?.querySelector("span");
+    if (errorText) {
+        errorText.textContent = message;
+    }
+    if (loginError) {
+        loginError.classList.add("show");
+    }
+}

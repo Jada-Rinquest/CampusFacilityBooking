@@ -6,6 +6,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Equipment;
 import za.ac.cput.campusfacilitybooking.service.EquipmentService;
 
@@ -26,9 +28,17 @@ public class EquipmentController {
         return ResponseEntity.ok(createdEquipment);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Equipment>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Equipment> read(@PathVariable String id) {
         Equipment equipment = service.read(id);
+        if (equipment == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(equipment);
     }
 

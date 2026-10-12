@@ -6,6 +6,7 @@ import za.ac.cput.campusfacilitybooking.domain.Invoice;
 import za.ac.cput.campusfacilitybooking.repository.InvoiceRepository;
 import za.ac.cput.campusfacilitybooking.service.InvoiceService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +43,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Invoice> getAll() {
+        return repository.findAll();
     }
 }

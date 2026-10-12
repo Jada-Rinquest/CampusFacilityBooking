@@ -5,6 +5,7 @@ import za.ac.cput.campusfacilitybooking.domain.Address;
 import za.ac.cput.campusfacilitybooking.repository.AddressRepository;
 import za.ac.cput.campusfacilitybooking.service.AddressService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class AddressServiceImpl implements AddressService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Address> getAll() {
+        return repository.findAll();
     }
 }

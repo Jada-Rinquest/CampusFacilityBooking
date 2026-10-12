@@ -25,10 +25,10 @@ public class StudentFactory {
             throw new IllegalArgumentException("User ID is required");
         }
 
-        return new Student(
-                studentId,
-                studentNumber,
-                userId
-        );
+        return new Student.Builder()
+                .setStudentId(studentId)
+                .setStudentNumber(studentNumber)
+                .setUserId(userId)
+                .build();
     }
 }

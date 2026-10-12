@@ -3,12 +3,11 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Notification;
-import za.ac.cput.campusfacilitybooking.domain.enums.NotificationType;
 import za.ac.cput.campusfacilitybooking.factory.NotificationFactory;
 import za.ac.cput.campusfacilitybooking.service.NotificationService;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/notification")
@@ -34,6 +33,11 @@ public class NotificationController {
         return ResponseEntity.ok(service.create(notification));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Notification>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Notification> read(@PathVariable String id) {
         Notification notification = service.read(id);
@@ -56,24 +60,4 @@ public class NotificationController {
         boolean deleted = service.delete(id);
         return ResponseEntity.ok(deleted);
     }
-}
-
-class NotificationRequest {
-    private String notificationId;
-    private String userId;
-    private String message;
-    private LocalDate sentDate;
-    private NotificationType notificationType;
-
-    // Getters and Setters
-    public String getNotificationId() { return notificationId; }
-    public void setNotificationId(String notificationId) { this.notificationId = notificationId; }
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
-    public LocalDate getSentDate() { return sentDate; }
-    public void setSentDate(LocalDate sentDate) { this.sentDate = sentDate; }
-    public NotificationType getNotificationType() { return notificationType; }
-    public void setNotificationType(NotificationType notificationType) { this.notificationType = notificationType; }
 }

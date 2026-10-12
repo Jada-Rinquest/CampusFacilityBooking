@@ -6,6 +6,8 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.MaintenanceRequest;
 import za.ac.cput.campusfacilitybooking.service.MaintenanceRequestService;
 
@@ -24,6 +26,11 @@ public class MaintenanceRequestController {
     public ResponseEntity<MaintenanceRequest> create(@RequestBody MaintenanceRequest maintenanceRequest) {
         MaintenanceRequest createdRequest = service.create(maintenanceRequest);
         return ResponseEntity.ok(createdRequest);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<MaintenanceRequest>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/read/{id}")

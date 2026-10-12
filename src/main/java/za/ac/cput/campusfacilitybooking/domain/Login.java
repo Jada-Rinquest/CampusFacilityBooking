@@ -48,4 +48,42 @@ public class Login {
                 ", password='[PROTECTED]'" +
                 '}';
     }
+
+    private Login(Builder builder) {
+        this.loginId = builder.loginId;
+        this.registrarId = builder.registrarId;
+        this.username = builder.username;
+        this.password = builder.password;
+    }
+
+    public static class Builder {
+        private String loginId;
+        private String registrarId;
+        private String username;
+        private String password;
+
+        public Builder setLoginId(String loginId) {
+            this.loginId = loginId;
+            return this;
+        }
+
+        public Builder setRegistrarId(String registrarId) {
+            this.registrarId = registrarId;
+            return this;
+        }
+
+        public Builder setUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Login build() {
+            return new Login(this);
+        }
+    }
 }

@@ -9,6 +9,7 @@ import za.ac.cput.campusfacilitybooking.domain.Staff;
 import za.ac.cput.campusfacilitybooking.repository.StaffRepository;
 import za.ac.cput.campusfacilitybooking.service.StaffService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,10 @@ public class StaffServiceImpl implements StaffService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Staff> getAll() {
+        return repository.findAll();
     }
 }

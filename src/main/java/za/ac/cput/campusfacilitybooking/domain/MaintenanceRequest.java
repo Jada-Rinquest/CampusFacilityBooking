@@ -80,4 +80,63 @@ public class MaintenanceRequest {
                 ", maintenanceStatus=" + maintenanceStatus +
                 '}';
     }
+
+    private MaintenanceRequest(Builder builder) {
+        this.requestId = builder.requestId;
+        this.equipmentId = builder.equipmentId;
+        this.reportedBy = builder.reportedBy;
+        this.description = builder.description;
+        this.dateReported = builder.dateReported;
+        this.maintenancePriority = builder.maintenancePriority;
+        this.maintenanceStatus = builder.maintenanceStatus;
+    }
+
+    public static class Builder {
+        private String requestId;
+        private String equipmentId;
+        private String reportedBy;
+        private String description;
+        private LocalDate dateReported;
+        private MaintenancePriority maintenancePriority;
+        private MaintenanceStatus maintenanceStatus;
+
+        public Builder setRequestId(String requestId) {
+            this.requestId = requestId;
+            return this;
+        }
+
+        public Builder setEquipmentId(String equipmentId) {
+            this.equipmentId = equipmentId;
+            return this;
+        }
+
+        public Builder setReportedBy(String reportedBy) {
+            this.reportedBy = reportedBy;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setDateReported(LocalDate dateReported) {
+            this.dateReported = dateReported;
+            return this;
+        }
+
+        public Builder setMaintenancePriority(MaintenancePriority maintenancePriority) {
+            this.maintenancePriority = maintenancePriority;
+            return this;
+        }
+
+        public Builder setMaintenanceStatus(MaintenanceStatus maintenanceStatus) {
+            this.maintenanceStatus = maintenanceStatus;
+            return this;
+        }
+
+        public MaintenanceRequest build() {
+            return new MaintenanceRequest(this);
+        }
+    }
 }
