@@ -8,5 +8,7 @@ import za.ac.cput.campusfacilitybooking.domain.Staff;
 
 public interface StaffService extends IService<Staff, String> {
 
+    Staff findByUserId(String userId);
+
 }
 

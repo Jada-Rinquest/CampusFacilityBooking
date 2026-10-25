@@ -8,6 +8,7 @@ const API_BASE_URL = "http://localhost:8080";
 const BOOKING_API = `${API_BASE_URL}/booking`;
 const FACILITY_API = `${API_BASE_URL}/facility`;
 const NOTIFICATION_API = `${API_BASE_URL}/notification`;
+const TIMESLOT_API = `${API_BASE_URL}/timeslot`;
 
 const welcomeName = document.getElementById("welcomeName");
 const topbarName = document.getElementById("topbarName");
@@ -45,8 +46,12 @@ function loadSignedInUser() {
 
     let user = null;
 
+    // script.js stores the user in localStorage when "Remember me" is ticked
     try {
-        user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+        user = JSON.parse(
+            sessionStorage.getItem("loggedInUser") ||
+            localStorage.getItem("loggedInUser")
+        );
     } catch (error) {
         user = null;
     }
@@ -97,21 +102,28 @@ async function loadDashboard() {
     const bookings = await safeFetch(`${BOOKING_API}/all`);
     const facilities = await safeFetch(`${FACILITY_API}/all`);
     const notifications = await safeFetch(`${NOTIFICATION_API}/all`);
+    const timeSlots = await safeFetch(`${TIMESLOT_API}/all`);
 
     const myBookings = userId
         ? bookings.filter((b) => b.userId === userId)
         : bookings;
+
+    // A booking's date lives on its time slot
+    const slotDates = {};
+    timeSlots.forEach((t) => { slotDates[t.timeSlotId] = t.date; });
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const upcoming = myBookings.filter((b) => {
 
-        if (!b.bookingDate) {
+        const date = slotDates[b.timeSlotId];
+
+        if (!date || b.bookingStatus === "CANCELLED" || b.bookingStatus === "REJECTED") {
             return false;
         }
 
-        const d = new Date(b.bookingDate);
+        const d = new Date(date);
         d.setHours(0, 0, 0, 0);
 
         return d >= today;

@@ -33,6 +33,15 @@ public class StaffController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Staff> findByUserId(@PathVariable String userId) {
+        Staff staff = service.findByUserId(userId);
+        if (staff == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(staff);
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Staff> read(@PathVariable String id) {
         Staff staff = service.read(id);

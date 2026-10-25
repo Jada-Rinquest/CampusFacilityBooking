@@ -468,6 +468,17 @@ async function loadBookings() {
 
         bookings = await response.json();
 
+        // Students only ever see their own bookings
+        const current = window.currentUser;
+
+        if (current && current.isStudent) {
+
+            bookings = bookings.filter(function (booking) {
+                return booking.userId === current.userId;
+            });
+
+        }
+
         renderBookings();
 
         updateStatistics();
@@ -493,6 +504,26 @@ async function loadBookings() {
 ========================================================= */
 
 async function loadUsers() {
+
+    // Students can only book for themselves, so they never
+    // load (or see) the list of other users
+    const current = window.currentUser;
+
+    if (current && current.isStudent) {
+
+        users = [{
+            userId: current.userId,
+            firstName: current.firstName,
+            lastName: current.lastName
+        }];
+
+        populateUserDropdown();
+
+        userSelect.disabled = true;
+
+        return;
+
+    }
 
     try {
 
@@ -571,8 +602,11 @@ async function loadFacilities() {
 
 function populateUserDropdown() {
 
-    userSelect.innerHTML =
-        '<option value="">Select a user</option>';
+    // A single user (a signed-in student) is pre-selected,
+    // and stays selected when the form is reset
+    userSelect.innerHTML = users.length === 1
+        ? ""
+        : '<option value="">Select a user</option>';
 
     users.forEach(function (user) {
 
@@ -884,14 +918,19 @@ async function handleBookingSubmit(event) {
 
 
     /*
-     * Default status.
-     *
-     * Change this value if your database
-     * uses a different booking status ID.
+     * New bookings start as PENDING (BookingStatus enum).
+     * Editing keeps the existing status, so a student
+     * cannot approve their own booking.
      */
 
-    const bookingStatusId =
-        "BS001";
+    const existingBooking = editingBookingId
+        ? bookings.find(function (item) {
+            return item.bookingId === editingBookingId;
+        })
+        : null;
+
+    const bookingStatus =
+        (existingBooking && existingBooking.bookingStatus) || "PENDING";
 
 
     const bookingData = {
@@ -906,7 +945,7 @@ async function handleBookingSubmit(event) {
 
         purpose: purpose,
 
-        bookingStatusId: bookingStatusId
+        bookingStatus: bookingStatus
 
     };
 
@@ -1203,7 +1242,7 @@ function getFilteredBookings() {
                 selectedStatus === "all" ||
 
                 getStatusName(
-                    booking.bookingStatusId
+                    booking.bookingStatus
                 ).toLowerCase()
                 === selectedStatus;
 
@@ -1258,7 +1297,7 @@ function createBookingRow(booking) {
 
     const status =
         getStatusName(
-            booking.bookingStatusId
+            booking.bookingStatus
         );
 
 
@@ -1422,7 +1461,7 @@ function viewBooking(bookingId) {
 
     const status =
         getStatusName(
-            booking.bookingStatusId
+            booking.bookingStatus
         );
 
 
@@ -1658,7 +1697,7 @@ function updateStatistics() {
             function (booking) {
 
                 return getStatusName(
-                    booking.bookingStatusId
+                    booking.bookingStatus
                 ) === "approved";
 
             }
@@ -1670,7 +1709,7 @@ function updateStatistics() {
             function (booking) {
 
                 return getStatusName(
-                    booking.bookingStatusId
+                    booking.bookingStatus
                 ) === "pending";
 
             }
@@ -1682,7 +1721,7 @@ function updateStatistics() {
             function (booking) {
 
                 return getStatusName(
-                    booking.bookingStatusId
+                    booking.bookingStatus
                 ) === "cancelled";
 
             }
@@ -1695,28 +1734,15 @@ function updateStatistics() {
    STATUS NAME
 ========================================================= */
 
-function getStatusName(statusId) {
+function getStatusName(status) {
 
     /*
-     * Update these IDs to match the values
-     * in your BookingStatus table.
+     * The backend sends the BookingStatus enum:
+     * PENDING, APPROVED, REJECTED or CANCELLED.
      */
 
-    const statuses = {
-
-        "BS001": "pending",
-
-        "BS002": "approved",
-
-        "BS003": "cancelled",
-
-        "BS004": "completed"
-
-    };
-
-
-    return statuses[statusId]
-        || "pending";
+    return String(status || "PENDING")
+        .toLowerCase();
 
 }
 

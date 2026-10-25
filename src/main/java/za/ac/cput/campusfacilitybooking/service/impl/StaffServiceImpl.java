@@ -27,6 +27,11 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Staff findByUserId(String userId) {
+        return repository.findByUserId(userId).orElse(null);
+    }
+
+    @Override
     public Staff read(String id) {
         Optional<Staff> staff = repository.findById(id);
         return staff.orElse(null);
