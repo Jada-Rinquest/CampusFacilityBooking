@@ -45,9 +45,14 @@ async function loadProfile() {
         localStorage.setItem("username", login.username);
     */
 
-    const loginId = localStorage.getItem("loginId");
-    const registrarId = localStorage.getItem("registrarId");
-    const username = localStorage.getItem("username");
+    let user = null;
+    try {
+        user = JSON.parse(localStorage.getItem("loggedInUser") || sessionStorage.getItem("loggedInUser") || "null");
+    } catch (e) {}
+
+    const loginId = localStorage.getItem("loginId") || (user ? user.userId : null);
+    const registrarId = localStorage.getItem("registrarId") || (user ? user.userId : null);
+    const username = localStorage.getItem("username") || (user ? user.username : null);
 
     /*
         If there is no logged-in user, use default information.

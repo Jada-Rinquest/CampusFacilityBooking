@@ -906,6 +906,8 @@ async function handleBookingSubmit(event) {
 
         purpose: purpose,
 
+        bookingStatus: "PENDING",
+
         bookingStatusId: bookingStatusId
 
     };

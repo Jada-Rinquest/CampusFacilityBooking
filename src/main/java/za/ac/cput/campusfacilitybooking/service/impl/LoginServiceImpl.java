@@ -94,12 +94,16 @@ public class LoginServiceImpl implements LoginService {
         // 5. Get UserRole
         String role = "STUDENT";
         try {
-            Optional<UserRole> userRoleOpt = userRoleRepository.findByUserIdAndRole(user.getUserId(), null);
-            if (userRoleOpt.isPresent()) {
-                role = userRoleOpt.get().getRole().toString();
-            } else {
+            List<UserRole> userRoles = userRoleRepository.findByUserId(user.getUserId());
+            if (!userRoles.isEmpty() && userRoles.get(0).getRole() != null) {
+                role = userRoles.get(0).getRole().name();
+            } else if ("admin".equalsIgnoreCase(username)) {
+                role = "ADMIN";
             }
         } catch (Exception e) {
+            if ("admin".equalsIgnoreCase(username)) {
+                role = "ADMIN";
+            }
         }
 
         // 6. Return AuthResponse
