@@ -7,6 +7,7 @@ public class AuthResponse {
     private String role;
     private String firstName;
     private String lastName;
+    private String accountType;
 
     public AuthResponse() {}
 
@@ -33,5 +34,7 @@ public class AuthResponse {
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getAccountType() { return accountType; }
+    public void setAccountType(String accountType) { this.accountType = accountType; }
 }
 

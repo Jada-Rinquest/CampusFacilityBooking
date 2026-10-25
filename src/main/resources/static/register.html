@@ -212,6 +212,60 @@
 
 
                 <!-- =============================================
+                     ACCOUNT TYPE (STUDENT / STAFF)
+                ============================================== -->
+
+                <div class="form-group">
+
+                    <label>
+                        I am registering as
+                    </label>
+
+                    <div class="account-type-options">
+
+                        <label class="account-type-option">
+
+                            <input
+                                    type="radio"
+                                    name="accountType"
+                                    value="STUDENT"
+                            >
+
+                            <span>
+                                <i class="fa-solid fa-user-graduate"></i>
+                                Student
+                            </span>
+
+                        </label>
+
+
+                        <label class="account-type-option">
+
+                            <input
+                                    type="radio"
+                                    name="accountType"
+                                    value="STAFF"
+                            >
+
+                            <span>
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                                Staff
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <small
+                            class="error-message"
+                            id="accountTypeError">
+                    </small>
+
+                </div>
+
+
+
+                <!-- =============================================
                      NAME
                 ============================================== -->
 
@@ -316,10 +370,10 @@
 
 
                 <!-- =============================================
-                     STUDENT NUMBER
+                     STUDENT NUMBER (students only)
                 ============================================== -->
 
-                <div class="form-group">
+                <div class="form-group" id="studentNumberGroup" hidden>
 
                     <label for="studentNumber">
                         Student Number
@@ -348,12 +402,12 @@
 
 
                 <!-- =============================================
-                     EMAIL
+                     EMAIL (shown once student / staff is chosen)
                 ============================================== -->
 
-                <div class="form-group">
+                <div class="form-group" id="emailGroup" hidden>
 
-                    <label for="email">
+                    <label for="email" id="emailLabel">
                         CPUT Email Address
                     </label>
 
@@ -365,7 +419,7 @@
                                 type="email"
                                 id="email"
                                 name="email"
-                                placeholder="example@mycput.ac.za"
+                                placeholder="you@mycput.ac.za"
                                 autocomplete="email"
                         >
 

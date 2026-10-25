@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Student number vs staff number, based on email
+    setupAccountTypeField();
+
     // Password toggles
     setupPasswordToggles();
 
@@ -30,6 +33,56 @@ document.addEventListener("DOMContentLoaded", function () {
     setupMobileMenu();
 
 });
+
+
+// =========================================================
+// ACCOUNT TYPE (STUDENT / STAFF) FROM EMAIL
+// Students: @mycput.ac.za (or @mycput.co.za)
+// Staff:    @cput.ac.za
+// =========================================================
+
+function accountTypeFromEmail(email) {
+    const value = email.trim().toLowerCase();
+
+    if (value.endsWith("@mycput.ac.za") || value.endsWith("@mycput.co.za")) {
+        return "STUDENT";
+    }
+
+    if (value.endsWith("@cput.ac.za")) {
+        return "STAFF";
+    }
+
+    return null;
+}
+
+function getSelectedAccountType() {
+    const selected = document.querySelector('input[name="accountType"]:checked');
+    return selected ? selected.value : null;
+}
+
+// Student: student number + @mycput email. Staff: @cput.ac.za email only.
+function setupAccountTypeField() {
+    const studentNumberGroup = document.getElementById("studentNumberGroup");
+    const emailGroup = document.getElementById("emailGroup");
+    const emailLabel = document.getElementById("emailLabel");
+    const emailInput = document.getElementById("email");
+
+    document.querySelectorAll('input[name="accountType"]').forEach(function (option) {
+        option.addEventListener("change", function () {
+            const isStaff = this.value === "STAFF";
+
+            studentNumberGroup.hidden = isStaff;
+            emailGroup.hidden = false;
+
+            emailLabel.textContent = isStaff ? "Staff Email Address" : "Student Email Address";
+            emailInput.placeholder = isStaff ? "you@cput.ac.za" : "you@mycput.ac.za";
+
+            document.getElementById("accountTypeError").textContent = "";
+            document.getElementById("emailError").textContent = "";
+            document.getElementById("studentNumberError").textContent = "";
+        });
+    });
+}
 
 
 // =========================================================
@@ -145,6 +198,14 @@ async function registerUser() {
 
     let hasError = false;
 
+    const accountType = getSelectedAccountType();
+    const isStaff = accountType === "STAFF";
+
+    if (!accountType) {
+        document.getElementById("accountTypeError").textContent = "Please choose Student or Staff.";
+        hasError = true;
+    }
+
     if (!firstName) {
         document.getElementById("firstNameError").textContent = "First name is required.";
         hasError = true;
@@ -160,17 +221,26 @@ async function registerUser() {
         hasError = true;
     }
 
-    if (!studentNumber) {
+    if (accountType === "STUDENT" && !studentNumber) {
         document.getElementById("studentNumberError").textContent = "Student number is required.";
         hasError = true;
     }
 
-    if (!email) {
-        document.getElementById("emailError").textContent = "Email is required.";
-        hasError = true;
-    } else if (!isValidEmail(email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email address.";
-        hasError = true;
+    // The email must match the option chosen - the server decides
+    // access from the email domain, so they have to agree
+    if (accountType) {
+        if (!email) {
+            document.getElementById("emailError").textContent = "Email is required.";
+            hasError = true;
+        } else if (!isValidEmail(email)) {
+            document.getElementById("emailError").textContent = "Please enter a valid email address.";
+            hasError = true;
+        } else if (accountTypeFromEmail(email) !== accountType) {
+            document.getElementById("emailError").textContent = isStaff
+                ? "Staff must use an @cput.ac.za email address."
+                : "Students must use an @mycput.ac.za email address.";
+            hasError = true;
+        }
     }
 
     if (!department) {
@@ -219,10 +289,24 @@ async function registerUser() {
     try {
 
         // Generate IDs
-        const userId = "USER-" + Date.now().toString().substring(6);
-        const loginId = "LOGIN-" + Date.now().toString().substring(6);
-        const userRoleId = "UR-" + Date.now().toString().substring(6);
+        const stamp = Date.now().toString().substring(6);
+        const userId = "USER-" + stamp;
+        const loginId = "LOGIN-" + stamp;
+        const userRoleId = "UR-" + stamp;
         const today = new Date().toISOString().split("T")[0];
+
+
+        // =================================================
+        // PRE-CHECKS (before anything is saved)
+        // =================================================
+
+        const usernameCheck = await fetch(
+            `${API_BASE_URL}/login/exists/${encodeURIComponent(username)}`
+        );
+        if (usernameCheck.ok && (await usernameCheck.json()) === true) {
+            document.getElementById("usernameError").textContent = "This username is already taken.";
+            throw new Error("Please choose a different username.");
+        }
 
         // Department mapping
         const departmentMap = {
@@ -307,18 +391,48 @@ async function registerUser() {
         // STEP 4: CREATE USER ROLE
         // =================================================
 
-        try {
-            await fetch(`${API_BASE_URL}/userrole/create`, {
+        const roleResponse = await fetch(`${API_BASE_URL}/userrole/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userRoleId: userRoleId,
+                userId: userId,
+                role: isStaff ? "LECTURER" : "STUDENT"
+            })
+        });
+
+        if (!roleResponse.ok) {
+            throw new Error("Account role could not be created.");
+        }
+
+
+        // =================================================
+        // STEP 5: CREATE STUDENT OR STAFF RECORD
+        // =================================================
+
+        const profileResponse = isStaff
+            ? await fetch(`${API_BASE_URL}/staff/create`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userRoleId: userRoleId,
-                    userId: userId,
-                    role: "STUDENT"
+                    staffId: "STF-" + stamp,
+                    userId: userId
+                })
+            })
+            : await fetch(`${API_BASE_URL}/student/create`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    studentId: "STU-" + stamp,
+                    studentNumber: studentNumber,
+                    userId: userId
                 })
             });
-        } catch (e) {
-            console.warn("UserRole could not be created:", e);
+
+        if (!profileResponse.ok) {
+            throw new Error(isStaff
+                ? "Staff record could not be created."
+                : "Student record could not be created.");
         }
 
 

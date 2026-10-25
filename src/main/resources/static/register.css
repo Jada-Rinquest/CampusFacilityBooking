@@ -371,6 +371,74 @@ body {
 
 
 /* =========================================================
+   ACCOUNT TYPE (STUDENT / STAFF)
+========================================================= */
+
+.account-type-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.form-group .account-type-option {
+    margin-bottom: 0;
+
+    cursor: pointer;
+}
+
+.account-type-option input {
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.account-type-option span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    height: 46px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: var(--white);
+
+    color: var(--muted);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.account-type-option:hover span {
+    border-color: var(--blue);
+}
+
+.account-type-option input:checked + span {
+    border-color: var(--blue);
+
+    background: var(--blue-soft);
+
+    color: var(--blue-dark);
+
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.account-type-option input:focus-visible + span {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
    INPUTS
 ========================================================= */
 

@@ -1,4 +1,113 @@
-const API_URL = window.location.origin;
+const API_URL = "http://localhost:8080";
+
+
+/* =========================
+   DASHBOARD OVERVIEW
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadSignedInStaff();
+
+    loadOverview();
+
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const sidebar = document.querySelector(".sidebar");
+
+    if (mobileMenuBtn && sidebar) {
+        mobileMenuBtn.addEventListener("click", () => sidebar.classList.toggle("open"));
+    }
+});
+
+
+function getSignedInUser() {
+
+    try {
+        return JSON.parse(
+            sessionStorage.getItem("loggedInUser") ||
+            localStorage.getItem("loggedInUser")
+        );
+    } catch (error) {
+        return null;
+    }
+}
+
+
+function loadSignedInStaff() {
+
+    const user = getSignedInUser();
+
+    if (!user) {
+        return;
+    }
+
+    const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username;
+    const parts = name.split(/\s+/);
+    const initials = parts.length > 1
+        ? parts[0][0] + parts[parts.length - 1][0]
+        : name.substring(0, 2);
+
+    setText("topbarName", name);
+    setText("topbarInitials", initials.toUpperCase());
+    setText("topbarRole", user.role === "ADMIN" ? "Administrator" : "Lecturer");
+    setText("welcomeText", `Welcome back, ${user.firstName || name}.`);
+}
+
+
+async function loadOverview() {
+
+    const user = getSignedInUser();
+
+    const [bookings, facilities, equipment, users, notifications] = await Promise.all([
+        fetchList("booking"),
+        fetchList("facility"),
+        fetchList("equipment"),
+        fetchList("user"),
+        fetchList("notification")
+    ]);
+
+    setText("totalBookings", bookings.length);
+    setText("totalFacilities", facilities.length);
+    setText("totalEquipment", equipment.length);
+    setText("totalUsers", users.length);
+    setText(
+        "notificationCount",
+        user ? notifications.filter((n) => n.userId === user.userId).length : 0
+    );
+}
+
+
+async function fetchList(resource) {
+
+    try {
+
+        const response = await fetch(`${API_URL}/${resource}/all`);
+
+        if (!response.ok) {
+            throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return Array.isArray(data) ? data : [];
+
+    } catch (error) {
+
+        console.error(`Could not load ${resource}:`, error);
+
+        return [];
+    }
+}
+
+
+function setText(elementId, value) {
+
+    const element = document.getElementById(elementId);
+
+    if (element) {
+        element.textContent = value;
+    }
+}
 
 
 /* =========================

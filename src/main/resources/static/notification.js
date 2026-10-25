@@ -1,6 +1,54 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
+       API CONFIGURATION
+    ========================================================= */
+
+    const API_BASE_URL = "http://localhost:8080";
+
+    const NOTIFICATION_API = `${API_BASE_URL}/notification`;
+    const USER_API = `${API_BASE_URL}/user`;
+
+
+    /* =========================================================
+       SIGNED-IN USER (set by auth.js)
+       Students only see their own notifications and cannot
+       send or delete any. Staff see and manage all of them.
+    ========================================================= */
+
+    const currentUser = window.currentUser || null;
+
+    const isStudent = !currentUser || currentUser.isStudent;
+
+
+    /* =========================================================
+       NOTIFICATION TYPES (NotificationType enum)
+    ========================================================= */
+
+    const TYPES = {
+
+        BOOKING_CONFIRMATION: {
+            name: "Booking",
+            cssClass: "booking",
+            icon: "fa-calendar-check"
+        },
+
+        MAINTENANCE_UPDATE: {
+            name: "Maintenance",
+            cssClass: "maintenance",
+            icon: "fa-screwdriver-wrench"
+        },
+
+        INVOICE_REMINDER: {
+            name: "Invoice Reminder",
+            cssClass: "reminder",
+            icon: "fa-file-invoice-dollar"
+        }
+
+    };
+
+
+    /* =========================================================
        ELEMENTS
     ========================================================= */
 
@@ -40,6 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const notificationTableBody =
         document.getElementById("notificationTableBody");
 
+    const recipientSelect =
+        document.getElementById("recipient");
+
     const totalNotifications =
         document.getElementById("totalNotifications");
 
@@ -49,15 +100,363 @@ document.addEventListener("DOMContentLoaded", function () {
     const bookingNotifications =
         document.getElementById("bookingNotifications");
 
-    const systemNotifications =
-        document.getElementById("systemNotifications");
+    const maintenanceNotifications =
+        document.getElementById("maintenanceNotifications");
+
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
+    let notifications = [];
+
+    // userId -> "First Last"
+    let userNames = {};
+
+
+    /* =========================================================
+       PAGE SET-UP FOR STUDENTS
+    ========================================================= */
+
+    if (isStudent) {
+
+        if (openNotificationModal) {
+            openNotificationModal.remove();
+        }
+
+        setText("pageTitle", "My Notifications");
+
+        setText(
+            "pageDescription",
+            "Updates about your bookings, maintenance requests and invoices."
+        );
+
+        setText(
+            "panelDescription",
+            "Notifications sent to you through the campus booking system."
+        );
+
+    }
+
+
+    /* =========================================================
+       LOAD DATA
+    ========================================================= */
+
+    loadPage();
+
+
+    async function loadPage() {
+
+        await loadUsers();
+
+        await loadNotifications();
+
+    }
+
+
+    async function loadUsers() {
+
+        // Students never load the list of other users
+        if (isStudent) {
+
+            if (currentUser) {
+                userNames[currentUser.userId] = currentUser.fullName;
+            }
+
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`${USER_API}/all`);
+
+            if (!response.ok) {
+                throw new Error(`User request failed: ${response.status}`);
+            }
+
+            const users = await response.json();
+
+            users.forEach(function (user) {
+                userNames[user.userId] =
+                    `${user.firstName} ${user.lastName}`.trim();
+            });
+
+            populateRecipients(users);
+
+        } catch (error) {
+
+            console.error("Error loading users:", error);
+
+        }
+
+    }
+
+
+    async function loadNotifications() {
+
+        try {
+
+            const response = await fetch(`${NOTIFICATION_API}/all`);
+
+            if (!response.ok) {
+                throw new Error(`Notification request failed: ${response.status}`);
+            }
+
+            notifications = await response.json();
+
+            if (isStudent) {
+
+                notifications = notifications.filter(function (notification) {
+                    return currentUser && notification.userId === currentUser.userId;
+                });
+
+            }
+
+        } catch (error) {
+
+            console.error("Error loading notifications:", error);
+
+            notifications = [];
+
+        }
+
+        renderNotifications();
+
+    }
+
+
+    function populateRecipients(users) {
+
+        if (!recipientSelect) {
+            return;
+        }
+
+        recipientSelect.innerHTML =
+            '<option value="">Select recipient</option>';
+
+        users.forEach(function (user) {
+
+            const option = document.createElement("option");
+
+            option.value = user.userId;
+
+            option.textContent =
+                `${user.firstName} ${user.lastName} (${user.email})`;
+
+            recipientSelect.appendChild(option);
+
+        });
+
+        const allOption = document.createElement("option");
+
+        allOption.value = "all";
+
+        allOption.textContent = "All Users";
+
+        recipientSelect.appendChild(allOption);
+
+    }
+
+
+    /* =========================================================
+       RENDER TABLE + STATISTICS
+    ========================================================= */
+
+    function renderNotifications() {
+
+        if (!notificationTableBody) {
+            return;
+        }
+
+        notificationTableBody.innerHTML = "";
+
+        // Newest first
+        const sorted = notifications.slice().sort(function (a, b) {
+            return String(b.sentDate).localeCompare(String(a.sentDate));
+        });
+
+        if (sorted.length === 0) {
+
+            notificationTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px;">
+                        ${isStudent ? "You have no notifications yet." : "No notifications found."}
+                    </td>
+                </tr>
+            `;
+
+        }
+
+        sorted.forEach(function (notification) {
+
+            notificationTableBody.appendChild(
+                createNotificationRow(notification)
+            );
+
+        });
+
+        updateStatistics();
+
+        filterNotifications();
+
+    }
+
+
+    function createNotificationRow(notification) {
+
+        const type =
+            TYPES[notification.notificationType] ||
+            { name: "General", cssClass: "system", icon: "fa-bell" };
+
+        const recipientName =
+            userNames[notification.userId] || notification.userId;
+
+        const title = `${type.name} Notification`;
+
+        const date = formatDate(notification.sentDate);
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="notification-message">
+
+                    <div class="notification-row-icon ${type.cssClass}-icon">
+
+                        <i class="fa-solid ${type.icon}"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(title)}
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(notification.message)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="recipient">
+
+                    <div class="recipient-avatar">
+                        ${escapeHTML(getInitials(recipientName))}
+                    </div>
+
+                    <span>
+                        ${escapeHTML(recipientName)}
+                    </span>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="type-badge ${type.cssClass}">
+                    ${escapeHTML(type.name)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="date">
+                    ${escapeHTML(date)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                        class="action-btn view-btn"
+                        title="View notification"
+                        data-title="${escapeHTML(title)}"
+                        data-recipient="${escapeHTML(recipientName)}"
+                        data-type="${escapeHTML(type.name)}"
+                        data-date="${escapeHTML(date)}"
+                        data-message="${escapeHTML(notification.message)}">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                    ${isStudent ? "" : `
+                    <button
+                        class="action-btn delete-btn"
+                        title="Delete notification"
+                        data-id="${escapeHTML(notification.notificationId)}">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </button>`}
+
+                </div>
+
+            </td>
+
+        `;
+
+        attachRowButtons(row);
+
+        return row;
+
+    }
+
+
+    function updateStatistics() {
+
+        const today = todayIso();
+
+        setCount(totalNotifications, notifications.length);
+
+        setCount(
+            sentToday,
+            notifications.filter(function (n) {
+                return n.sentDate === today;
+            }).length
+        );
+
+        setCount(
+            bookingNotifications,
+            notifications.filter(function (n) {
+                return n.notificationType === "BOOKING_CONFIRMATION";
+            }).length
+        );
+
+        setCount(
+            maintenanceNotifications,
+            notifications.filter(function (n) {
+                return n.notificationType === "MAINTENANCE_UPDATE";
+            }).length
+        );
+
+    }
 
 
     /* =========================================================
        OPEN SEND NOTIFICATION MODAL
     ========================================================= */
 
-    if (openNotificationModal) {
+    if (openNotificationModal && !isStudent) {
 
         openNotificationModal.addEventListener("click", function () {
 
@@ -146,23 +545,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       SEND NOTIFICATION
+       SEND NOTIFICATION (staff only)
     ========================================================= */
 
     if (notificationForm) {
 
-        notificationForm.addEventListener("submit", function (event) {
+        notificationForm.addEventListener("submit", async function (event) {
 
             event.preventDefault();
 
+            if (isStudent) {
+                return;
+            }
+
             const recipient =
-                document.getElementById("recipient").value;
+                recipientSelect.value;
 
             const notificationType =
                 document.getElementById("notificationType").value;
 
             const message =
-                document.getElementById("notificationMessage").value.trim();
+                notificationMessage.value.trim();
 
 
             /* Validate form */
@@ -177,236 +580,51 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            /* Generate a temporary notification ID */
+            /* "All Users" sends one notification to every user */
 
-            const notificationId =
-                "NT" + Date.now();
+            const recipients = recipient === "all"
+                ? Object.keys(userNames)
+                : [recipient];
 
+            const stamp = Date.now();
 
-            /* Current date */
+            try {
 
-            const currentDate =
-                new Date().toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                });
+                for (let i = 0; i < recipients.length; i++) {
 
+                    const response = await fetch(`${NOTIFICATION_API}/create`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            notificationId: `NT${stamp}${i}`,
+                            userId: recipients[i],
+                            message: message,
+                            sentDate: todayIso(),
+                            notificationType: notificationType
+                        })
+                    });
 
-            /* Get recipient name */
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
 
-            const recipientSelect =
-                document.getElementById("recipient");
+                }
 
-            const recipientName =
-                recipientSelect.options[
-                    recipientSelect.selectedIndex
-                ].text;
+                closeNotification();
 
+                await loadNotifications();
 
-            /* Get notification type name */
+                alert("Notification sent successfully!");
 
-            const typeSelect =
-                document.getElementById("notificationType");
+            } catch (error) {
 
-            const typeName =
-                typeSelect.options[
-                    typeSelect.selectedIndex
-                ].text;
+                console.error("Error sending notification:", error);
 
+                alert("The notification could not be sent. Please try again.");
 
-            /* Add notification to table */
-
-            addNotificationToTable(
-                notificationId,
-                recipientName,
-                recipient,
-                typeName,
-                notificationType,
-                currentDate,
-                message
-            );
-
-
-            /* Update statistics */
-
-            updateStatistics(notificationType);
-
-
-            /* Close modal */
-
-            closeNotification();
-
-
-            /* Success message */
-
-            alert("Notification sent successfully!");
+            }
 
         });
-
-    }
-
-
-    /* =========================================================
-       ADD NOTIFICATION TO TABLE
-    ========================================================= */
-
-    function addNotificationToTable(
-        notificationId,
-        recipientName,
-        recipientId,
-        typeName,
-        typeValue,
-        date,
-        message
-    ) {
-
-        if (!notificationTableBody) {
-            return;
-        }
-
-
-        /* Determine icon */
-
-        let icon = "fa-bell";
-
-        if (typeValue === "booking") {
-            icon = "fa-calendar-check";
-        }
-
-        else if (typeValue === "maintenance") {
-            icon = "fa-screwdriver-wrench";
-        }
-
-        else if (typeValue === "system") {
-            icon = "fa-circle-info";
-        }
-
-        else if (typeValue === "reminder") {
-            icon = "fa-clock";
-        }
-
-        else if (typeValue === "announcement") {
-            icon = "fa-bullhorn";
-        }
-
-
-        /* Create row */
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-
-                <div class="notification-message">
-
-                    <div class="notification-row-icon ${typeValue}-icon">
-
-                        <i class="fa-solid ${icon}"></i>
-
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            New ${typeName} Notification
-                        </strong>
-
-                        <span>
-                            ${escapeHTML(message)}
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </td>
-
-
-            <td>
-
-                <div class="recipient">
-
-                    <div class="recipient-avatar">
-                        ${getInitials(recipientName)}
-                    </div>
-
-                    <span>
-                        ${escapeHTML(recipientName)}
-                    </span>
-
-                </div>
-
-            </td>
-
-
-            <td>
-
-                <span class="type-badge ${typeValue}">
-                    ${escapeHTML(typeName)}
-                </span>
-
-            </td>
-
-
-            <td>
-
-                <span class="date">
-                    ${date}
-                </span>
-
-            </td>
-
-
-            <td>
-
-                <div class="action-buttons">
-
-                    <button
-                        class="action-btn view-btn"
-                        title="View notification"
-                        data-title="New ${escapeHTML(typeName)} Notification"
-                        data-recipient="${escapeHTML(recipientName)}"
-                        data-type="${escapeHTML(typeName)}"
-                        data-date="${date}"
-                        data-message="${escapeHTML(message)}">
-
-                        <i class="fa-solid fa-eye"></i>
-
-                    </button>
-
-
-                    <button
-                        class="action-btn delete-btn"
-                        title="Delete notification">
-
-                        <i class="fa-solid fa-trash"></i>
-
-                    </button>
-
-                </div>
-
-            </td>
-
-        `;
-
-
-        /*
-         * Insert the newest notification
-         * at the top of the table.
-         */
-
-        notificationTableBody.prepend(row);
-
-
-        /*
-         * Attach buttons to the new row.
-         */
-
-        attachRowButtons(row);
 
     }
 
@@ -430,45 +648,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
             viewButton.addEventListener("click", function () {
 
-                const title =
-                    this.dataset.title;
-
-                const recipient =
-                    this.dataset.recipient;
-
-                const type =
-                    this.dataset.type;
-
-                const date =
-                    this.dataset.date;
-
-                const message =
-                    this.dataset.message;
-
-
                 document.getElementById(
                     "viewNotificationTitle"
-                ).textContent = title;
+                ).textContent = this.dataset.title;
 
 
                 document.getElementById(
                     "viewRecipient"
-                ).textContent = recipient;
+                ).textContent = this.dataset.recipient;
 
 
                 document.getElementById(
                     "viewType"
-                ).textContent = type;
+                ).textContent = this.dataset.type;
 
 
                 document.getElementById(
                     "viewDate"
-                ).textContent = date;
+                ).textContent = this.dataset.date;
 
 
                 document.getElementById(
                     "viewMessage"
-                ).textContent = message;
+                ).textContent = this.dataset.message;
 
 
                 viewNotificationModal.classList.add("active");
@@ -480,25 +682,41 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* DELETE */
+        /* DELETE (staff only - students get no delete button) */
 
         if (deleteButton) {
 
             deleteButton.addEventListener(
                 "click",
-                function () {
+                async function () {
 
                     const confirmed =
                         confirm(
                             "Are you sure you want to delete this notification?"
                         );
 
+                    if (!confirmed) {
+                        return;
+                    }
 
-                    if (confirmed) {
+                    try {
 
-                        row.remove();
+                        const response = await fetch(
+                            `${NOTIFICATION_API}/delete/${encodeURIComponent(this.dataset.id)}`,
+                            { method: "DELETE" }
+                        );
 
-                        updateTotalCount(-1);
+                        if (!response.ok) {
+                            throw new Error(`Delete failed: ${response.status}`);
+                        }
+
+                        await loadNotifications();
+
+                    } catch (error) {
+
+                        console.error("Error deleting notification:", error);
+
+                        alert("The notification could not be deleted.");
 
                     }
 
@@ -506,24 +724,6 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         }
-
-    }
-
-
-    /* =========================================================
-       ATTACH BUTTONS TO EXISTING NOTIFICATIONS
-    ========================================================= */
-
-    if (notificationTableBody) {
-
-        const rows =
-            notificationTableBody.querySelectorAll("tr");
-
-        rows.forEach(function (row) {
-
-            attachRowButtons(row);
-
-        });
 
     }
 
@@ -602,14 +802,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function filterNotifications() {
 
-        const searchTerm =
-            notificationSearch.value
-                .toLowerCase()
-                .trim();
+        if (!notificationTableBody) {
+            return;
+        }
 
-        const selectedType =
-            notificationTypeFilter.value
-                .toLowerCase();
+        const searchTerm = notificationSearch
+            ? notificationSearch.value.toLowerCase().trim()
+            : "";
+
+        const selectedType = notificationTypeFilter
+            ? notificationTypeFilter.value.toLowerCase()
+            : "";
 
 
         const rows =
@@ -617,6 +820,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         rows.forEach(function (row) {
+
+            const badge =
+                row.querySelector(".type-badge");
+
+            // The "no notifications" row has no badge
+            if (!badge) {
+                return;
+            }
 
             const rowText =
                 row.textContent.toLowerCase();
@@ -626,19 +837,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 rowText.includes(searchTerm);
 
 
-            const badge =
-                row.querySelector(".type-badge");
-
-
-            let matchesType = true;
-
-
-            if (selectedType && badge) {
-
-                matchesType =
-                    badge.classList.contains(selectedType);
-
-            }
+            const matchesType =
+                !selectedType ||
+                badge.classList.contains(selectedType);
 
 
             if (matchesSearch && matchesType) {
@@ -659,54 +860,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       UPDATE STATISTICS
+       HELPERS
     ========================================================= */
 
-    function updateStatistics(type) {
+    function setText(id, value) {
 
-        updateTotalCount(1);
+        const element = document.getElementById(id);
 
-
-        if (sentToday) {
-
-            sentToday.textContent =
-                parseInt(sentToday.textContent) + 1;
-
-        }
-
-
-        if (type === "booking" && bookingNotifications) {
-
-            bookingNotifications.textContent =
-                parseInt(
-                    bookingNotifications.textContent
-                ) + 1;
-
-        }
-
-
-        if (type === "system" && systemNotifications) {
-
-            systemNotifications.textContent =
-                parseInt(
-                    systemNotifications.textContent
-                ) + 1;
-
+        if (element) {
+            element.textContent = value;
         }
 
     }
 
 
-    function updateTotalCount(amount) {
+    function setCount(element, value) {
 
-        if (totalNotifications) {
-
-            totalNotifications.textContent =
-                parseInt(
-                    totalNotifications.textContent
-                ) + amount;
-
+        if (element) {
+            element.textContent = value;
         }
+
+    }
+
+
+    // Local date as YYYY-MM-DD (what the backend's LocalDate expects)
+    function todayIso() {
+
+        const now = new Date();
+
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+
+        const day = String(now.getDate()).padStart(2, "0");
+
+        return `${now.getFullYear()}-${month}-${day}`;
+
+    }
+
+
+    function formatDate(isoDate) {
+
+        if (!isoDate) {
+            return "";
+        }
+
+        const date = new Date(`${isoDate}T00:00:00`);
+
+        return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
 
     }
 
@@ -722,13 +925,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        if (name === "All Users") {
-            return "AL";
-        }
-
-
         const words =
-            name.trim().split(" ");
+            String(name).trim().split(/\s+/);
 
 
         if (words.length === 1) {
@@ -755,12 +953,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function escapeHTML(value) {
 
-        if (!value) {
+        if (value === null || value === undefined) {
             return "";
         }
 
 
-        return value
+        return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
