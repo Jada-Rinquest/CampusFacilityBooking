@@ -842,6 +842,11 @@ a {
     color: var(--muted);
 }
 
+.reminder-icon {
+    background: #fffbeb;
+    color: var(--warning);
+}
+
 .notification-message > div:last-child {
     display: flex;
     flex-direction: column;

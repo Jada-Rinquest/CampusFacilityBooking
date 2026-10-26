@@ -1064,13 +1064,15 @@ a {
     background: var(--warning);
 }
 
-.status-badge.cancelled {
+.status-badge.cancelled,
+.status-badge.rejected {
     background: var(--danger-light);
 
     color: var(--danger);
 }
 
-.status-badge.cancelled::before {
+.status-badge.cancelled::before,
+.status-badge.rejected::before {
     background: var(--danger);
 }
 

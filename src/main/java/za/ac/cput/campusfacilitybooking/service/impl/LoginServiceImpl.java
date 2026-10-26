@@ -5,6 +5,8 @@ import za.ac.cput.campusfacilitybooking.domain.Login;
 import za.ac.cput.campusfacilitybooking.domain.Register;
 import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.domain.UserRole;
+import za.ac.cput.campusfacilitybooking.domain.enums.AccountType;
+import za.ac.cput.campusfacilitybooking.domain.enums.Role;
 import za.ac.cput.campusfacilitybooking.dto.AuthResponse;
 import za.ac.cput.campusfacilitybooking.repository.LoginRepository;
 import za.ac.cput.campusfacilitybooking.repository.RegisterRepository;
@@ -12,6 +14,8 @@ import za.ac.cput.campusfacilitybooking.repository.UserRepository;
 import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.LoginService;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -91,18 +95,32 @@ public class LoginServiceImpl implements LoginService {
 
         User user = userOpt.get();
 
-        // 5. Get UserRole
-        String role = "STUDENT";
-        try {
-            Optional<UserRole> userRoleOpt = userRoleRepository.findByUserIdAndRole(user.getUserId(), null);
-            if (userRoleOpt.isPresent()) {
-                role = userRoleOpt.get().getRole().toString();
-            } else {
-            }
-        } catch (Exception e) {
+        // 5. Account type comes from the email domain (@mycput = student, @cput = staff).
+        //    Anything unrecognised gets the least privilege.
+        AccountType accountType = AccountType.fromEmail(user.getEmail());
+        if (accountType == null) {
+            accountType = AccountType.STUDENT;
         }
 
-        // 6. Return AuthResponse
+        // 6. Get UserRole (highest privilege wins: STUDENT < LECTURER < ADMIN).
+        //    Students are always STUDENT; staff are at least LECTURER.
+        Role storedRole = userRoleRepository.findByUserId(user.getUserId())
+                .stream()
+                .map(UserRole::getRole)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
+
+        String role;
+        if (accountType == AccountType.STUDENT) {
+            role = Role.STUDENT.name();
+        } else if (storedRole == Role.ADMIN) {
+            role = Role.ADMIN.name();
+        } else {
+            role = Role.LECTURER.name();
+        }
+
+        // 7. Return AuthResponse
         AuthResponse response = new AuthResponse(
                 user.getUserId(),
                 username,
@@ -111,9 +129,14 @@ public class LoginServiceImpl implements LoginService {
                 user.getFirstName(),
                 user.getLastName()
         );
-
+        response.setAccountType(accountType.name());
 
         return response;
+    }
+
+    @Override
+    public boolean isUsernameTaken(String username) {
+        return loginRepository.existsByUsername(username);
     }
 
     @Override

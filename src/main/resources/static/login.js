@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (forgotPassword) {
         forgotPassword.addEventListener("click", function (event) {
             event.preventDefault();
-            alert("Your password is your User ID. Please contact the campus administrator if you have forgotten it.");
+            alert("Please contact the campus administrator to reset your password.");
         });
     }
 
@@ -156,9 +156,14 @@ async function loginUser() {
             username: authResponse.username,
             email: authResponse.email,
             role: authResponse.role,
+            accountType: authResponse.accountType,
             firstName: authResponse.firstName,
             lastName: authResponse.lastName
         };
+
+        // Clear any session left over from a different account
+        sessionStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInUser");
 
         const rememberMe = document.getElementById("rememberMe");
 
@@ -176,11 +181,10 @@ async function loginUser() {
         loginButtonText.textContent = "Success!";
         loginButtonIcon.className = "fa-solid fa-check";
 
-        // Redirect based on role
-        let redirectUrl = "student-dashboard.html";
-        if (authResponse.role === "ADMIN" || authResponse.role === "LECTURER") {
-            redirectUrl = "staff-dashboard.html";
-        }
+        // Redirect based on account type (@cput.ac.za = staff, @mycput = student)
+        const redirectUrl = authResponse.accountType === "STAFF"
+            ? "staff-dashboard.html"
+            : "student-dashboard.html";
 
         setTimeout(function () {
             window.location.href = redirectUrl;

@@ -35,29 +35,13 @@ document.addEventListener("DOMContentLoaded", function () {
 async function loadProfile() {
 
     /*
-        The login page should store the login information
-        in localStorage after successful login.
-
-        Example:
-
-        localStorage.setItem("loginId", login.loginId);
-        localStorage.setItem("registrarId", login.registrarId);
-        localStorage.setItem("username", login.username);
+        auth.js runs first and puts the signed-in user
+        (saved by script.js at login) on window.currentUser.
     */
 
-    const loginId = localStorage.getItem("loginId");
-    const registrarId = localStorage.getItem("registrarId");
-    const username = localStorage.getItem("username");
+    const current = window.currentUser;
 
-    /*
-        If there is no logged-in user, use default information.
-        This prevents the page from completely breaking when
-        you open profile.html directly during development.
-    */
-
-    if (!loginId) {
-
-        console.log("No logged-in user found.");
+    if (!current) {
 
         setDefaultProfile();
 
@@ -65,86 +49,80 @@ async function loadProfile() {
     }
 
 
+    // Show what we already know straight away
+    showProfile({
+        userId: current.userId,
+        firstName: current.firstName,
+        lastName: current.lastName,
+        email: current.email
+    }, current);
+
+
     try {
 
         /*
-            Get the login information from the backend.
+            Get the full user record (the name, email, date of
+            birth and department entered when registering).
         */
 
         const response = await fetch(
-            `${API_BASE_URL}/login/read/${loginId}`
+            `${API_BASE_URL}/user/read/${encodeURIComponent(current.userId)}`
         );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Unable to retrieve login information."
+                "Unable to retrieve user information."
             );
 
         }
 
 
-        const login = await response.json();
+        const user = await response.json();
+
+        showProfile(user, current);
 
 
         /*
-            Display login information.
+            Department name.
         */
 
-        const storedUsername =
-            login.username || username || "User";
+        if (user.departmentId) {
 
-        const storedRegistrarId =
-            login.registrarId || registrarId || "";
+            const departmentResponse = await fetch(
+                `${API_BASE_URL}/department/read/${encodeURIComponent(user.departmentId)}`
+            );
 
+            const departmentName = departmentResponse.ok
+                ? (await departmentResponse.json()).name
+                : user.departmentId;
 
-        /*
-            Display the username.
-        */
-
-        document.getElementById("topbarName").textContent =
-            storedUsername;
-
-        document.getElementById("profileName").textContent =
-            storedUsername;
-
-
-        /*
-            Display registrar ID.
-        */
-
-        document.getElementById("profileUserId").textContent =
-            storedRegistrarId || "N/A";
-
-        document.getElementById("userId").value =
-            storedRegistrarId || "N/A";
-
-        document.getElementById("accountUserId").textContent =
-            storedRegistrarId || "N/A";
-
-
-        /*
-            Display username as email if no email is
-            currently available from the backend.
-        */
-
-        const emailElement =
-            document.getElementById("profileEmail");
-
-        if (emailElement) {
-
-            emailElement.textContent =
-                login.username || "No email available";
-
+            setText("profileDepartment", departmentName);
+            setValue("department", departmentName);
         }
 
 
         /*
-            Set initials.
+            Student number or staff ID.
         */
 
-        setAvatarInitials(storedUsername);
+        const recordType = current.isStudent ? "student" : "staff";
+
+        const recordResponse = await fetch(
+            `${API_BASE_URL}/${recordType}/user/${encodeURIComponent(current.userId)}`
+        );
+
+        if (recordResponse.ok) {
+
+            const record = await recordResponse.json();
+
+            if (current.isStudent) {
+                setValue("studentNumber", record.studentNumber || "N/A");
+            } else {
+                setValue("staffId", record.staffId || "N/A");
+            }
+        }
 
 
     } catch (error) {
@@ -159,6 +137,79 @@ async function loadProfile() {
             "error"
         );
 
+    }
+
+}
+
+
+/* =========================================================
+   SHOW PROFILE
+========================================================= */
+
+function showProfile(user, current) {
+
+    const fullName =
+        `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+        current.username;
+
+
+    setText("topbarName", fullName);
+    setText("topbarRole", current.roleLabel);
+
+    setText("profileName", fullName);
+    setText("profileRole", current.roleLabel);
+    setText("profileEmail", user.email || "N/A");
+    setText("profileUserId", user.userId);
+
+    setValue("firstName", user.firstName || "");
+    setValue("lastName", user.lastName || "");
+    setValue("email", user.email || "");
+    setValue("dateOfBirth", user.dateOfBirth || "");
+    setValue("userId", user.userId);
+
+    setValue("accountRole", current.roleLabel);
+    setText("accountType", current.isStudent ? "Student" : "Staff");
+    setText("accountUserId", user.userId);
+
+
+    /*
+        Students see their student number, staff see their staff ID.
+    */
+
+    const studentGroup = document.getElementById("studentNumberGroup");
+    const staffGroup = document.getElementById("staffIdGroup");
+
+    if (studentGroup) {
+        studentGroup.style.display = current.isStudent ? "" : "none";
+    }
+
+    if (staffGroup) {
+        staffGroup.style.display = current.isStudent ? "none" : "";
+    }
+
+
+    setAvatarInitials(fullName);
+
+}
+
+
+function setText(id, value) {
+
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent = value;
+    }
+
+}
+
+
+function setValue(id, value) {
+
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.value = value;
     }
 
 }
@@ -321,19 +372,10 @@ function setupLogout() {
     logoutButton.addEventListener("click", function () {
 
         /*
-            Remove login information.
+            login.html clears the session and returns to sign in.
         */
 
-        localStorage.removeItem("loginId");
-        localStorage.removeItem("registrarId");
-        localStorage.removeItem("username");
-
-
-        /*
-            Return to login page.
-        */
-
-        window.location.href = "index.html";
+        window.location.href = "login.html";
 
     });
 

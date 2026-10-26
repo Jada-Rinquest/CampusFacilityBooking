@@ -12,6 +12,9 @@
 
     <!-- Notification CSS -->
     <link rel="stylesheet" href="notification.css">
+    <!-- Sign-in check + student/staff permissions -->
+    <script src="auth.js"></script>
+
 </head>
 
 <body>
@@ -78,7 +81,7 @@
             <span>Profile</span>
         </a>
 
-        <a href="index.html" class="logout">
+        <a href="login.html" class="logout">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Logout</span>
         </a>
@@ -159,9 +162,9 @@
                     COMMUNICATIONS
                 </span>
 
-                <h2>Notification Management</h2>
+                <h2 id="pageTitle">Notification Management</h2>
 
-                <p>
+                <p id="pageDescription">
                     Keep students and staff informed about bookings,
                     maintenance and important campus updates.
                 </p>
@@ -196,7 +199,7 @@
                     <span>Total Notifications</span>
 
                     <strong id="totalNotifications">
-                        128
+                        0
                     </strong>
 
                 </div>
@@ -215,7 +218,7 @@
                     <span>Sent Today</span>
 
                     <strong id="sentToday">
-                        14
+                        0
                     </strong>
 
                 </div>
@@ -234,7 +237,7 @@
                     <span>Booking Notifications</span>
 
                     <strong id="bookingNotifications">
-                        86
+                        0
                     </strong>
 
                 </div>
@@ -245,15 +248,15 @@
             <div class="stat-card">
 
                 <div class="stat-icon">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
 
                 <div class="stat-content">
 
-                    <span>System Notifications</span>
+                    <span>Maintenance Updates</span>
 
-                    <strong id="systemNotifications">
-                        42
+                    <strong id="maintenanceNotifications">
+                        0
                     </strong>
 
                 </div>
@@ -280,7 +283,7 @@
 
                     <h3>Recent Notifications</h3>
 
-                    <p>
+                    <p id="panelDescription">
                         View and manage notifications sent through
                         the campus booking system.
                     </p>
@@ -315,16 +318,8 @@
                             Maintenance
                         </option>
 
-                        <option value="system">
-                            System
-                        </option>
-
                         <option value="reminder">
-                            Reminder
-                        </option>
-
-                        <option value="announcement">
-                            Announcement
+                            Invoice Reminder
                         </option>
 
                     </select>
@@ -362,387 +357,6 @@
 
 
                     <tbody id="notificationTableBody">
-
-                    <!-- =====================================
-                         NOTIFICATION
-                    ====================================== -->
-
-                    <tr>
-
-                        <td>
-
-                            <div class="notification-message">
-
-                                <div class="notification-row-icon booking-icon">
-                                    <i class="fa-solid fa-calendar-check"></i>
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        Booking Approved
-                                    </strong>
-
-                                    <span>
-                                        Your booking for Room 204
-                                        has been approved.
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="recipient">
-
-                                <div class="recipient-avatar">
-                                    JR
-                                </div>
-
-                                <span>
-                                    Jada Rinquest
-                                </span>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="type-badge booking">
-                                Booking
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="date">
-                                24 Aug 2026
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-buttons">
-
-                                <button
-                                        class="action-btn view-btn"
-                                        title="View notification">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-
-                                <button
-                                        class="action-btn delete-btn"
-                                        title="Delete notification">
-
-                                    <i class="fa-solid fa-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- =====================================
-                         NOTIFICATION
-                    ====================================== -->
-
-                    <tr>
-
-                        <td>
-
-                            <div class="notification-message">
-
-                                <div class="notification-row-icon maintenance-icon">
-                                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        Maintenance Required
-                                    </strong>
-
-                                    <span>
-                                        Projector EQUIP001 requires
-                                        maintenance.
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="recipient">
-
-                                <div class="recipient-avatar">
-                                    JS
-                                </div>
-
-                                <span>
-                                    John Smith
-                                </span>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="type-badge maintenance">
-                                Maintenance
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="date">
-                                23 Aug 2026
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-buttons">
-
-                                <button
-                                        class="action-btn view-btn"
-                                        title="View notification">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-
-                                <button
-                                        class="action-btn delete-btn"
-                                        title="Delete notification">
-
-                                    <i class="fa-solid fa-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- =====================================
-                         NOTIFICATION
-                    ====================================== -->
-
-                    <tr>
-
-                        <td>
-
-                            <div class="notification-message">
-
-                                <div class="notification-row-icon booking-icon">
-                                    <i class="fa-solid fa-calendar-xmark"></i>
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        Booking Cancelled
-                                    </strong>
-
-                                    <span>
-                                        Your booking for Laboratory 2
-                                        has been cancelled.
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="recipient">
-
-                                <div class="recipient-avatar">
-                                    SM
-                                </div>
-
-                                <span>
-                                    Sarah Mokoena
-                                </span>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="type-badge booking">
-                                Booking
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="date">
-                                23 Aug 2026
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-buttons">
-
-                                <button
-                                        class="action-btn view-btn"
-                                        title="View notification">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-
-                                <button
-                                        class="action-btn delete-btn"
-                                        title="Delete notification">
-
-                                    <i class="fa-solid fa-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- =====================================
-                         NOTIFICATION
-                    ====================================== -->
-
-                    <tr>
-
-                        <td>
-
-                            <div class="notification-message">
-
-                                <div class="notification-row-icon system-icon">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        System Maintenance
-                                    </strong>
-
-                                    <span>
-                                        The booking system will undergo
-                                        maintenance tonight.
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="recipient">
-
-                                <div class="recipient-avatar">
-                                    AL
-                                </div>
-
-                                <span>
-                                    All Users
-                                </span>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="type-badge system">
-                                System
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="date">
-                                22 Aug 2026
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-buttons">
-
-                                <button
-                                        class="action-btn view-btn"
-                                        title="View notification">
-
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </button>
-
-
-                                <button
-                                        class="action-btn delete-btn"
-                                        title="Delete notification">
-
-                                    <i class="fa-solid fa-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
                     </tbody>
 
                 </table>
@@ -873,21 +487,7 @@
                         Select recipient
                     </option>
 
-                    <option value="U001">
-                        Jada Rinquest
-                    </option>
-
-                    <option value="U002">
-                        John Smith
-                    </option>
-
-                    <option value="U003">
-                        Sarah Mokoena
-                    </option>
-
-                    <option value="all">
-                        All Users
-                    </option>
+                    <!-- notification.js adds the users from the backend -->
 
                 </select>
 
@@ -914,24 +514,16 @@
                         Select notification type
                     </option>
 
-                    <option value="booking">
+                    <option value="BOOKING_CONFIRMATION">
                         Booking
                     </option>
 
-                    <option value="maintenance">
+                    <option value="MAINTENANCE_UPDATE">
                         Maintenance
                     </option>
 
-                    <option value="system">
-                        System
-                    </option>
-
-                    <option value="reminder">
-                        Reminder
-                    </option>
-
-                    <option value="announcement">
-                        Announcement
+                    <option value="INVOICE_REMINDER">
+                        Invoice Reminder
                     </option>
 
                 </select>

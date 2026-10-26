@@ -9,16 +9,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // allowCredentials must stay false: several controllers use
+        // @CrossOrigin(origins = "*"), and Spring rejects "*" combined with
+        // credentials, which made /login and /user return 500 errors.
+        // The frontend sends no cookies, so credentials are not needed.
         registry.addMapping("/**")
-                .allowedOrigins(
-                        "http://localhost:63342",
-                        "http://127.0.0.1:63342",
-                        "http://localhost:5500",
-                        "http://127.0.0.1:5500"
-                )
+                .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 }

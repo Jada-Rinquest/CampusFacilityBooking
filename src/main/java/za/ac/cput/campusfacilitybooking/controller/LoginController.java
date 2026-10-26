@@ -33,6 +33,11 @@ public class LoginController {
         return ResponseEntity.ok(service.create(login));
     }
 
+    @GetMapping("/exists/{username}")
+    public ResponseEntity<Boolean> usernameExists(@PathVariable String username) {
+        return ResponseEntity.ok(service.isUsernameTaken(username));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Login>> getAll() {
         return ResponseEntity.ok(service.getAll());

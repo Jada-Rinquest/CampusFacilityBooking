@@ -1,11 +1,14 @@
 package za.ac.cput.campusfacilitybooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.User;
+import za.ac.cput.campusfacilitybooking.domain.enums.AccountType;
 import za.ac.cput.campusfacilitybooking.factory.UserFactory;
 import za.ac.cput.campusfacilitybooking.service.UserService;
 
@@ -25,6 +28,14 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> create(@RequestBody UserRequest request) {
+        if (AccountType.fromEmail(request.getEmail()) == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Use your CPUT email: @mycput.ac.za for students or @cput.ac.za for staff.");
+        }
+        if (service.findByEmail(request.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "An account with this email already exists.");
+        }
         User user = UserFactory.createUser(
                 request.getUserId(),
                 request.getFirstName(),
