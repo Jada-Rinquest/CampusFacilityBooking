@@ -15,6 +15,9 @@
     <!-- Dashboard CSS -->
     <link rel="stylesheet" href="staff-dashboard.css">
 
+    <!-- Sign-in check + student/staff permissions -->
+    <script src="auth.js"></script>
+
 </head>
 
 
@@ -129,7 +132,7 @@
         </a>
 
 
-        <a href="index.html" class="logout">
+        <a href="login.html" class="logout">
 
             <i class="fa-solid fa-right-from-bracket"></i>
 
@@ -172,7 +175,7 @@
 
                 <h1>Dashboard</h1>
 
-                <p>
+                <p id="welcomeText">
                     Welcome back to CampusBook.
                 </p>
 
@@ -196,8 +199,8 @@
 
                 <i class="fa-solid fa-bell"></i>
 
-                <span class="notification-count">
-                    3
+                <span class="notification-count" id="notificationCount">
+                    0
                 </span>
 
             </button>
@@ -209,7 +212,7 @@
 
                 <div class="staff-avatar">
 
-                    <span>
+                    <span id="topbarInitials">
                         ST
                     </span>
 
@@ -218,11 +221,11 @@
 
                 <div class="staff-info">
 
-                    <strong>
+                    <strong id="topbarName">
                         Staff Member
                     </strong>
 
-                    <span>
+                    <span id="topbarRole">
                         Administrator
                     </span>
 
@@ -297,8 +300,8 @@
                         Total Bookings
                     </span>
 
-                    <strong>
-                        24
+                    <strong id="totalBookings">
+                        0
                     </strong>
 
                 </div>
@@ -322,8 +325,8 @@
                         Facilities
                     </span>
 
-                    <strong>
-                        18
+                    <strong id="totalFacilities">
+                        0
                     </strong>
 
                 </div>
@@ -347,8 +350,8 @@
                         Equipment
                     </span>
 
-                    <strong>
-                        64
+                    <strong id="totalEquipment">
+                        0
                     </strong>
 
                 </div>
@@ -372,8 +375,8 @@
                         Users
                     </span>
 
-                    <strong>
-                        128
+                    <strong id="totalUsers">
+                        0
                     </strong>
 
                 </div>
@@ -696,7 +699,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="script.js"></script>
+<script src="staff-dashboard.js"></script>
 
 </body>
 

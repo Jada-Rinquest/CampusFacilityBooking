@@ -20,6 +20,7 @@ import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.LoginServiceImpl;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,7 +103,7 @@ public class LoginServiceTest {
         when(loginRepository.findByUsername(username)).thenReturn(Optional.of(login));
         when(registerRepository.findById(registrarId)).thenReturn(Optional.of(register));
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(userRoleRepository.findByUserIdAndRole(userId, null)).thenReturn(Optional.of(userRole));
+        when(userRoleRepository.findByUserId(userId)).thenReturn(List.of(userRole));
 
         AuthResponse response = service.authenticate(username, password);
 
