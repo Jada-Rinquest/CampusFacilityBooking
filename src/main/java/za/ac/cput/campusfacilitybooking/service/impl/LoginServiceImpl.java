@@ -1,6 +1,10 @@
 package za.ac.cput.campusfacilitybooking.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+
 import za.ac.cput.campusfacilitybooking.domain.Login;
 import za.ac.cput.campusfacilitybooking.domain.Register;
 import za.ac.cput.campusfacilitybooking.domain.User;
@@ -11,8 +15,6 @@ import za.ac.cput.campusfacilitybooking.repository.RegisterRepository;
 import za.ac.cput.campusfacilitybooking.repository.UserRepository;
 import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.LoginService;
-
-import java.util.Optional;
 
 @Service
 public class LoginServiceImpl implements LoginService {
