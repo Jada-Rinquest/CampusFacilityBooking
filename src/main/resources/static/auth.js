@@ -6,13 +6,23 @@
    user. It runs before the page renders so that:
      - signed-out visitors go back to the login page
      - students cannot open staff-only pages (users, invoices,
-       staff dashboard) and never see links to them
+       equipment, maintenance, staff dashboard) and never see
+       links to them
+     - anything marked data-staff-only (or class "staff-only")
+       is hidden from students, including buttons that a page's
+       own script adds later (edit / delete / add facility etc.)
      - the top bar shows the signed-in person's name and role
 ========================================================= */
 
 (function () {
 
-    const STAFF_ONLY_PAGES = ["user.html", "invoice.html", "staff-dashboard.html"];
+    const STAFF_ONLY_PAGES = [
+        "user.html",
+        "invoice.html",
+        "equipment.html",
+        "maintenance.html",
+        "staff-dashboard.html"
+    ];
     const STUDENT_ONLY_PAGES = ["student-dashboard.html"];
 
     function readUser() {
@@ -69,12 +79,29 @@
         roleLabel: roleLabel
     };
 
+    // Hide staff-only controls from students straight away, before the page
+    // paints. A CSS rule (instead of removing elements) also covers buttons
+    // that a page's script builds later, such as edit/delete in a table.
+    if (isStudent) {
+        document.documentElement.classList.add("is-student");
+
+        const hideRule = document.createElement("style");
+        hideRule.textContent =
+            "html.is-student [data-staff-only], html.is-student .staff-only { display: none !important; }";
+        document.head.appendChild(hideRule);
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
 
         if (isStudent) {
 
             // Students never see links to staff-only pages
-            document.querySelectorAll('a[href="user.html"], a[href="invoice.html"]')
+            const staffOnlyLinks = STAFF_ONLY_PAGES
+                .filter(function (p) { return p !== "staff-dashboard.html"; })
+                .map(function (p) { return 'a[href="' + p + '"]'; })
+                .join(", ");
+
+            document.querySelectorAll(staffOnlyLinks)
                 .forEach(function (link) {
                     const card = link.closest(".dashboard-card");
                     (card || link).remove();
