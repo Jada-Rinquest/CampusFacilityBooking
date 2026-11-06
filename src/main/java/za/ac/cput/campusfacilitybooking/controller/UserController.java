@@ -1,3 +1,4 @@
+
 package za.ac.cput.campusfacilitybooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+
 import za.ac.cput.campusfacilitybooking.domain.User;
 import za.ac.cput.campusfacilitybooking.domain.enums.AccountType;
 import za.ac.cput.campusfacilitybooking.factory.UserFactory;
 import za.ac.cput.campusfacilitybooking.service.UserService;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -27,14 +28,24 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> create(@RequestBody UserRequest request) {
+
+        // Validate CPUT email address
         if (AccountType.fromEmail(request.getEmail()) == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Use your CPUT email: @mycput.ac.za for students or @cput.ac.za for staff.");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Use your CPUT email: @mycput.ac.za for students or @cput.ac.za for staff."
+            );
         }
-        if (service.findByEmail(request.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "An account with this email already exists.");
+
+        // Check whether the email already exists
+        if (service.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "An account with this email already exists."
+            );
         }
+
+        // Create a new user
         User user = UserFactory.createUser(
                 request.getUserId(),
                 request.getFirstName(),
@@ -43,6 +54,7 @@ public class UserController {
                 request.getDateOfBirth(),
                 request.getDepartmentId()
         );
+
         return ResponseEntity.ok(service.create(user));
     }
 
@@ -54,18 +66,22 @@ public class UserController {
     @GetMapping("/read/{id}")
     public ResponseEntity<User> read(@PathVariable String id) {
         User user = service.read(id);
+
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/findByEmail/{email}")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
         Optional<User> user = service.findByEmail(email);
+
         if (user.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(user.get());
     }
 

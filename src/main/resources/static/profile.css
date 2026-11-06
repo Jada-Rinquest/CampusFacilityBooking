@@ -1154,3 +1154,140 @@ body {
         height: 36px;
     }
 }
+
+/* Profile editing buttons */
+
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.profile-edit-actions button {
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-edit-actions .primary-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.profile-edit-actions .primary-btn:hover {
+    background: #2563eb;
+}
+
+.profile-edit-actions [hidden] {
+    display: none !important;
+}
+
+.form-group input:not([readonly]) {
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    outline: none;
+}
+
+.form-group input[readonly] {
+    cursor: default;
+}
+
+/* =========================================
+   PROFILE LAYOUT FIX
+========================================= */
+
+/* Keep the profile card in the normal page flow */
+.profile-card {
+    position: static;
+}
+
+/* Give every profile section its own card */
+.profile-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+/* Align the section title and Edit Profile button */
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Keep the profile details within their grid column */
+.profile-details {
+    min-width: 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 700px) {
+    .profile-section {
+        padding: 22px 18px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* =========================================
+   ACCOUNT SECURITY LAYOUT FIX
+========================================= */
+
+.security-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.security-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1 1 220px;
+    min-width: 0;
+}
+
+.security-info > div:last-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.security-info strong,
+.security-info span {
+    display: block;
+    overflow-wrap: break-word;
+}
+
+.security-item .secondary-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Smaller screens */
+@media (max-width: 700px) {
+    .security-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .security-info {
+        flex: 0 1 auto;
+        width: 100%;
+    }
+
+    .security-item .secondary-btn {
+        width: 100%;
+    }
+}
