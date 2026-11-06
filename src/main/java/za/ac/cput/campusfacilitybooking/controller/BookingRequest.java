@@ -9,6 +9,7 @@ public class BookingRequest {
     private String userId;
     private String purpose;
     private BookingStatus bookingStatus;
+    private String bookingStatusId;
 
     // Getters and Setters
     public String getBookingId() { return bookingId; }
@@ -21,6 +22,15 @@ public class BookingRequest {
     public void setUserId(String userId) { this.userId = userId; }
     public String getPurpose() { return purpose; }
     public void setPurpose(String purpose) { this.purpose = purpose; }
-    public BookingStatus getBookingStatus() { return bookingStatus; }
+    public BookingStatus getBookingStatus() { 
+        if (bookingStatus == null) {
+            if ("BS002".equalsIgnoreCase(bookingStatusId)) return BookingStatus.APPROVED;
+            if ("BS003".equalsIgnoreCase(bookingStatusId)) return BookingStatus.CANCELLED;
+            return BookingStatus.PENDING;
+        }
+        return bookingStatus; 
+    }
     public void setBookingStatus(BookingStatus bookingStatus) { this.bookingStatus = bookingStatus; }
+    public String getBookingStatusId() { return bookingStatusId; }
+    public void setBookingStatusId(String bookingStatusId) { this.bookingStatusId = bookingStatusId; }
 }

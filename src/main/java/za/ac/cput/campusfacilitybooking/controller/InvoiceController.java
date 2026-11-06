@@ -13,7 +13,6 @@ import za.ac.cput.campusfacilitybooking.service.InvoiceService;
 
 @RestController
 @RequestMapping("/invoice")
-@CrossOrigin(origins = "*")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -33,12 +32,15 @@ public class InvoiceController {
             return ResponseEntity.badRequest().build();
         }
 
+        java.time.LocalDate issueDate = request.getIssueDate() != null ? request.getIssueDate() : java.time.LocalDate.now();
+        java.time.LocalDate dueDate = request.getDueDate() != null ? request.getDueDate() : java.time.LocalDate.now().plusDays(14);
+
         Invoice invoice = InvoiceFactory.createInvoice(
                 request.getInvoiceId(),
                 booking,
                 request.getAmount(),
-                request.getIssueDate(),
-                request.getDueDate()
+                issueDate,
+                dueDate
         );
 
         return ResponseEntity.ok(invoiceService.create(invoice));

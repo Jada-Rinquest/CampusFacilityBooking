@@ -12,7 +12,6 @@ import za.ac.cput.campusfacilitybooking.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "*")  // ← IMPORTANT: Allow CORS
 public class LoginController {
 
     private final LoginService service;

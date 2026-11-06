@@ -173,6 +173,10 @@ async function loginUser() {
             sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
         }
 
+        localStorage.setItem("loginId", authResponse.userId);
+        localStorage.setItem("registrarId", authResponse.userId);
+        localStorage.setItem("username", authResponse.username);
+
 
         // =================================================
         // REDIRECT TO DASHBOARD
