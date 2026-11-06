@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
         // The frontend sends no cookies, so credentials are not needed.
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
                 .allowedHeaders("*")
                 .allowCredentials(false)
                 .maxAge(3600);

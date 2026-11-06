@@ -644,6 +644,7 @@ async function handleInvoiceSubmit(event) {
         invoiceId: id,
         bookingId: bookingId,
         amount: parseFloat(amount),
+        issueDate: new Date().toISOString().split("T")[0],
         dueDate: due,
         invoiceStatus: status,
         description: description || ""
