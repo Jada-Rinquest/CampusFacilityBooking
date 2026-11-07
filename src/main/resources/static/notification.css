@@ -1622,3 +1622,74 @@ a {
         height: 36px;
     }
 }
+
+/* =========================================
+   NOTIFICATION READ STATUS
+========================================= */
+
+/* Unread notification row */
+
+.unread-notification {
+    background-color: #eff6ff;
+}
+
+.unread-notification:hover {
+    background-color: #dbeafe;
+}
+
+.unread-notification strong {
+    font-weight: 700;
+}
+
+/* New badge */
+
+.new-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 8px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+/* Read notification row */
+
+#notificationTableBody tr:not(.unread-notification) {
+    background-color: #ffffff;
+}
+
+/* FIX NEW BADGE DISPLAY */
+
+.notification-message .new-badge {
+    display: inline-block;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: none;
+    margin-left: 0;
+    padding: 4px 9px;
+
+    background-color: #3b82f6;
+    color: #ffffff;
+
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* UNREAD ROW */
+
+.notification-table tbody tr.unread-notification {
+    background-color: #eff6ff;
+}
+
+.notification-table tbody tr.unread-notification:hover {
+    background-color: #dbeafe;
+}
+

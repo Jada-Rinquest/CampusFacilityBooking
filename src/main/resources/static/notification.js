@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
@@ -11,18 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       SIGNED-IN USER (set by auth.js)
-       Students only see their own notifications and cannot
-       send or delete any. Staff see and manage all of them.
+       SIGNED-IN USER
     ========================================================= */
 
     const currentUser = window.currentUser || null;
-
     const isStudent = !currentUser || currentUser.isStudent;
 
 
     /* =========================================================
-       NOTIFICATION TYPES (NotificationType enum)
+       NOTIFICATION TYPES
     ========================================================= */
 
     const TYPES = {
@@ -109,13 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================================= */
 
     let notifications = [];
-
-    // userId -> "First Last"
     let userNames = {};
 
 
     /* =========================================================
-       PAGE SET-UP FOR STUDENTS
+       STUDENT PAGE SETUP
     ========================================================= */
 
     if (isStudent) {
@@ -145,23 +141,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadPage();
 
-
     async function loadPage() {
-
         await loadUsers();
-
         await loadNotifications();
-
     }
 
 
     async function loadUsers() {
 
-        // Students never load the list of other users
         if (isStudent) {
 
             if (currentUser) {
-                userNames[currentUser.userId] = currentUser.fullName;
+                userNames[currentUser.userId] =
+                    currentUser.fullName;
             }
 
             return;
@@ -172,7 +164,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch(`${USER_API}/all`);
 
             if (!response.ok) {
-                throw new Error(`User request failed: ${response.status}`);
+                throw new Error(
+                    `User request failed: ${response.status}`
+                );
             }
 
             const users = await response.json();
@@ -185,11 +179,8 @@ document.addEventListener("DOMContentLoaded", function () {
             populateRecipients(users);
 
         } catch (error) {
-
             console.error("Error loading users:", error);
-
         }
-
     }
 
 
@@ -197,34 +188,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            const response = await fetch(`${NOTIFICATION_API}/all`);
+            const response = await fetch(
+                `${NOTIFICATION_API}/all`
+            );
 
             if (!response.ok) {
-                throw new Error(`Notification request failed: ${response.status}`);
+                throw new Error(
+                    `Notification request failed: ${response.status}`
+                );
             }
 
             notifications = await response.json();
 
             if (isStudent) {
 
-                notifications = notifications.filter(function (notification) {
-                    return currentUser && notification.userId === currentUser.userId;
-                });
+                notifications = notifications.filter(
+                    function (notification) {
+
+                        return currentUser &&
+                            notification.userId === currentUser.userId;
+
+                    }
+                );
 
             }
 
         } catch (error) {
 
-            console.error("Error loading notifications:", error);
+            console.error(
+                "Error loading notifications:",
+                error
+            );
 
             notifications = [];
-
         }
 
         renderNotifications();
-
     }
 
+
+    /* =========================================================
+       POPULATE RECIPIENTS
+    ========================================================= */
 
     function populateRecipients(users) {
 
@@ -251,16 +256,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const allOption = document.createElement("option");
 
         allOption.value = "all";
-
         allOption.textContent = "All Users";
 
         recipientSelect.appendChild(allOption);
-
     }
 
 
     /* =========================================================
-       RENDER TABLE + STATISTICS
+       RENDER NOTIFICATIONS
     ========================================================= */
 
     function renderNotifications() {
@@ -271,17 +274,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         notificationTableBody.innerHTML = "";
 
-        // Newest first
-        const sorted = notifications.slice().sort(function (a, b) {
-            return String(b.sentDate).localeCompare(String(a.sentDate));
-        });
+        const sorted = notifications.slice().sort(
+            function (a, b) {
+
+                return String(b.sentDate)
+                    .localeCompare(String(a.sentDate));
+
+            }
+        );
 
         if (sorted.length === 0) {
 
             notificationTableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 30px;">
-                        ${isStudent ? "You have no notifications yet." : "No notifications found."}
+                    <td colspan="5"
+                        style="text-align:center;padding:30px;">
+                        ${isStudent
+                ? "You have no notifications yet."
+                : "No notifications found."}
                     </td>
                 </tr>
             `;
@@ -297,26 +307,39 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         updateStatistics();
-
         filterNotifications();
-
     }
 
+
+    /* =========================================================
+       CREATE NOTIFICATION ROW
+       NEW + READ STATUS
+    ========================================================= */
 
     function createNotificationRow(notification) {
 
         const type =
             TYPES[notification.notificationType] ||
-            { name: "General", cssClass: "system", icon: "fa-bell" };
+            {
+                name: "General",
+                cssClass: "system",
+                icon: "fa-bell"
+            };
 
         const recipientName =
-            userNames[notification.userId] || notification.userId;
+            userNames[notification.userId] ||
+            notification.userId;
 
         const title = `${type.name} Notification`;
 
         const date = formatDate(notification.sentDate);
 
         const row = document.createElement("tr");
+
+        // Highlight unread notifications
+        if (!notification.read) {
+            row.classList.add("unread-notification");
+        }
 
         row.innerHTML = `
 
@@ -336,6 +359,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             ${escapeHTML(title)}
                         </strong>
 
+                        ${!notification.read
+            ? '<span class="new-badge">New</span>'
+            : ''}
+
                         <span>
                             ${escapeHTML(notification.message)}
                         </span>
@@ -345,7 +372,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
 
             </td>
-
 
             <td>
 
@@ -363,7 +389,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             </td>
 
-
             <td>
 
                 <span class="type-badge ${type.cssClass}">
@@ -371,7 +396,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 </span>
 
             </td>
-
 
             <td>
 
@@ -381,7 +405,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             </td>
 
-
             <td>
 
                 <div class="action-buttons">
@@ -389,6 +412,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <button
                         class="action-btn view-btn"
                         title="View notification"
+                        data-id="${escapeHTML(notification.notificationId)}"
                         data-title="${escapeHTML(title)}"
                         data-recipient="${escapeHTML(recipientName)}"
                         data-type="${escapeHTML(type.name)}"
@@ -418,15 +442,21 @@ document.addEventListener("DOMContentLoaded", function () {
         attachRowButtons(row);
 
         return row;
-
     }
 
+
+    /* =========================================================
+       UPDATE STATISTICS + UNREAD COUNTER
+    ========================================================= */
 
     function updateStatistics() {
 
         const today = todayIso();
 
-        setCount(totalNotifications, notifications.length);
+        setCount(
+            totalNotifications,
+            notifications.length
+        );
 
         setCount(
             sentToday,
@@ -438,44 +468,70 @@ document.addEventListener("DOMContentLoaded", function () {
         setCount(
             bookingNotifications,
             notifications.filter(function (n) {
-                return n.notificationType === "BOOKING_CONFIRMATION";
+                return n.notificationType ===
+                    "BOOKING_CONFIRMATION";
             }).length
         );
 
         setCount(
             maintenanceNotifications,
             notifications.filter(function (n) {
-                return n.notificationType === "MAINTENANCE_UPDATE";
+                return n.notificationType ===
+                    "MAINTENANCE_UPDATE";
             }).length
         );
 
+        // Count unread notifications
+        const unreadCount = notifications.filter(
+            function (n) {
+                return !n.read;
+            }
+        ).length;
+
+        // Update notification bell
+        const bellBadge = document.querySelector(
+            ".notification-count"
+        );
+
+        if (bellBadge) {
+
+            bellBadge.textContent = unreadCount;
+
+            bellBadge.style.display =
+                unreadCount > 0 ? "" : "none";
+
+        }
     }
 
 
     /* =========================================================
-       OPEN SEND NOTIFICATION MODAL
+       OPEN SEND MODAL
     ========================================================= */
 
     if (openNotificationModal && !isStudent) {
 
-        openNotificationModal.addEventListener("click", function () {
+        openNotificationModal.addEventListener(
+            "click",
+            function () {
 
-            notificationModal.classList.add("active");
+                notificationModal.classList.add("active");
 
-            document.body.classList.add("modal-open");
+                document.body.classList.add("modal-open");
 
-        });
-
+            }
+        );
     }
 
 
     /* =========================================================
-       CLOSE SEND NOTIFICATION MODAL
+       CLOSE SEND MODAL
     ========================================================= */
 
     function closeNotification() {
 
-        notificationModal.classList.remove("active");
+        if (notificationModal) {
+            notificationModal.classList.remove("active");
+        }
 
         document.body.classList.remove("modal-open");
 
@@ -495,7 +551,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             closeNotification
         );
-
     }
 
 
@@ -505,26 +560,21 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             closeNotification
         );
-
     }
 
 
-    /* =========================================================
-       CLOSE MODAL WHEN CLICKING OUTSIDE
-    ========================================================= */
-
     if (notificationModal) {
 
-        notificationModal.addEventListener("click", function (event) {
+        notificationModal.addEventListener(
+            "click",
+            function (event) {
 
-            if (event.target === notificationModal) {
-
-                closeNotification();
+                if (event.target === notificationModal) {
+                    closeNotification();
+                }
 
             }
-
-        });
-
+        );
     }
 
 
@@ -534,103 +584,127 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (notificationMessage && characterCount) {
 
-        notificationMessage.addEventListener("input", function () {
+        notificationMessage.addEventListener(
+            "input",
+            function () {
 
-            characterCount.textContent =
-                notificationMessage.value.length;
+                characterCount.textContent =
+                    notificationMessage.value.length;
 
-        });
-
+            }
+        );
     }
 
 
     /* =========================================================
-       SEND NOTIFICATION (staff only)
+       SEND NOTIFICATION
     ========================================================= */
 
     if (notificationForm) {
 
-        notificationForm.addEventListener("submit", async function (event) {
+        notificationForm.addEventListener(
+            "submit",
+            async function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            if (isStudent) {
-                return;
-            }
-
-            const recipient =
-                recipientSelect.value;
-
-            const notificationType =
-                document.getElementById("notificationType").value;
-
-            const message =
-                notificationMessage.value.trim();
-
-
-            /* Validate form */
-
-            if (!recipient ||
-                !notificationType ||
-                !message) {
-
-                alert("Please complete all required fields.");
-
-                return;
-            }
-
-
-            /* "All Users" sends one notification to every user */
-
-            const recipients = recipient === "all"
-                ? Object.keys(userNames)
-                : [recipient];
-
-            const stamp = Date.now();
-
-            try {
-
-                for (let i = 0; i < recipients.length; i++) {
-
-                    const response = await fetch(`${NOTIFICATION_API}/create`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            notificationId: `NT${stamp}${i}`,
-                            userId: recipients[i],
-                            message: message,
-                            sentDate: todayIso(),
-                            notificationType: notificationType
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Server error: ${response.status}`);
-                    }
-
+                if (isStudent) {
+                    return;
                 }
 
-                closeNotification();
+                const recipient = recipientSelect.value;
 
-                await loadNotifications();
+                const notificationType =
+                    document.getElementById(
+                        "notificationType"
+                    ).value;
 
-                alert("Notification sent successfully!");
+                const message =
+                    notificationMessage.value.trim();
 
-            } catch (error) {
+                if (!recipient ||
+                    !notificationType ||
+                    !message) {
 
-                console.error("Error sending notification:", error);
+                    alert(
+                        "Please complete all required fields."
+                    );
 
-                alert("The notification could not be sent. Please try again.");
+                    return;
+                }
+
+                const recipients = recipient === "all"
+                    ? Object.keys(userNames)
+                    : [recipient];
+
+                const stamp = Date.now();
+
+                try {
+
+                    for (let i = 0; i < recipients.length; i++) {
+
+                        const response = await fetch(
+                            `${NOTIFICATION_API}/create`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    notificationId:
+                                        `NT${stamp}${i}`,
+
+                                    userId: recipients[i],
+
+                                    message: message,
+
+                                    sentDate: todayIso(),
+
+                                    notificationType:
+                                    notificationType
+
+                                })
+                            }
+                        );
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                `Server error: ${response.status}`
+                            );
+                        }
+                    }
+
+                    closeNotification();
+
+                    await loadNotifications();
+
+                    alert(
+                        "Notification sent successfully!"
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Error sending notification:",
+                        error
+                    );
+
+                    alert(
+                        "The notification could not be sent."
+                    );
+                }
 
             }
-
-        });
-
+        );
     }
 
 
     /* =========================================================
-       VIEW + DELETE BUTTONS
+       VIEW + MARK AS READ + DELETE
     ========================================================= */
 
     function attachRowButtons(row) {
@@ -642,47 +716,102 @@ document.addEventListener("DOMContentLoaded", function () {
             row.querySelector(".delete-btn");
 
 
-        /* VIEW */
+        /* =====================================================
+           VIEW NOTIFICATION + MARK AS READ
+        ===================================================== */
 
         if (viewButton) {
 
-            viewButton.addEventListener("click", function () {
+            viewButton.addEventListener(
+                "click",
+                async function () {
 
-                document.getElementById(
-                    "viewNotificationTitle"
-                ).textContent = this.dataset.title;
+                    const notificationId =
+                        this.dataset.id;
 
+                    // Display notification details
+                    document.getElementById(
+                        "viewNotificationTitle"
+                    ).textContent = this.dataset.title;
 
-                document.getElementById(
-                    "viewRecipient"
-                ).textContent = this.dataset.recipient;
+                    document.getElementById(
+                        "viewRecipient"
+                    ).textContent = this.dataset.recipient;
 
+                    document.getElementById(
+                        "viewType"
+                    ).textContent = this.dataset.type;
 
-                document.getElementById(
-                    "viewType"
-                ).textContent = this.dataset.type;
+                    document.getElementById(
+                        "viewDate"
+                    ).textContent = this.dataset.date;
 
+                    document.getElementById(
+                        "viewMessage"
+                    ).textContent = this.dataset.message;
 
-                document.getElementById(
-                    "viewDate"
-                ).textContent = this.dataset.date;
+                    // Open the modal
+                    viewNotificationModal.classList.add(
+                        "active"
+                    );
 
+                    document.body.classList.add(
+                        "modal-open"
+                    );
 
-                document.getElementById(
-                    "viewMessage"
-                ).textContent = this.dataset.message;
+                    // Find notification
+                    const notification = notifications.find(
+                        function (n) {
 
+                            return n.notificationId ===
+                                notificationId;
 
-                viewNotificationModal.classList.add("active");
+                        }
+                    );
 
-                document.body.classList.add("modal-open");
+                    // Only mark unread notifications
+                    if (notification && !notification.read) {
 
-            });
+                        try {
 
+                            const response = await fetch(
+                                `${NOTIFICATION_API}/mark-read/${encodeURIComponent(notificationId)}`,
+                                {
+                                    method: "PUT"
+                                }
+                            );
+
+                            if (!response.ok) {
+
+                                throw new Error(
+                                    `Mark as read failed: ${response.status}`
+                                );
+                            }
+
+                            // Update local status
+                            notification.read = true;
+
+                            // Refresh table and counter
+                            renderNotifications();
+
+                        } catch (error) {
+
+                            console.error(
+                                "Error marking notification as read:",
+                                error
+                            );
+
+                        }
+                    }
+
+                }
+            );
         }
 
 
-        /* DELETE (staff only - students get no delete button) */
+        /* =====================================================
+           DELETE NOTIFICATION
+        ===================================================== */
 
         if (deleteButton) {
 
@@ -690,10 +819,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "click",
                 async function () {
 
-                    const confirmed =
-                        confirm(
-                            "Are you sure you want to delete this notification?"
-                        );
+                    const confirmed = confirm(
+                        "Are you sure you want to delete this notification?"
+                    );
 
                     if (!confirmed) {
                         return;
@@ -703,28 +831,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const response = await fetch(
                             `${NOTIFICATION_API}/delete/${encodeURIComponent(this.dataset.id)}`,
-                            { method: "DELETE" }
+                            {
+                                method: "DELETE"
+                            }
                         );
 
                         if (!response.ok) {
-                            throw new Error(`Delete failed: ${response.status}`);
+
+                            throw new Error(
+                                `Delete failed: ${response.status}`
+                            );
                         }
 
                         await loadNotifications();
 
                     } catch (error) {
 
-                        console.error("Error deleting notification:", error);
+                        console.error(
+                            "Error deleting notification:",
+                            error
+                        );
 
-                        alert("The notification could not be deleted.");
-
+                        alert(
+                            "The notification could not be deleted."
+                        );
                     }
 
                 }
             );
-
         }
-
     }
 
 
@@ -732,25 +867,27 @@ document.addEventListener("DOMContentLoaded", function () {
        CLOSE VIEW MODAL
     ========================================================= */
 
+    function closeViewNotification() {
+
+        if (viewNotificationModal) {
+
+            viewNotificationModal.classList.remove(
+                "active"
+            );
+        }
+
+        document.body.classList.remove("modal-open");
+    }
+
+
     if (closeViewModal) {
 
         closeViewModal.addEventListener(
             "click",
-            function () {
-
-                viewNotificationModal.classList.remove("active");
-
-                document.body.classList.remove("modal-open");
-
-            }
+            closeViewNotification
         );
-
     }
 
-
-    /* =========================================================
-       CLOSE VIEW MODAL WHEN CLICKING OUTSIDE
-    ========================================================= */
 
     if (viewNotificationModal) {
 
@@ -759,16 +896,11 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 if (event.target === viewNotificationModal) {
-
-                    viewNotificationModal.classList.remove("active");
-
-                    document.body.classList.remove("modal-open");
-
+                    closeViewNotification();
                 }
 
             }
         );
-
     }
 
 
@@ -782,7 +914,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "input",
             filterNotifications
         );
-
     }
 
 
@@ -796,7 +927,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "change",
             filterNotifications
         );
-
     }
 
 
@@ -814,17 +944,14 @@ document.addEventListener("DOMContentLoaded", function () {
             ? notificationTypeFilter.value.toLowerCase()
             : "";
 
-
         const rows =
             notificationTableBody.querySelectorAll("tr");
-
 
         rows.forEach(function (row) {
 
             const badge =
                 row.querySelector(".type-badge");
 
-            // The "no notifications" row has no badge
             if (!badge) {
                 return;
             }
@@ -832,35 +959,22 @@ document.addEventListener("DOMContentLoaded", function () {
             const rowText =
                 row.textContent.toLowerCase();
 
-
             const matchesSearch =
                 rowText.includes(searchTerm);
-
 
             const matchesType =
                 !selectedType ||
                 badge.classList.contains(selectedType);
 
-
-            if (matchesSearch && matchesType) {
-
-                row.style.display = "";
-
-            }
-
-            else {
-
-                row.style.display = "none";
-
-            }
+            row.style.display =
+                matchesSearch && matchesType ? "" : "none";
 
         });
-
     }
 
 
     /* =========================================================
-       HELPERS
+       HELPER FUNCTIONS
     ========================================================= */
 
     function setText(id, value) {
@@ -870,7 +984,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (element) {
             element.textContent = value;
         }
-
     }
 
 
@@ -879,21 +992,22 @@ document.addEventListener("DOMContentLoaded", function () {
         if (element) {
             element.textContent = value;
         }
-
     }
 
 
-    // Local date as YYYY-MM-DD (what the backend's LocalDate expects)
     function todayIso() {
 
         const now = new Date();
 
-        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const month = String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
 
-        const day = String(now.getDate()).padStart(2, "0");
+        const day = String(
+            now.getDate()
+        ).padStart(2, "0");
 
         return `${now.getFullYear()}-${month}-${day}`;
-
     }
 
 
@@ -903,14 +1017,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return "";
         }
 
-        const date = new Date(`${isoDate}T00:00:00`);
+        const date = new Date(
+            `${isoDate}T00:00:00`
+        );
 
-        return date.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-        });
-
+        return date.toLocaleDateString(
+            "en-GB",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
     }
 
 
@@ -924,31 +1042,25 @@ document.addEventListener("DOMContentLoaded", function () {
             return "U";
         }
 
-
         const words =
             String(name).trim().split(/\s+/);
-
 
         if (words.length === 1) {
 
             return words[0]
                 .substring(0, 2)
                 .toUpperCase();
-
         }
-
 
         return (
             words[0].charAt(0) +
             words[words.length - 1].charAt(0)
         ).toUpperCase();
-
     }
 
 
     /* =========================================================
-       SECURITY HELPER
-       Prevent HTML being inserted directly from user input.
+       ESCAPE HTML
     ========================================================= */
 
     function escapeHTML(value) {
@@ -957,14 +1069,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return "";
         }
 
-
         return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
 
@@ -980,27 +1090,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     notificationModal &&
-                    notificationModal.classList.contains("active")
+                    notificationModal.classList.contains(
+                        "active"
+                    )
                 ) {
-
                     closeNotification();
-
                 }
-
 
                 if (
                     viewNotificationModal &&
-                    viewNotificationModal.classList.contains("active")
+                    viewNotificationModal.classList.contains(
+                        "active"
+                    )
                 ) {
-
-                    viewNotificationModal.classList.remove("active");
-
-                    document.body.classList.remove("modal-open");
-
+                    closeViewNotification();
                 }
-
             }
-
         }
     );
 
@@ -1015,7 +1120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar =
         document.querySelector(".sidebar");
 
-
     if (mobileMenuBtn && sidebar) {
 
         mobileMenuBtn.addEventListener(
@@ -1026,8 +1130,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
-
     }
-
 
 });
