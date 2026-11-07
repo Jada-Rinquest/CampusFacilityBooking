@@ -172,7 +172,7 @@
         : (
             String(user.role || "").toUpperCase() === "ADMIN"
                 ? "Administrator"
-                : "Lecturer"
+                : "Staff"
         );
 
     /* =====================================================
