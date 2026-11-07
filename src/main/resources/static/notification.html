@@ -1,26 +1,26 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Notifications | Campus Facility Booking</title>
 
-    <!-- Font Awesome -->
+    <link rel="stylesheet" href="notification.css">
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Notification CSS -->
-    <link rel="stylesheet" href="notification.css">
-    <!-- Sign-in check + student/staff permissions -->
     <script src="auth.js"></script>
-
 </head>
 
 <body>
 
 <!-- =========================================================
-     STAFF SIDEBAR
+     SIDEBAR
 ========================================================= -->
 
 <aside class="sidebar">
@@ -90,38 +90,49 @@
 
 </aside>
 
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
 
-    <!-- =====================================================
-         TOP BAR
-    ====================================================== -->
-
+    <!-- TOP BAR -->
     <header class="topbar">
 
         <div class="topbar-title">
 
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button type="button"
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    aria-label="Toggle menu">
+
                 <i class="fa-solid fa-bars"></i>
+
             </button>
 
             <div>
                 <h1>Notifications</h1>
-                <p>Manage campus notifications and communications.</p>
+                <p>
+                    Manage campus notifications and communications.
+                </p>
             </div>
 
         </div>
 
-
         <div class="topbar-actions">
 
-            <button class="notification-icon" title="Notifications">
+            <!-- DYNAMIC NOTIFICATION BELL -->
+            <button type="button"
+                    class="notification-icon"
+                    title="Notifications"
+                    onclick="window.location.href='notification.html'">
+
                 <i class="fa-solid fa-bell"></i>
-                <span class="notification-count">3</span>
+
+                <span class="notification-count"
+                      style="display: none;"
+                      aria-live="polite"></span>
+
             </button>
 
             <div class="staff-profile">
@@ -141,18 +152,13 @@
 
     </header>
 
-
     <!-- =====================================================
          PAGE CONTENT
     ====================================================== -->
 
     <section class="notification-page">
 
-
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
-
+        <!-- PAGE HEADER -->
         <div class="page-header">
 
             <div>
@@ -162,7 +168,9 @@
                     COMMUNICATIONS
                 </span>
 
-                <h2 id="pageTitle">Notification Management</h2>
+                <h2 id="pageTitle">
+                    Notification Management
+                </h2>
 
                 <p id="pageDescription">
                     Keep students and staff informed about bookings,
@@ -171,16 +179,16 @@
 
             </div>
 
-            <button class="primary-btn" id="openNotificationModal">
+            <button type="button"
+                    class="primary-btn"
+                    id="openNotificationModal">
 
                 <i class="fa-solid fa-plus"></i>
-
                 Send Notification
 
             </button>
 
         </div>
-
 
         <!-- =================================================
              STATISTICS
@@ -195,17 +203,11 @@
                 </div>
 
                 <div class="stat-content">
-
                     <span>Total Notifications</span>
-
-                    <strong id="totalNotifications">
-                        0
-                    </strong>
-
+                    <strong id="totalNotifications">0</strong>
                 </div>
 
             </div>
-
 
             <div class="stat-card">
 
@@ -214,17 +216,11 @@
                 </div>
 
                 <div class="stat-content">
-
                     <span>Sent Today</span>
-
-                    <strong id="sentToday">
-                        0
-                    </strong>
-
+                    <strong id="sentToday">0</strong>
                 </div>
 
             </div>
-
 
             <div class="stat-card">
 
@@ -233,17 +229,11 @@
                 </div>
 
                 <div class="stat-content">
-
                     <span>Booking Notifications</span>
-
-                    <strong id="bookingNotifications">
-                        0
-                    </strong>
-
+                    <strong id="bookingNotifications">0</strong>
                 </div>
 
             </div>
-
 
             <div class="stat-card">
 
@@ -252,30 +242,19 @@
                 </div>
 
                 <div class="stat-content">
-
                     <span>Maintenance Updates</span>
-
-                    <strong id="maintenanceNotifications">
-                        0
-                    </strong>
-
+                    <strong id="maintenanceNotifications">0</strong>
                 </div>
 
             </div>
 
         </div>
 
-
         <!-- =================================================
-             NOTIFICATION TABLE SECTION
+             NOTIFICATION TABLE
         ================================================== -->
 
         <div class="notification-panel">
-
-
-            <!-- =============================================
-                 TABLE HEADER
-            ============================================== -->
 
             <div class="panel-header">
 
@@ -290,21 +269,17 @@
 
                 </div>
 
-
                 <div class="panel-actions">
 
                     <div class="search-box">
 
                         <i class="fa-solid fa-magnifying-glass"></i>
 
-                        <input
-                                type="text"
-                                id="notificationSearch"
-                                placeholder="Search notifications..."
-                        >
+                        <input type="text"
+                               id="notificationSearch"
+                               placeholder="Search notifications...">
 
                     </div>
-
 
                     <select id="notificationTypeFilter">
 
@@ -328,11 +303,6 @@
 
             </div>
 
-
-            <!-- =============================================
-                 TABLE
-            ============================================== -->
-
             <div class="table-container">
 
                 <table class="notification-table">
@@ -340,74 +310,36 @@
                     <thead>
 
                     <tr>
-
                         <th>Notification</th>
-
                         <th>Recipient</th>
-
                         <th>Type</th>
-
                         <th>Date Sent</th>
-
                         <th>Actions</th>
-
                     </tr>
 
                     </thead>
 
-
                     <tbody id="notificationTableBody">
+
+                    <!-- Populated by notification.js -->
+
                     </tbody>
 
                 </table>
 
             </div>
 
-
-            <!-- =============================================
-                 PAGINATION
-            ============================================== -->
-
+            <!-- PAGINATION -->
             <div class="table-footer">
 
-                <span>
-                    Showing <strong>1–4</strong> of
-                    <strong>128</strong> notifications
+                <span id="notificationCount">
+                    Showing 0 notifications
                 </span>
 
-                <div class="pagination">
+                <div class="pagination"
+                     id="notificationPagination">
 
-                    <button
-                            class="pagination-btn"
-                            disabled>
-
-                        <i class="fa-solid fa-chevron-left"></i>
-
-                    </button>
-
-                    <button class="pagination-btn active">
-                        1
-                    </button>
-
-                    <button class="pagination-btn">
-                        2
-                    </button>
-
-                    <button class="pagination-btn">
-                        3
-                    </button>
-
-                    <span>...</span>
-
-                    <button class="pagination-btn">
-                        32
-                    </button>
-
-                    <button class="pagination-btn">
-
-                        <i class="fa-solid fa-chevron-right"></i>
-
-                    </button>
+                    <!-- Pagination controls can be added by notification.js -->
 
                 </div>
 
@@ -419,19 +351,14 @@
 
 </main>
 
-
 <!-- =========================================================
      SEND NOTIFICATION MODAL
 ========================================================= -->
 
-<div class="modal-overlay" id="notificationModal">
+<div class="modal-overlay"
+     id="notificationModal">
 
     <div class="notification-modal">
-
-
-        <!-- =============================================
-             MODAL HEADER
-        ============================================== -->
 
         <div class="modal-header">
 
@@ -450,10 +377,10 @@
 
             </div>
 
-
-            <button
+            <button type="button"
                     class="modal-close"
-                    id="closeNotificationModal">
+                    id="closeNotificationModal"
+                    aria-label="Close notification form">
 
                 <i class="fa-solid fa-xmark"></i>
 
@@ -461,24 +388,14 @@
 
         </div>
 
-
-        <!-- =============================================
-             FORM
-        ============================================== -->
-
         <form id="notificationForm">
 
-
-            <!-- Recipient -->
-
+            <!-- RECIPIENT -->
             <div class="form-group">
 
                 <label for="recipient">
-
                     Recipient
-
                     <span>*</span>
-
                 </label>
 
                 <select id="recipient" required>
@@ -487,28 +404,21 @@
                         Select recipient
                     </option>
 
-                    <!-- notification.js adds the users from the backend -->
+                    <!-- Populated by notification.js -->
 
                 </select>
 
             </div>
 
-
-            <!-- Notification Type -->
-
+            <!-- NOTIFICATION TYPE -->
             <div class="form-group">
 
                 <label for="notificationType">
-
                     Notification Type
-
                     <span>*</span>
-
                 </label>
 
-                <select
-                        id="notificationType"
-                        required>
+                <select id="notificationType" required>
 
                     <option value="">
                         Select notification type
@@ -530,25 +440,19 @@
 
             </div>
 
-
-            <!-- Message -->
-
+            <!-- MESSAGE -->
             <div class="form-group">
 
                 <label for="notificationMessage">
-
                     Message
-
                     <span>*</span>
-
                 </label>
 
-                <textarea
-                        id="notificationMessage"
-                        rows="5"
-                        maxlength="500"
-                        placeholder="Enter notification message..."
-                        required></textarea>
+                <textarea id="notificationMessage"
+                          rows="5"
+                          maxlength="500"
+                          placeholder="Enter notification message..."
+                          required></textarea>
 
                 <div class="character-count">
                     <span id="characterCount">0</span>/500
@@ -556,13 +460,10 @@
 
             </div>
 
-
-            <!-- Form Actions -->
-
+            <!-- ACTIONS -->
             <div class="modal-actions">
 
-                <button
-                        type="button"
+                <button type="button"
                         class="secondary-btn"
                         id="cancelNotification">
 
@@ -570,12 +471,10 @@
 
                 </button>
 
-                <button
-                        type="submit"
+                <button type="submit"
                         class="primary-btn">
 
                     <i class="fa-solid fa-paper-plane"></i>
-
                     Send Notification
 
                 </button>
@@ -588,12 +487,12 @@
 
 </div>
 
-
 <!-- =========================================================
      VIEW NOTIFICATION MODAL
 ========================================================= -->
 
-<div class="modal-overlay" id="viewNotificationModal">
+<div class="modal-overlay"
+     id="viewNotificationModal">
 
     <div class="view-notification-modal">
 
@@ -607,14 +506,15 @@
                 </span>
 
                 <h2 id="viewNotificationTitle">
-                    Booking Approved
+                    Notification Details
                 </h2>
 
             </div>
 
-            <button
+            <button type="button"
                     class="modal-close"
-                    id="closeViewModal">
+                    id="closeViewModal"
+                    aria-label="Close notification details">
 
                 <i class="fa-solid fa-xmark"></i>
 
@@ -622,52 +522,33 @@
 
         </div>
 
-
         <div class="notification-detail">
 
             <div class="detail-row">
 
                 <span>Recipient</span>
-
-                <strong id="viewRecipient">
-                    Jada Rinquest
-                </strong>
+                <strong id="viewRecipient">-</strong>
 
             </div>
-
 
             <div class="detail-row">
 
                 <span>Notification Type</span>
-
-                <strong id="viewType">
-                    Booking
-                </strong>
+                <strong id="viewType">-</strong>
 
             </div>
-
 
             <div class="detail-row">
 
                 <span>Date Sent</span>
-
-                <strong id="viewDate">
-                    24 Aug 2026
-                </strong>
+                <strong id="viewDate">-</strong>
 
             </div>
-
 
             <div class="detail-message">
 
                 <span>Message</span>
-
-                <p id="viewMessage">
-
-                    Your booking for Room 204 has been
-                    approved.
-
-                </p>
+                <p id="viewMessage">-</p>
 
             </div>
 
@@ -677,11 +558,14 @@
 
 </div>
 
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Shared notification counter -->
+<script src="notification-badge.js"></script>
+
+<!-- Existing notification functionality -->
 <script src="notification.js"></script>
 
 </body>
