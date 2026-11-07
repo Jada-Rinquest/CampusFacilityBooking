@@ -51,7 +51,7 @@ function loadSignedInStaff() {
 
     setText("topbarName", name);
     setText("topbarInitials", initials.toUpperCase());
-    setText("topbarRole", user.role === "ADMIN" ? "Administrator" : "Lecturer");
+    setText("topbarRole", user.role === "ADMIN" ? "Administrator" : "Staff");
     setText("welcomeText", `Welcome back, ${user.firstName || name}.`);
 }
 
