@@ -1,0 +1,304 @@
+
+/* =========================================================
+   CAMPUS FACILITY BOOKING SYSTEM
+   STAFF DASHBOARD WELCOME BANNER
+   Matches Student Dashboard and Login Branding
+========================================================= */
+
+/* MAIN WELCOME BANNER */
+
+.staff-welcome-banner {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 185px;
+
+    margin-bottom: 28px;
+    padding: 36px 42px;
+
+    background: linear-gradient(
+            115deg,
+            #172033 0%,
+            #1c2b46 65%,
+            #263f68 100%
+    );
+
+    border-radius: 16px;
+
+    color: #ffffff;
+}
+
+/* DECORATIVE BACKGROUND CIRCLE */
+
+.staff-welcome-banner::after {
+    content: "";
+
+    position: absolute;
+
+    right: -65px;
+    top: -115px;
+
+    width: 330px;
+    height: 330px;
+
+    border: 45px solid rgba(
+            255, 255, 255, 0.035
+    );
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+/* WELCOME CONTENT */
+
+.staff-welcome-content {
+    position: relative;
+    z-index: 1;
+
+    flex: 1;
+}
+
+/* STAFF PORTAL LABEL */
+
+.staff-welcome-label {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    color: #a9c9ff;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.staff-welcome-label i {
+    font-size: 14px;
+}
+
+/* WELCOME HEADING */
+
+.staff-welcome-banner h2 {
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-size: clamp(
+            24px,
+            2.5vw,
+            34px
+    );
+
+    font-weight: 750;
+    line-height: 1.25;
+
+    letter-spacing: -0.6px;
+}
+
+/* LOGGED-IN STAFF NAME */
+
+.staff-welcome-banner h2 span {
+    color: #a9c9ff;
+}
+
+/* DESCRIPTION */
+
+.staff-welcome-banner p {
+    max-width: 620px;
+
+    margin: 0;
+
+    color: #dbeafe;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* MANAGE BOOKINGS BUTTON */
+
+.staff-welcome-button {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    padding: 15px 20px;
+
+    background: #ffffff;
+    color: #172033;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.staff-welcome-button:hover {
+    background: #eff6ff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 22px rgba(
+            0, 0, 0, 0.15
+    );
+}
+
+/* DASHBOARD STATISTICS */
+
+.dashboard-stats {
+    margin-top: 0;
+    margin-bottom: 38px;
+}
+
+.dashboard-stats .stat-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    box-shadow: 0 3px 12px rgba(
+            15, 23, 42, 0.05
+    );
+}
+
+.dashboard-stats .stat-card:hover {
+    border-color: #bfdbfe;
+
+    box-shadow: 0 10px 25px rgba(
+            15, 23, 42, 0.08
+    );
+}
+
+/* MANAGEMENT CARDS */
+
+.dashboard-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.dashboard-card:hover {
+    border-color: #bfdbfe;
+}
+
+/* MANAGEMENT BUTTONS */
+
+.dashboard-button {
+    background: #3b82f6;
+    color: #ffffff;
+
+    border-radius: 9px;
+
+    font-weight: 700;
+}
+
+.dashboard-button:hover {
+    background: #2563eb;
+}
+
+/* HIDE EMPTY NOTIFICATION BADGE */
+
+.notification-count:empty {
+    display: none !important;
+}
+
+/* ACCESSIBILITY */
+
+.staff-welcome-button:focus-visible,
+.dashboard-button:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .staff-welcome-banner {
+        padding: 30px;
+        gap: 20px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 27px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .staff-welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+
+        padding: 28px 24px;
+
+        gap: 22px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 25px;
+    }
+
+    .staff-welcome-banner p {
+        font-size: 13px;
+    }
+
+    .staff-welcome-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 450px) {
+
+    .staff-welcome-banner {
+        padding: 24px 20px;
+        border-radius: 13px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 23px;
+    }
+
+    .staff-welcome-label {
+        font-size: 10px;
+    }
+
+}

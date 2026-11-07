@@ -1,0 +1,335 @@
+
+/* =========================================================
+   CAMPUS FACILITY BOOKING SYSTEM
+   SHARED STUDENT AND STAFF THEME
+   Matches Login and Registration branding
+========================================================= */
+
+:root {
+    --navy: #172033;
+    --navy-light: #23344f;
+    --blue: #3b82f6;
+    --blue-dark: #2563eb;
+    --blue-soft: #eff6ff;
+    --white: #ffffff;
+    --ivory: #f8fafc;
+    --background: #f8fafc;
+    --light-gray: #f1f5f9;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --sidebar-width: 250px;
+    --radius: 14px;
+    --shadow-sm: 0 2px 8px rgba(15,23,42,.05);
+    --shadow-md: 0 8px 24px rgba(15,23,42,.08);
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+/* SHARED SIDEBAR */
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--navy);
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-logo {
+    min-height: 82px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 22px;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+    color: white;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.sidebar-logo i {
+    color: #60a5fa;
+    font-size: 24px;
+}
+
+.sidebar-nav a,
+.sidebar-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-bottom a:hover {
+    background: rgba(255,255,255,.08);
+    color: white;
+}
+
+.sidebar-nav a.active {
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 5px 15px rgba(59,130,246,.22);
+}
+
+/* MAIN AREA */
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--background);
+}
+
+/* TOP NAVIGATION */
+
+.topbar {
+    min-height: 82px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 32px;
+}
+
+.topbar h1 {
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* NOTIFICATION BELL */
+
+.notification-icon {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.notification-icon:hover {
+    color: var(--blue);
+    background: var(--blue-soft);
+}
+
+.notification-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--danger);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* USER PROFILE */
+
+.student-profile,
+.staff-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.student-avatar,
+.staff-avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.student-info,
+.staff-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.student-info strong,
+.staff-info strong {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.student-info span,
+.staff-info span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* CARDS AND PANELS */
+
+.summary-card,
+.stat-card,
+.dashboard-panel,
+.facility-card,
+.student-facility-card,
+.booking-card,
+.notification-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-card,
+.stat-card,
+.student-facility-card {
+    transition: transform .2s, box-shadow .2s;
+}
+
+.summary-card:hover,
+.stat-card:hover,
+.student-facility-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* BUTTONS */
+
+.primary-btn,
+.student-book-button {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-btn:hover,
+.student-book-button:hover {
+    background: var(--blue-dark);
+}
+
+.secondary-btn,
+.secondary-button {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.secondary-btn:hover,
+.secondary-button:hover {
+    background: var(--blue-soft);
+    color: var(--blue-dark);
+}
+
+/* FORM CONTROLS */
+
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline-color: var(--blue);
+}
+
+/* TABLES */
+
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+td {
+    color: var(--text);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 250px;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .topbar {
+        padding: 15px 20px;
+    }
+
+    .topbar-actions {
+        gap: 12px;
+    }
+
+    .student-info,
+    .staff-info {
+        display: none;
+    }
+}
