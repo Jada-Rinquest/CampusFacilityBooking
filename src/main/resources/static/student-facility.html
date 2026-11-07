@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Facilities | Campus Facility Booking</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Student Facilities CSS -->
+    <link rel="stylesheet" href="student-facility.css">
+
+    <!-- Authentication -->
+    <script src="auth.js"></script>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>CampusBooking</span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <!-- Dashboard -->
+        <a href="student-dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- Bookings -->
+        <a href="booking.html">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>My Bookings</span>
+        </a>
+
+        <!-- Student Facilities -->
+        <a href="student-facility.html" class="active">
+            <i class="fa-solid fa-building"></i>
+            <span>Facilities</span>
+        </a>
+
+        <!-- Notifications -->
+        <a href="notification.html">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <!-- Profile -->
+        <a href="profile.html">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+        <!-- Logout -->
+        <a href="login.html" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <div class="topbar-title">
+
+            <button type="button"
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    aria-label="Toggle navigation">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <div>
+                <h1>Student Facilities</h1>
+                <p>Explore and book campus facilities.</p>
+            </div>
+
+        </div>
+
+        <div class="topbar-actions">
+
+            <!-- Notifications -->
+            <a href="notification.html"
+               class="notification-icon"
+               aria-label="Notifications">
+
+                <i class="fa-solid fa-bell"></i>
+
+            </a>
+
+            <!-- Student Profile -->
+            <a href="profile.html" class="staff-profile">
+
+                <div class="staff-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="staff-info">
+                    <strong>My Profile</strong>
+                    <span>Student</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         STUDENT FACILITIES PAGE
+    ====================================================== -->
+
+    <section class="facility-page">
+
+        <!-- PAGE HEADING -->
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+
+                    <i class="fa-solid fa-building"></i>
+
+                    STUDENT FACILITIES
+
+                </span>
+
+                <h2>Explore Campus Facilities</h2>
+
+                <p>
+                    Browse campus facilities, find a suitable
+                    space and start your booking.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SEARCH AND FILTER SECTION
+        ================================================== -->
+
+        <div class="facility-card student-search-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>Find a Facility</h3>
+
+                    <p>
+                        Search by facility name, location or type.
+                    </p>
+
+                </div>
+
+                <div class="card-header-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+            </div>
+
+            <div class="student-facility-toolbar">
+
+                <!-- Search Input -->
+                <div class="student-facility-search">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                            type="search"
+                            id="facilitySearch"
+                            placeholder="Search facilities..."
+                            aria-label="Search facilities">
+
+                </div>
+
+                <!-- Facility Type Filter -->
+                <select
+                        id="facilityTypeFilter"
+                        aria-label="Filter facilities by type">
+
+                    <option value="ALL">
+                        All Facility Types
+                    </option>
+
+                    <option value="LECTURE_HALL">
+                        Lecture Hall
+                    </option>
+
+                    <option value="CLASSROOM">
+                        Classroom
+                    </option>
+
+                    <option value="LABORATORY">
+                        Laboratory
+                    </option>
+
+                    <option value="COMPUTER_LAB">
+                        Computer Lab
+                    </option>
+
+                    <option value="MEETING_ROOM">
+                        Meeting Room
+                    </option>
+
+                    <option value="SPORTS_FACILITY">
+                        Sports Facility
+                    </option>
+
+                </select>
+
+                <!-- Refresh Button -->
+                <button
+                        type="button"
+                        id="refreshFacilities"
+                        class="secondary-button student-refresh-button">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FACILITY SUMMARY
+        ================================================== -->
+
+        <div class="student-facility-summary">
+
+            <div>
+
+                <h3>Available Campus Facilities</h3>
+
+                <p id="facilityCount">
+                    Loading facilities...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FACILITIES FROM MYSQL
+        ================================================== -->
+
+        <div
+                id="facilitiesGrid"
+                class="student-facilities-grid">
+
+            <!-- Facility cards will be inserted here
+                 automatically using JavaScript -->
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div
+                id="facilitiesEmpty"
+                class="facility-card student-empty-state"
+                hidden>
+
+            <i class="fa-solid fa-building-circle-xmark"></i>
+
+            <h3>No Facilities Found</h3>
+
+            <p>
+                There are no facilities matching your search.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             LOADING AND ERROR MESSAGES
+        ================================================== -->
+
+        <div
+                id="facilityMessage"
+                class="student-facility-message"
+                role="status"
+                aria-live="polite">
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     STUDENT FACILITIES JAVASCRIPT
+========================================================= -->
+
+<script src="student-facility.js"></script>
+
+</body>
+</html>

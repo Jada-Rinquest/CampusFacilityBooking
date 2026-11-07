@@ -1,0 +1,675 @@
+
+/* =========================================================
+   CAMPUS FACILITY BOOKING SYSTEM
+   STUDENT FACILITIES CSS
+========================================================= */
+
+:root {
+    --navy: #172033;
+    --navy-light: #243149;
+    --blue: #3b82f6;
+    --blue-dark: #2563eb;
+    --blue-soft: #eff6ff;
+    --white: #ffffff;
+    --background: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --success: #16a34a;
+    --danger: #dc2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    min-height: 88px;
+    padding: 28px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo i {
+    color: #60a5fa;
+    font-size: 24px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 25px 13px;
+}
+
+.sidebar-nav a,
+.sidebar-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    color: #cbd5e1;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-nav a i,
+.sidebar-bottom a i {
+    width: 19px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.sidebar-nav a:hover,
+.sidebar-bottom a:hover {
+    background: var(--navy-light);
+    color: var(--white);
+}
+
+.sidebar-nav a.active {
+    background: var(--blue);
+    color: var(--white);
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 15px 13px 25px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-bottom .logout:hover {
+    background: rgba(220,38,38,0.15);
+    color: #fca5a5;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main-content {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+    min-height: 82px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 17px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.topbar-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-title h1 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.topbar-title p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.notification-icon {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 20px;
+}
+
+.notification-icon:hover {
+    color: var(--blue);
+}
+
+.staff-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+}
+
+.staff-avatar {
+    width: 42px;
+    height: 42px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+.staff-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.staff-info strong {
+    font-size: 13px;
+}
+
+.staff-info span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--navy);
+    font-size: 20px;
+}
+
+/* =========================================================
+   FACILITY PAGE
+========================================================= */
+
+.facility-page {
+    padding: 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue);
+    background: var(--blue-soft);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 9px 13px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+}
+
+.page-header h2 {
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   SEARCH CARD
+========================================================= */
+
+.facility-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 3px 12px rgba(15,23,42,0.03);
+}
+
+.student-search-card {
+    margin-bottom: 28px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 23px;
+}
+
+.card-header h3 {
+    font-size: 18px;
+    margin-bottom: 7px;
+}
+
+.card-header p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.card-header-icon {
+    width: 43px;
+    height: 43px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+/* =========================================================
+   SEARCH AND FILTER
+========================================================= */
+
+.student-facility-toolbar {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) 220px auto;
+    gap: 15px;
+    align-items: center;
+}
+
+.student-facility-search {
+    position: relative;
+}
+
+.student-facility-search i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.student-facility-search input,
+.student-facility-toolbar select {
+    width: 100%;
+    height: 46px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 9px;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.student-facility-search input {
+    padding: 0 15px 0 44px;
+}
+
+.student-facility-toolbar select {
+    padding: 0 12px;
+}
+
+.student-facility-search input:focus,
+.student-facility-toolbar select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.secondary-button {
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    border-radius: 9px;
+    padding: 13px 19px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.secondary-button:hover {
+    background: var(--blue-soft);
+    border-color: var(--blue);
+    color: var(--blue-dark);
+}
+
+.secondary-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.student-refresh-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   FACILITY SUMMARY
+========================================================= */
+
+.student-facility-summary {
+    margin-bottom: 20px;
+}
+
+.student-facility-summary h3 {
+    font-size: 19px;
+    margin-bottom: 7px;
+}
+
+.student-facility-summary p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* =========================================================
+   FACILITY GRID
+========================================================= */
+
+.student-facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+/* =========================================================
+   FACILITY CARDS
+========================================================= */
+
+.student-facility-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 3px 12px rgba(15,23,42,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 0;
+}
+
+.student-facility-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(15,23,42,0.09);
+}
+
+.student-facility-icon {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-radius: 12px;
+    font-size: 23px;
+    margin-bottom: 18px;
+}
+
+.student-facility-type {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 7px 11px;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 13px;
+}
+
+.student-facility-card h3 {
+    font-size: 18px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    overflow-wrap: anywhere;
+}
+
+.student-facility-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.student-facility-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.student-facility-detail-row i {
+    color: var(--blue);
+    width: 16px;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.student-facility-detail-row strong {
+    color: var(--text);
+}
+
+/* =========================================================
+   BOOK FACILITY BUTTON
+========================================================= */
+
+.student-book-button {
+    margin-top: auto;
+    width: 100%;
+    border: none;
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 9px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s;
+}
+
+.student-book-button:hover {
+    background: var(--blue-dark);
+}
+
+.student-book-button:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.student-empty-state {
+    text-align: center;
+    padding: 55px 25px;
+}
+
+.student-empty-state > i {
+    font-size: 42px;
+    color: #94a3b8;
+    margin-bottom: 18px;
+}
+
+.student-empty-state h3 {
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+.student-empty-state p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Keep hidden elements hidden */
+[hidden] {
+    display: none !important;
+}
+
+/* =========================================================
+   STATUS MESSAGES
+========================================================= */
+
+.student-facility-message {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.student-facility-message:empty {
+    display: none;
+}
+
+.student-facility-message.info {
+    color: var(--blue-dark);
+}
+
+.student-facility-message.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: var(--danger);
+    padding: 14px 18px;
+    border-radius: 9px;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media (max-width: 1200px) {
+    .student-facilities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .student-facility-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .student-refresh-button {
+        width: 100%;
+    }
+
+    .facility-page {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .topbar {
+        padding: 16px 20px;
+    }
+
+    .topbar-actions {
+        gap: 14px;
+    }
+
+    .staff-info {
+        display: none;
+    }
+
+    .facility-page {
+        padding: 20px;
+    }
+
+    .page-header h2 {
+        font-size: 23px;
+    }
+
+    .student-facilities-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .topbar-title h1 {
+        font-size: 17px;
+    }
+
+    .topbar-title p {
+        font-size: 11px;
+    }
+
+    .facility-card,
+    .student-facility-card {
+        padding: 19px;
+    }
+}
