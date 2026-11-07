@@ -642,7 +642,9 @@ function renderUsersTable() {
         row.appendChild(countCell);
 
         const actionCell = document.createElement("td");
+        actionCell.className = "user-table-actions";
 
+// VIEW BOOKINGS BUTTON
         const viewButton = document.createElement("button");
         viewButton.type = "button";
         viewButton.className = "table-view-btn";
@@ -650,7 +652,18 @@ function renderUsersTable() {
         viewButton.textContent = "View Bookings";
         viewButton.disabled = !bookingsLoaded;
 
+// DELETE USER BUTTON
+        const deleteTableButton = document.createElement("button");
+        deleteTableButton.type = "button";
+        deleteTableButton.className = "table-delete-btn";
+        deleteTableButton.textContent = "Delete";
+
+        deleteTableButton.addEventListener("click", async () => {
+            await deleteUserFromTable(user.userId, fullName);
+        });
+
         actionCell.appendChild(viewButton);
+        actionCell.appendChild(deleteTableButton);
         row.appendChild(actionCell);
 
         registeredUsersBody.appendChild(row);
@@ -735,3 +748,72 @@ function viewUserBookings(userId, scrollToCard = true) {
         });
     }
 }
+
+/* =========================================================
+   DELETE USER FROM REGISTERED USERS TABLE
+========================================================= */
+
+async function deleteUserFromTable(userId, fullName) {
+
+    // Check whether bookings are available
+    if (!bookingsLoaded) {
+        alert("Cannot verify bookings. Please refresh first.");
+        return;
+    }
+
+    const bookings = getUserBookings(userId);
+
+    // Protect existing booking records
+    if (bookings.length > 0) {
+        alert(
+            `${fullName} has ${bookings.length} booking(s).\n\n` +
+            "This user cannot be deleted while bookings are linked " +
+            "to their account."
+        );
+        return;
+    }
+
+    const confirmed = confirm(
+        `Are you sure you want to delete ${fullName}?\n\n` +
+        `User ID: ${userId}\n\n` +
+        "This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+        const deleted = await requestJson(
+            `${USER_API}/delete/${encodeURIComponent(userId)}`,
+            { method: "DELETE" }
+        );
+
+        if (deleted === false) {
+            throw new Error("The backend did not delete this user.");
+        }
+
+        if (userIdInput.value.trim() === userId) {
+            clearForm();
+        }
+
+        if (selectedUserId === userId) {
+            selectedUserId = null;
+            userBookingsCard.hidden = true;
+        }
+
+        showMessage(
+            `${fullName} deleted successfully.`,
+            "success"
+        );
+
+        await loadUsersAndBookings();
+
+    } catch (error) {
+        console.error("Delete failed:", error);
+
+        showMessage(
+            `Could not delete ${fullName}: ${error.message}`,
+            "error"
+        );
+    }
+}
+
