@@ -1,10 +1,8 @@
 package za.ac.cput.campusfacilitybooking.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Register;
 import za.ac.cput.campusfacilitybooking.factory.RegisterFactory;
 import za.ac.cput.campusfacilitybooking.service.RegisterService;
@@ -15,42 +13,52 @@ public class RegisterController {
 
     private final RegisterService service;
 
-    @Autowired
     public RegisterController(RegisterService service) {
         this.service = service;
     }
 
+    // Temporarily retained for the existing registration flow.
+    // Must be replaced by an atomic registration operation
+    // that generates the registration ID on the server.
     @PostMapping("/create")
-    public ResponseEntity<Register> create(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> create(
+            @RequestBody RegisterRequest request) {
+
+        if (request == null ||
+                request.getEmail() == null ||
+                request.getEmail().isBlank()) {
+
+            return ResponseEntity.badRequest()
+                    .body("Email address is required");
+        }
+
+        if (request.getRegistrarId() == null ||
+                request.getRegistrarId().isBlank()) {
+
+            return ResponseEntity.badRequest()
+                    .body("Registration ID is required");
+        }
+
         Register register = RegisterFactory.createRegister(
                 request.getRegistrarId(),
-                request.getEmail(),
+                request.getEmail().trim(),
                 request.getDateRegistered()
         );
-        return ResponseEntity.ok(service.create(register));
-    }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Register>> getAll() {
-        return ResponseEntity.ok(service.getAll());
-    }
-
-    @GetMapping("/read/{id}")
-    public ResponseEntity<Register> read(@PathVariable String id) {
-        Register register = service.read(id);
         if (register == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest()
+                    .body("Invalid registration details");
         }
-        return ResponseEntity.ok(register);
-    }
 
-    @PutMapping("/update")
-    public ResponseEntity<Register> update(@RequestBody Register register) {
-        return ResponseEntity.ok(service.update(register));
-    }
+        try {
+            Register saved = service.create(register);
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable String id) {
-        return ResponseEntity.ok(service.delete(id));
+            return ResponseEntity.ok(saved);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.badRequest()
+                    .body("Invalid registration details");
+        }
     }
 }
