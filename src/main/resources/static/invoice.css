@@ -1657,3 +1657,70 @@ a {
         height: 36px;
     }
 }
+
+/* =========================================================
+   UPDATED INVOICE STATISTICS
+   Five cards including Cancelled
+========================================================= */
+
+.invoice-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/* Allow content to fit in smaller cards */
+
+.invoice-stats .stat-card {
+    min-width: 0;
+}
+
+.invoice-stats .stat-card strong {
+    font-weight: 700;
+}
+
+/* =========================================================
+   CANCELLED STATISTICS ICON
+========================================================= */
+
+.stat-icon.cancelled-icon {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+/* =========================================================
+   CANCELLED STATUS BADGE
+========================================================= */
+
+.status-badge.cancelled {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+/* =========================================================
+   RESPONSIVE STATISTICS
+========================================================= */
+
+@media (max-width: 1350px) {
+
+    .invoice-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 950px) {
+
+    .invoice-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .invoice-stats {
+        grid-template-columns: 1fr;
+    }
+
+}

@@ -1,4 +1,50 @@
+
 document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================================
+       API CONFIGURATION
+    ========================================================= */
+
+    const API_BASE_URL = "http://localhost:8080";
+
+    const NOTIFICATION_API = `${API_BASE_URL}/notification`;
+    const USER_API = `${API_BASE_URL}/user`;
+
+
+    /* =========================================================
+       SIGNED-IN USER
+    ========================================================= */
+
+    const currentUser = window.currentUser || null;
+    const isStudent = !currentUser || currentUser.isStudent;
+
+
+    /* =========================================================
+       NOTIFICATION TYPES
+    ========================================================= */
+
+    const TYPES = {
+
+        BOOKING_CONFIRMATION: {
+            name: "Booking",
+            cssClass: "booking",
+            icon: "fa-calendar-check"
+        },
+
+        MAINTENANCE_UPDATE: {
+            name: "Maintenance",
+            cssClass: "maintenance",
+            icon: "fa-screwdriver-wrench"
+        },
+
+        INVOICE_REMINDER: {
+            name: "Invoice Reminder",
+            cssClass: "reminder",
+            icon: "fa-file-invoice-dollar"
+        }
+
+    };
+
 
     /* =========================================================
        ELEMENTS
@@ -40,6 +86,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const notificationTableBody =
         document.getElementById("notificationTableBody");
 
+    const recipientSelect =
+        document.getElementById("recipient");
+
     const totalNotifications =
         document.getElementById("totalNotifications");
 
@@ -49,34 +98,440 @@ document.addEventListener("DOMContentLoaded", function () {
     const bookingNotifications =
         document.getElementById("bookingNotifications");
 
-    const systemNotifications =
-        document.getElementById("systemNotifications");
+    const maintenanceNotifications =
+        document.getElementById("maintenanceNotifications");
 
 
     /* =========================================================
-       OPEN SEND NOTIFICATION MODAL
+       STATE
     ========================================================= */
 
-    if (openNotificationModal) {
+    let notifications = [];
+    let userNames = {};
 
-        openNotificationModal.addEventListener("click", function () {
 
-            notificationModal.classList.add("active");
+    /* =========================================================
+       STUDENT PAGE SETUP
+    ========================================================= */
 
-            document.body.classList.add("modal-open");
+    if (isStudent) {
 
-        });
+        if (openNotificationModal) {
+            openNotificationModal.remove();
+        }
+
+        setText("pageTitle", "My Notifications");
+
+        setText(
+            "pageDescription",
+            "Updates about your bookings, maintenance requests and invoices."
+        );
+
+        setText(
+            "panelDescription",
+            "Notifications sent to you through the campus booking system."
+        );
 
     }
 
 
     /* =========================================================
-       CLOSE SEND NOTIFICATION MODAL
+       LOAD DATA
+    ========================================================= */
+
+    loadPage();
+
+    async function loadPage() {
+        await loadUsers();
+        await loadNotifications();
+    }
+
+
+    async function loadUsers() {
+
+        if (isStudent) {
+
+            if (currentUser) {
+                userNames[currentUser.userId] =
+                    currentUser.fullName;
+            }
+
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`${USER_API}/all`);
+
+            if (!response.ok) {
+                throw new Error(
+                    `User request failed: ${response.status}`
+                );
+            }
+
+            const users = await response.json();
+
+            users.forEach(function (user) {
+                userNames[user.userId] =
+                    `${user.firstName} ${user.lastName}`.trim();
+            });
+
+            populateRecipients(users);
+
+        } catch (error) {
+            console.error("Error loading users:", error);
+        }
+    }
+
+
+    async function loadNotifications() {
+
+        try {
+
+            const response = await fetch(
+                `${NOTIFICATION_API}/all`
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Notification request failed: ${response.status}`
+                );
+            }
+
+            notifications = await response.json();
+
+            if (isStudent) {
+
+                notifications = notifications.filter(
+                    function (notification) {
+
+                        return currentUser &&
+                            notification.userId === currentUser.userId;
+
+                    }
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error loading notifications:",
+                error
+            );
+
+            notifications = [];
+        }
+
+        renderNotifications();
+    }
+
+
+    /* =========================================================
+       POPULATE RECIPIENTS
+    ========================================================= */
+
+    function populateRecipients(users) {
+
+        if (!recipientSelect) {
+            return;
+        }
+
+        recipientSelect.innerHTML =
+            '<option value="">Select recipient</option>';
+
+        users.forEach(function (user) {
+
+            const option = document.createElement("option");
+
+            option.value = user.userId;
+
+            option.textContent =
+                `${user.firstName} ${user.lastName} (${user.email})`;
+
+            recipientSelect.appendChild(option);
+
+        });
+
+        const allOption = document.createElement("option");
+
+        allOption.value = "all";
+        allOption.textContent = "All Users";
+
+        recipientSelect.appendChild(allOption);
+    }
+
+
+    /* =========================================================
+       RENDER NOTIFICATIONS
+    ========================================================= */
+
+    function renderNotifications() {
+
+        if (!notificationTableBody) {
+            return;
+        }
+
+        notificationTableBody.innerHTML = "";
+
+        const sorted = notifications.slice().sort(
+            function (a, b) {
+
+                return String(b.sentDate)
+                    .localeCompare(String(a.sentDate));
+
+            }
+        );
+
+        if (sorted.length === 0) {
+
+            notificationTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5"
+                        style="text-align:center;padding:30px;">
+                        ${isStudent
+                ? "You have no notifications yet."
+                : "No notifications found."}
+                    </td>
+                </tr>
+            `;
+
+        }
+
+        sorted.forEach(function (notification) {
+
+            notificationTableBody.appendChild(
+                createNotificationRow(notification)
+            );
+
+        });
+
+        updateStatistics();
+        filterNotifications();
+    }
+
+
+    /* =========================================================
+       CREATE NOTIFICATION ROW
+       NEW + READ STATUS
+    ========================================================= */
+
+    function createNotificationRow(notification) {
+
+        const type =
+            TYPES[notification.notificationType] ||
+            {
+                name: "General",
+                cssClass: "system",
+                icon: "fa-bell"
+            };
+
+        const recipientName =
+            userNames[notification.userId] ||
+            notification.userId;
+
+        const title = `${type.name} Notification`;
+
+        const date = formatDate(notification.sentDate);
+
+        const row = document.createElement("tr");
+
+        // Highlight unread notifications
+        if (!notification.read) {
+            row.classList.add("unread-notification");
+        }
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="notification-message">
+
+                    <div class="notification-row-icon ${type.cssClass}-icon">
+
+                        <i class="fa-solid ${type.icon}"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(title)}
+                        </strong>
+
+                        ${!notification.read
+            ? '<span class="new-badge">New</span>'
+            : ''}
+
+                        <span>
+                            ${escapeHTML(notification.message)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td>
+
+                <div class="recipient">
+
+                    <div class="recipient-avatar">
+                        ${escapeHTML(getInitials(recipientName))}
+                    </div>
+
+                    <span>
+                        ${escapeHTML(recipientName)}
+                    </span>
+
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="type-badge ${type.cssClass}">
+                    ${escapeHTML(type.name)}
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="date">
+                    ${escapeHTML(date)}
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                        class="action-btn view-btn"
+                        title="View notification"
+                        data-id="${escapeHTML(notification.notificationId)}"
+                        data-title="${escapeHTML(title)}"
+                        data-recipient="${escapeHTML(recipientName)}"
+                        data-type="${escapeHTML(type.name)}"
+                        data-date="${escapeHTML(date)}"
+                        data-message="${escapeHTML(notification.message)}">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                    ${isStudent ? "" : `
+                    <button
+                        class="action-btn delete-btn"
+                        title="Delete notification"
+                        data-id="${escapeHTML(notification.notificationId)}">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </button>`}
+
+                </div>
+
+            </td>
+
+        `;
+
+        attachRowButtons(row);
+
+        return row;
+    }
+
+
+    /* =========================================================
+       UPDATE STATISTICS + UNREAD COUNTER
+    ========================================================= */
+
+    function updateStatistics() {
+
+        const today = todayIso();
+
+        setCount(
+            totalNotifications,
+            notifications.length
+        );
+
+        setCount(
+            sentToday,
+            notifications.filter(function (n) {
+                return n.sentDate === today;
+            }).length
+        );
+
+        setCount(
+            bookingNotifications,
+            notifications.filter(function (n) {
+                return n.notificationType ===
+                    "BOOKING_CONFIRMATION";
+            }).length
+        );
+
+        setCount(
+            maintenanceNotifications,
+            notifications.filter(function (n) {
+                return n.notificationType ===
+                    "MAINTENANCE_UPDATE";
+            }).length
+        );
+
+        // Count unread notifications
+        const unreadCount = notifications.filter(
+            function (n) {
+                return !n.read;
+            }
+        ).length;
+
+        // Update notification bell
+        const bellBadge = document.querySelector(
+            ".notification-count"
+        );
+
+        if (bellBadge) {
+
+            bellBadge.textContent = unreadCount;
+
+            bellBadge.style.display =
+                unreadCount > 0 ? "" : "none";
+
+        }
+    }
+
+
+    /* =========================================================
+       OPEN SEND MODAL
+    ========================================================= */
+
+    if (openNotificationModal && !isStudent) {
+
+        openNotificationModal.addEventListener(
+            "click",
+            function () {
+
+                notificationModal.classList.add("active");
+
+                document.body.classList.add("modal-open");
+
+            }
+        );
+    }
+
+
+    /* =========================================================
+       CLOSE SEND MODAL
     ========================================================= */
 
     function closeNotification() {
 
-        notificationModal.classList.remove("active");
+        if (notificationModal) {
+            notificationModal.classList.remove("active");
+        }
 
         document.body.classList.remove("modal-open");
 
@@ -96,7 +551,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             closeNotification
         );
-
     }
 
 
@@ -106,26 +560,21 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             closeNotification
         );
-
     }
 
 
-    /* =========================================================
-       CLOSE MODAL WHEN CLICKING OUTSIDE
-    ========================================================= */
-
     if (notificationModal) {
 
-        notificationModal.addEventListener("click", function (event) {
+        notificationModal.addEventListener(
+            "click",
+            function (event) {
 
-            if (event.target === notificationModal) {
-
-                closeNotification();
+                if (event.target === notificationModal) {
+                    closeNotification();
+                }
 
             }
-
-        });
-
+        );
     }
 
 
@@ -135,13 +584,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (notificationMessage && characterCount) {
 
-        notificationMessage.addEventListener("input", function () {
+        notificationMessage.addEventListener(
+            "input",
+            function () {
 
-            characterCount.textContent =
-                notificationMessage.value.length;
+                characterCount.textContent =
+                    notificationMessage.value.length;
 
-        });
-
+            }
+        );
     }
 
 
@@ -151,268 +602,109 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (notificationForm) {
 
-        notificationForm.addEventListener("submit", function (event) {
+        notificationForm.addEventListener(
+            "submit",
+            async function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            const recipient =
-                document.getElementById("recipient").value;
+                if (isStudent) {
+                    return;
+                }
 
-            const notificationType =
-                document.getElementById("notificationType").value;
+                const recipient = recipientSelect.value;
 
-            const message =
-                document.getElementById("notificationMessage").value.trim();
+                const notificationType =
+                    document.getElementById(
+                        "notificationType"
+                    ).value;
 
+                const message =
+                    notificationMessage.value.trim();
 
-            /* Validate form */
+                if (!recipient ||
+                    !notificationType ||
+                    !message) {
 
-            if (!recipient ||
-                !notificationType ||
-                !message) {
+                    alert(
+                        "Please complete all required fields."
+                    );
 
-                alert("Please complete all required fields.");
+                    return;
+                }
 
-                return;
+                const recipients = recipient === "all"
+                    ? Object.keys(userNames)
+                    : [recipient];
+
+                const stamp = Date.now();
+
+                try {
+
+                    for (let i = 0; i < recipients.length; i++) {
+
+                        const response = await fetch(
+                            `${NOTIFICATION_API}/create`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    notificationId:
+                                        `NT${stamp}${i}`,
+
+                                    userId: recipients[i],
+
+                                    message: message,
+
+                                    sentDate: todayIso(),
+
+                                    notificationType:
+                                    notificationType
+
+                                })
+                            }
+                        );
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                `Server error: ${response.status}`
+                            );
+                        }
+                    }
+
+                    closeNotification();
+
+                    await loadNotifications();
+
+                    alert(
+                        "Notification sent successfully!"
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Error sending notification:",
+                        error
+                    );
+
+                    alert(
+                        "The notification could not be sent."
+                    );
+                }
+
             }
-
-
-            /* Generate a temporary notification ID */
-
-            const notificationId =
-                "NT" + Date.now();
-
-
-            /* Current date */
-
-            const currentDate =
-                new Date().toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                });
-
-
-            /* Get recipient name */
-
-            const recipientSelect =
-                document.getElementById("recipient");
-
-            const recipientName =
-                recipientSelect.options[
-                    recipientSelect.selectedIndex
-                ].text;
-
-
-            /* Get notification type name */
-
-            const typeSelect =
-                document.getElementById("notificationType");
-
-            const typeName =
-                typeSelect.options[
-                    typeSelect.selectedIndex
-                ].text;
-
-
-            /* Add notification to table */
-
-            addNotificationToTable(
-                notificationId,
-                recipientName,
-                recipient,
-                typeName,
-                notificationType,
-                currentDate,
-                message
-            );
-
-
-            /* Update statistics */
-
-            updateStatistics(notificationType);
-
-
-            /* Close modal */
-
-            closeNotification();
-
-
-            /* Success message */
-
-            alert("Notification sent successfully!");
-
-        });
-
+        );
     }
 
 
     /* =========================================================
-       ADD NOTIFICATION TO TABLE
-    ========================================================= */
-
-    function addNotificationToTable(
-        notificationId,
-        recipientName,
-        recipientId,
-        typeName,
-        typeValue,
-        date,
-        message
-    ) {
-
-        if (!notificationTableBody) {
-            return;
-        }
-
-
-        /* Determine icon */
-
-        let icon = "fa-bell";
-
-        if (typeValue === "booking") {
-            icon = "fa-calendar-check";
-        }
-
-        else if (typeValue === "maintenance") {
-            icon = "fa-screwdriver-wrench";
-        }
-
-        else if (typeValue === "system") {
-            icon = "fa-circle-info";
-        }
-
-        else if (typeValue === "reminder") {
-            icon = "fa-clock";
-        }
-
-        else if (typeValue === "announcement") {
-            icon = "fa-bullhorn";
-        }
-
-
-        /* Create row */
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-
-                <div class="notification-message">
-
-                    <div class="notification-row-icon ${typeValue}-icon">
-
-                        <i class="fa-solid ${icon}"></i>
-
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            New ${typeName} Notification
-                        </strong>
-
-                        <span>
-                            ${escapeHTML(message)}
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </td>
-
-
-            <td>
-
-                <div class="recipient">
-
-                    <div class="recipient-avatar">
-                        ${getInitials(recipientName)}
-                    </div>
-
-                    <span>
-                        ${escapeHTML(recipientName)}
-                    </span>
-
-                </div>
-
-            </td>
-
-
-            <td>
-
-                <span class="type-badge ${typeValue}">
-                    ${escapeHTML(typeName)}
-                </span>
-
-            </td>
-
-
-            <td>
-
-                <span class="date">
-                    ${date}
-                </span>
-
-            </td>
-
-
-            <td>
-
-                <div class="action-buttons">
-
-                    <button
-                        class="action-btn view-btn"
-                        title="View notification"
-                        data-title="New ${escapeHTML(typeName)} Notification"
-                        data-recipient="${escapeHTML(recipientName)}"
-                        data-type="${escapeHTML(typeName)}"
-                        data-date="${date}"
-                        data-message="${escapeHTML(message)}">
-
-                        <i class="fa-solid fa-eye"></i>
-
-                    </button>
-
-
-                    <button
-                        class="action-btn delete-btn"
-                        title="Delete notification">
-
-                        <i class="fa-solid fa-trash"></i>
-
-                    </button>
-
-                </div>
-
-            </td>
-
-        `;
-
-
-        /*
-         * Insert the newest notification
-         * at the top of the table.
-         */
-
-        notificationTableBody.prepend(row);
-
-
-        /*
-         * Attach buttons to the new row.
-         */
-
-        attachRowButtons(row);
-
-    }
-
-
-    /* =========================================================
-       VIEW + DELETE BUTTONS
+       VIEW + MARK AS READ + DELETE
     ========================================================= */
 
     function attachRowButtons(row) {
@@ -424,107 +716,150 @@ document.addEventListener("DOMContentLoaded", function () {
             row.querySelector(".delete-btn");
 
 
-        /* VIEW */
+        /* =====================================================
+           VIEW NOTIFICATION + MARK AS READ
+        ===================================================== */
 
         if (viewButton) {
 
-            viewButton.addEventListener("click", function () {
+            viewButton.addEventListener(
+                "click",
+                async function () {
 
-                const title =
-                    this.dataset.title;
+                    const notificationId =
+                        this.dataset.id;
 
-                const recipient =
-                    this.dataset.recipient;
+                    // Display notification details
+                    document.getElementById(
+                        "viewNotificationTitle"
+                    ).textContent = this.dataset.title;
 
-                const type =
-                    this.dataset.type;
+                    document.getElementById(
+                        "viewRecipient"
+                    ).textContent = this.dataset.recipient;
 
-                const date =
-                    this.dataset.date;
+                    document.getElementById(
+                        "viewType"
+                    ).textContent = this.dataset.type;
 
-                const message =
-                    this.dataset.message;
+                    document.getElementById(
+                        "viewDate"
+                    ).textContent = this.dataset.date;
 
+                    document.getElementById(
+                        "viewMessage"
+                    ).textContent = this.dataset.message;
 
-                document.getElementById(
-                    "viewNotificationTitle"
-                ).textContent = title;
+                    // Open the modal
+                    viewNotificationModal.classList.add(
+                        "active"
+                    );
 
+                    document.body.classList.add(
+                        "modal-open"
+                    );
 
-                document.getElementById(
-                    "viewRecipient"
-                ).textContent = recipient;
+                    // Find notification
+                    const notification = notifications.find(
+                        function (n) {
 
+                            return n.notificationId ===
+                                notificationId;
 
-                document.getElementById(
-                    "viewType"
-                ).textContent = type;
+                        }
+                    );
 
+                    // Only mark unread notifications
+                    if (notification && !notification.read) {
 
-                document.getElementById(
-                    "viewDate"
-                ).textContent = date;
+                        try {
 
+                            const response = await fetch(
+                                `${NOTIFICATION_API}/mark-read/${encodeURIComponent(notificationId)}`,
+                                {
+                                    method: "PUT"
+                                }
+                            );
 
-                document.getElementById(
-                    "viewMessage"
-                ).textContent = message;
+                            if (!response.ok) {
 
+                                throw new Error(
+                                    `Mark as read failed: ${response.status}`
+                                );
+                            }
 
-                viewNotificationModal.classList.add("active");
+                            // Update local status
+                            notification.read = true;
 
-                document.body.classList.add("modal-open");
+                            // Refresh table and counter
+                            renderNotifications();
 
-            });
+                        } catch (error) {
 
+                            console.error(
+                                "Error marking notification as read:",
+                                error
+                            );
+
+                        }
+                    }
+
+                }
+            );
         }
 
 
-        /* DELETE */
+        /* =====================================================
+           DELETE NOTIFICATION
+        ===================================================== */
 
         if (deleteButton) {
 
             deleteButton.addEventListener(
                 "click",
-                function () {
+                async function () {
 
-                    const confirmed =
-                        confirm(
-                            "Are you sure you want to delete this notification?"
+                    const confirmed = confirm(
+                        "Are you sure you want to delete this notification?"
+                    );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    try {
+
+                        const response = await fetch(
+                            `${NOTIFICATION_API}/delete/${encodeURIComponent(this.dataset.id)}`,
+                            {
+                                method: "DELETE"
+                            }
                         );
 
+                        if (!response.ok) {
 
-                    if (confirmed) {
+                            throw new Error(
+                                `Delete failed: ${response.status}`
+                            );
+                        }
 
-                        row.remove();
+                        await loadNotifications();
 
-                        updateTotalCount(-1);
+                    } catch (error) {
 
+                        console.error(
+                            "Error deleting notification:",
+                            error
+                        );
+
+                        alert(
+                            "The notification could not be deleted."
+                        );
                     }
 
                 }
             );
-
         }
-
-    }
-
-
-    /* =========================================================
-       ATTACH BUTTONS TO EXISTING NOTIFICATIONS
-    ========================================================= */
-
-    if (notificationTableBody) {
-
-        const rows =
-            notificationTableBody.querySelectorAll("tr");
-
-        rows.forEach(function (row) {
-
-            attachRowButtons(row);
-
-        });
-
     }
 
 
@@ -532,25 +867,27 @@ document.addEventListener("DOMContentLoaded", function () {
        CLOSE VIEW MODAL
     ========================================================= */
 
+    function closeViewNotification() {
+
+        if (viewNotificationModal) {
+
+            viewNotificationModal.classList.remove(
+                "active"
+            );
+        }
+
+        document.body.classList.remove("modal-open");
+    }
+
+
     if (closeViewModal) {
 
         closeViewModal.addEventListener(
             "click",
-            function () {
-
-                viewNotificationModal.classList.remove("active");
-
-                document.body.classList.remove("modal-open");
-
-            }
+            closeViewNotification
         );
-
     }
 
-
-    /* =========================================================
-       CLOSE VIEW MODAL WHEN CLICKING OUTSIDE
-    ========================================================= */
 
     if (viewNotificationModal) {
 
@@ -559,16 +896,11 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 if (event.target === viewNotificationModal) {
-
-                    viewNotificationModal.classList.remove("active");
-
-                    document.body.classList.remove("modal-open");
-
+                    closeViewNotification();
                 }
 
             }
         );
-
     }
 
 
@@ -582,7 +914,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "input",
             filterNotifications
         );
-
     }
 
 
@@ -596,118 +927,108 @@ document.addEventListener("DOMContentLoaded", function () {
             "change",
             filterNotifications
         );
-
     }
 
 
     function filterNotifications() {
 
-        const searchTerm =
-            notificationSearch.value
-                .toLowerCase()
-                .trim();
+        if (!notificationTableBody) {
+            return;
+        }
 
-        const selectedType =
-            notificationTypeFilter.value
-                .toLowerCase();
+        const searchTerm = notificationSearch
+            ? notificationSearch.value.toLowerCase().trim()
+            : "";
 
+        const selectedType = notificationTypeFilter
+            ? notificationTypeFilter.value.toLowerCase()
+            : "";
 
         const rows =
             notificationTableBody.querySelectorAll("tr");
 
-
         rows.forEach(function (row) {
-
-            const rowText =
-                row.textContent.toLowerCase();
-
-
-            const matchesSearch =
-                rowText.includes(searchTerm);
-
 
             const badge =
                 row.querySelector(".type-badge");
 
-
-            let matchesType = true;
-
-
-            if (selectedType && badge) {
-
-                matchesType =
-                    badge.classList.contains(selectedType);
-
+            if (!badge) {
+                return;
             }
 
+            const rowText =
+                row.textContent.toLowerCase();
 
-            if (matchesSearch && matchesType) {
+            const matchesSearch =
+                rowText.includes(searchTerm);
 
-                row.style.display = "";
+            const matchesType =
+                !selectedType ||
+                badge.classList.contains(selectedType);
 
-            }
-
-            else {
-
-                row.style.display = "none";
-
-            }
+            row.style.display =
+                matchesSearch && matchesType ? "" : "none";
 
         });
-
     }
 
 
     /* =========================================================
-       UPDATE STATISTICS
+       HELPER FUNCTIONS
     ========================================================= */
 
-    function updateStatistics(type) {
+    function setText(id, value) {
 
-        updateTotalCount(1);
+        const element = document.getElementById(id);
 
-
-        if (sentToday) {
-
-            sentToday.textContent =
-                parseInt(sentToday.textContent) + 1;
-
+        if (element) {
+            element.textContent = value;
         }
-
-
-        if (type === "booking" && bookingNotifications) {
-
-            bookingNotifications.textContent =
-                parseInt(
-                    bookingNotifications.textContent
-                ) + 1;
-
-        }
-
-
-        if (type === "system" && systemNotifications) {
-
-            systemNotifications.textContent =
-                parseInt(
-                    systemNotifications.textContent
-                ) + 1;
-
-        }
-
     }
 
 
-    function updateTotalCount(amount) {
+    function setCount(element, value) {
 
-        if (totalNotifications) {
+        if (element) {
+            element.textContent = value;
+        }
+    }
 
-            totalNotifications.textContent =
-                parseInt(
-                    totalNotifications.textContent
-                ) + amount;
 
+    function todayIso() {
+
+        const now = new Date();
+
+        const month = String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+        const day = String(
+            now.getDate()
+        ).padStart(2, "0");
+
+        return `${now.getFullYear()}-${month}-${day}`;
+    }
+
+
+    function formatDate(isoDate) {
+
+        if (!isoDate) {
+            return "";
         }
 
+        const date = new Date(
+            `${isoDate}T00:00:00`
+        );
+
+        return date.toLocaleDateString(
+            "en-GB",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
     }
 
 
@@ -721,52 +1042,39 @@ document.addEventListener("DOMContentLoaded", function () {
             return "U";
         }
 
-
-        if (name === "All Users") {
-            return "AL";
-        }
-
-
         const words =
-            name.trim().split(" ");
-
+            String(name).trim().split(/\s+/);
 
         if (words.length === 1) {
 
             return words[0]
                 .substring(0, 2)
                 .toUpperCase();
-
         }
-
 
         return (
             words[0].charAt(0) +
             words[words.length - 1].charAt(0)
         ).toUpperCase();
-
     }
 
 
     /* =========================================================
-       SECURITY HELPER
-       Prevent HTML being inserted directly from user input.
+       ESCAPE HTML
     ========================================================= */
 
     function escapeHTML(value) {
 
-        if (!value) {
+        if (value === null || value === undefined) {
             return "";
         }
 
-
-        return value
+        return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
 
@@ -782,27 +1090,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     notificationModal &&
-                    notificationModal.classList.contains("active")
+                    notificationModal.classList.contains(
+                        "active"
+                    )
                 ) {
-
                     closeNotification();
-
                 }
-
 
                 if (
                     viewNotificationModal &&
-                    viewNotificationModal.classList.contains("active")
+                    viewNotificationModal.classList.contains(
+                        "active"
+                    )
                 ) {
-
-                    viewNotificationModal.classList.remove("active");
-
-                    document.body.classList.remove("modal-open");
-
+                    closeViewNotification();
                 }
-
             }
-
         }
     );
 
@@ -817,7 +1120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar =
         document.querySelector(".sidebar");
 
-
     if (mobileMenuBtn && sidebar) {
 
         mobileMenuBtn.addEventListener(
@@ -828,8 +1130,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
-
     }
-
 
 });

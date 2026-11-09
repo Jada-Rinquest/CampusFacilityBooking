@@ -1,3 +1,4 @@
+
 package za.ac.cput.campusfacilitybooking.service.impl;
 
 import org.springframework.stereotype.Service;
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    // Check whether an email already exists
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 
     @Override

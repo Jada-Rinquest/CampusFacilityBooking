@@ -12,7 +12,6 @@ import za.ac.cput.campusfacilitybooking.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "*")  // ← IMPORTANT: Allow CORS
 public class LoginController {
 
     private final LoginService service;
@@ -31,6 +30,11 @@ public class LoginController {
                 request.getPassword()
         );
         return ResponseEntity.ok(service.create(login));
+    }
+
+    @GetMapping("/exists/{username}")
+    public ResponseEntity<Boolean> usernameExists(@PathVariable String username) {
+        return ResponseEntity.ok(service.isUsernameTaken(username));
     }
 
     @GetMapping("/all")

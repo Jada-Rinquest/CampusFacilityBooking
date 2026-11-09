@@ -29,6 +29,15 @@ public class StudentController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Student> findByUserId(@PathVariable String userId) {
+        Student student = service.findByUserId(userId);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(student);
+    }
+
     @GetMapping("/read/{id}")
     public ResponseEntity<Student> read(@PathVariable String id) {
         Student student = service.read(id);

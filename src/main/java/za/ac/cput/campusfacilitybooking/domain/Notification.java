@@ -1,3 +1,4 @@
+
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
@@ -11,9 +12,13 @@ public class Notification {
 
     @Id
     private String notificationId;
+
     private String userId;
     private String message;
     private LocalDate sentDate;
+
+    @Column(name = "is_read", nullable = false)
+    private boolean read = false;
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
@@ -27,6 +32,7 @@ public class Notification {
         this.message = builder.message;
         this.sentDate = builder.sentDate;
         this.notificationType = builder.notificationType;
+        this.read = builder.read;
     }
 
     public String getNotificationId() {
@@ -49,12 +55,22 @@ public class Notification {
         return notificationType;
     }
 
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
     public static class Builder {
+
         private String notificationId;
         private String userId;
         private String message;
         private LocalDate sentDate;
         private NotificationType notificationType;
+        private boolean read = false;
 
         public Builder setNotificationId(String notificationId) {
             this.notificationId = notificationId;
@@ -76,8 +92,14 @@ public class Notification {
             return this;
         }
 
-        public Builder setNotificationType(NotificationType notificationType) {
+        public Builder setNotificationType(
+                NotificationType notificationType) {
             this.notificationType = notificationType;
+            return this;
+        }
+
+        public Builder setRead(boolean read) {
+            this.read = read;
             return this;
         }
 
@@ -94,6 +116,7 @@ public class Notification {
                 ", message='" + message + '\'' +
                 ", sentDate=" + sentDate +
                 ", notificationType=" + notificationType +
+                ", read=" + read +
                 '}';
     }
 }
