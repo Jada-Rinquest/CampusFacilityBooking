@@ -12,6 +12,10 @@
 --   sndlovu   -> STUDENT  -> student-dashboard.html
 --   apatel    -> STUDENT  -> student-dashboard.html
 --   lsmith    -> STUDENT  -> student-dashboard.html
+--
+-- The passwords below are plain text only so the demo logins are
+-- easy to read. On startup PasswordHashMigration replaces every
+-- plain-text password in the login table with its BCrypt hash.
 -- =========================================================
 
 

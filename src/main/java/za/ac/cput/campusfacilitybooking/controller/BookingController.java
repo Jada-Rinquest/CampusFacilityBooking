@@ -2,6 +2,7 @@ package za.ac.cput.campusfacilitybooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
+    // Students: only for themselves and only as PENDING (see OwnershipGuard)
+    @PreAuthorize("@ownership.canCreateBooking(#request, authentication)")
     @PostMapping("/create")
     public ResponseEntity<Booking> create(@RequestBody BookingRequest request) {
         Booking booking = BookingFactory.createBooking(
@@ -53,6 +56,8 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.update(booking));
     }
 
+    // Students: only their own bookings
+    @PreAuthorize("@ownership.ownsBooking(#id, authentication)")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable String id) {
         return ResponseEntity.ok(bookingService.delete(id));

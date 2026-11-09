@@ -18,6 +18,8 @@ import za.ac.cput.campusfacilitybooking.repository.RegisterRepository;
 import za.ac.cput.campusfacilitybooking.repository.UserRepository;
 import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.impl.LoginServiceImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,18 +42,65 @@ public class LoginServiceTest {
         registerRepository = Mockito.mock(RegisterRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         userRoleRepository = Mockito.mock(UserRoleRepository.class);
-        service = new LoginServiceImpl(loginRepository, registerRepository, userRepository, userRoleRepository);
+        service = new LoginServiceImpl(loginRepository, registerRepository, userRepository,
+                userRoleRepository, passwordEncoder);
+
+        // save() hands back whatever it was given
+        when(loginRepository.save(any(Login.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    }
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    /* A login as it is stored in the database: with a BCrypt hash */
+    private Login storedLogin(String loginId, String registrarId, String username, String rawPassword) {
+        return LoginFactory.createLogin(loginId, registrarId, username, passwordEncoder.encode(rawPassword));
     }
 
     @Test
     void testCreate() {
         Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
-        when(loginRepository.save(login)).thenReturn(login);
 
         Login created = service.create(login);
 
         assertNotNull(created);
         assertEquals(login.getLoginId(), created.getLoginId());
+    }
+
+    @Test
+    void testCreate_HashesPassword() {
+        Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
+
+        Login created = service.create(login);
+
+        assertNotEquals("password123", created.getPassword());
+        assertTrue(created.getPassword().startsWith("$2"));
+        assertTrue(passwordEncoder.matches("password123", created.getPassword()));
+    }
+
+    @Test
+    void testUpdate_WithoutPassword_KeepsStoredHash() {
+        Login stored = storedLogin("L001", "R001", "admin", "password123");
+        when(loginRepository.findById("L001")).thenReturn(Optional.of(stored));
+
+        Login withoutPassword = new Login.Builder()
+                .setLoginId("L001").setRegistrarId("R001").setUsername("admin_renamed").build();
+
+        Login updated = service.update(withoutPassword);
+
+        assertEquals("admin_renamed", updated.getUsername());
+        assertEquals(stored.getPassword(), updated.getPassword());
+    }
+
+    @Test
+    void testUpgradePlaintextPasswords() {
+        Login plain = LoginFactory.createLogin("L001", "R001", "admin", "Password123");
+        Login hashed = storedLogin("L002", "R002", "staff", "Password123");
+        when(loginRepository.findAll()).thenReturn(List.of(plain, hashed));
+
+        int upgraded = service.upgradePlaintextPasswords();
+
+        assertEquals(1, upgraded);
+        verify(loginRepository, times(1)).save(any(Login.class));
     }
 
     @Test
@@ -68,7 +117,6 @@ public class LoginServiceTest {
     @Test
     void testUpdate() {
         Login login = LoginFactory.createLogin("L001", "R001", "admin_updated", "newpassword123");
-        when(loginRepository.save(login)).thenReturn(login);
 
         Login updated = service.update(login);
 
@@ -95,7 +143,7 @@ public class LoginServiceTest {
         String password = "password123";
         String email = "admin@cput.ac.za";
 
-        Login login = LoginFactory.createLogin("L001", registrarId, username, password);
+        Login login = storedLogin("L001", registrarId, username, password);
         Register register = RegisterFactory.createRegister(registrarId, email, LocalDate.now());
         User user = UserFactory.createUser(userId, "Admin", "User", email, LocalDate.of(1990, 1, 1), "D001");
         UserRole userRole = UserRoleFactory.createUserRole("UR001", userId, Role.ADMIN);
@@ -115,6 +163,15 @@ public class LoginServiceTest {
     }
 
     @Test
+    void testAuthenticate_PlaintextStoredPasswordIsRejected() {
+        // A password that was never hashed must not be accepted by a plain string compare
+        Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
+        when(loginRepository.findByUsername("admin")).thenReturn(Optional.of(login));
+
+        assertNull(service.authenticate("admin", "password123"));
+    }
+
+    @Test
     void testAuthenticate_InvalidUsername() {
         when(loginRepository.findByUsername("invalid")).thenReturn(Optional.empty());
 
@@ -125,7 +182,7 @@ public class LoginServiceTest {
 
     @Test
     void testAuthenticate_InvalidPassword() {
-        Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
+        Login login = storedLogin("L001", "R001", "admin", "password123");
         when(loginRepository.findByUsername("admin")).thenReturn(Optional.of(login));
 
         AuthResponse response = service.authenticate("admin", "wrongpassword");
@@ -135,7 +192,7 @@ public class LoginServiceTest {
 
     @Test
     void testAuthenticate_RegisterNotFound() {
-        Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
+        Login login = storedLogin("L001", "R001", "admin", "password123");
         when(loginRepository.findByUsername("admin")).thenReturn(Optional.of(login));
         when(registerRepository.findById("R001")).thenReturn(Optional.empty());
 
@@ -146,7 +203,7 @@ public class LoginServiceTest {
 
     @Test
     void testAuthenticate_UserNotFound() {
-        Login login = LoginFactory.createLogin("L001", "R001", "admin", "password123");
+        Login login = storedLogin("L001", "R001", "admin", "password123");
         Register register = RegisterFactory.createRegister("R001", "admin@cput.ac.za", LocalDate.now());
 
         when(loginRepository.findByUsername("admin")).thenReturn(Optional.of(login));

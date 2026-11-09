@@ -4,6 +4,7 @@ package za.ac.cput.campusfacilitybooking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -85,6 +86,9 @@ public class UserController {
         return ResponseEntity.ok(user.get());
     }
 
+    // Students: only their own profile, and the email cannot change
+    // (the email domain decides student vs staff access)
+    @PreAuthorize("@ownership.canUpdateUser(#user, authentication)")
     @PutMapping("/update")
     public ResponseEntity<User> update(@RequestBody User user) {
         return ResponseEntity.ok(service.update(user));
