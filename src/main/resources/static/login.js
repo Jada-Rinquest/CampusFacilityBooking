@@ -108,8 +108,12 @@ async function loginUser() {
         // AUTHENTICATE USING LOGIN ENDPOINT
         // =================================================
 
-        const response = await fetch(`${API_BASE_URL}/login/authenticate`, {
+        // The server checks the password (BCrypt) and starts a session.
+        // The session cookie is HttpOnly, so it is sent automatically
+        // with every later request and never readable from JavaScript.
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 username: username,
@@ -119,11 +123,16 @@ async function loginUser() {
 
 
         // =================================================
-        // AUTHENTICATION FAILED
+        // AUTHENTICATION FAILED / ACCOUNT LOCKED
         // =================================================
 
         if (response.status === 401) {
             showLoginError("Invalid username or password.");
+            return;
+        }
+
+        if (response.status === 429) {
+            showLoginError("Too many failed attempts. Please wait 15 minutes and try again.");
             return;
         }
 
@@ -144,7 +153,6 @@ async function loginUser() {
 
         const authResponse = await response.json();
 
-        console.log("Login successful:", authResponse);
 
 
         // =================================================

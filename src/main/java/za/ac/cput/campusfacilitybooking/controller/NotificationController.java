@@ -3,6 +3,7 @@ package za.ac.cput.campusfacilitybooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,6 +70,7 @@ public class NotificationController {
     }
 
     // MARK NOTIFICATION AS READ
+    @PreAuthorize("@ownership.ownsNotification(#id, authentication)")
     @PutMapping("/mark-read/{id}")
     public ResponseEntity<Notification> markAsRead(
             @PathVariable String id) {
@@ -87,6 +89,7 @@ public class NotificationController {
     }
 
     // DELETE NOTIFICATION
+    @PreAuthorize("@ownership.ownsNotification(#id, authentication)")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(
             @PathVariable String id) {

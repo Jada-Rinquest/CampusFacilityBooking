@@ -102,6 +102,52 @@
     }
 
     /* =====================================================
+       SERVER SESSION CHECK
+
+       The stored user only decides what the page shows.
+       The server enforces access on every request using the
+       session cookie. If the server answers 401 (session
+       expired, server restarted, signed out elsewhere), the
+       local copy is out of date: clear it and sign in again.
+    ===================================================== */
+
+    const originalFetch = window.fetch.bind(window);
+
+    function sessionExpired() {
+
+        ["loggedInUser", "loginId", "registrarId", "username"]
+            .forEach(function (key) {
+                sessionStorage.removeItem(key);
+                localStorage.removeItem(key);
+            });
+
+        window.location.replace("index.html");
+    }
+
+    window.fetch = function (input, init) {
+
+        return originalFetch(input, init).then(function (response) {
+
+            if (response.status === 401) {
+                sessionExpired();
+            }
+
+            return response;
+        });
+    };
+
+    // Confirm the session is still valid when the page opens
+    originalFetch("/auth/me", { credentials: "same-origin" })
+        .then(function (response) {
+            if (response.status === 401) {
+                sessionExpired();
+            }
+        })
+        .catch(function () {
+            /* server not reachable - the page shows its own error */
+        });
+
+    /* =====================================================
        DETERMINE ROLE AND CURRENT PAGE
     ===================================================== */
 

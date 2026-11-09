@@ -3,7 +3,9 @@ package za.ac.cput.campusfacilitybooking.service.impl;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import za.ac.cput.campusfacilitybooking.domain.Login;
@@ -26,20 +28,47 @@ public class LoginServiceImpl implements LoginService {
     private final RegisterRepository registerRepository;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    // Shape of a BCrypt hash, e.g. $2a$10$<53 characters>
+    private static final Pattern BCRYPT_HASH =
+            Pattern.compile("^\\$2[aby]?\\$\\d{2}\\$[./A-Za-z0-9]{53}$");
 
     public LoginServiceImpl(LoginRepository loginRepository,
                             RegisterRepository registerRepository,
                             UserRepository userRepository,
-                            UserRoleRepository userRoleRepository) {
+                            UserRoleRepository userRoleRepository,
+                            PasswordEncoder passwordEncoder) {
         this.loginRepository = loginRepository;
         this.registerRepository = registerRepository;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    static boolean isHashed(String password) {
+        return password != null && BCRYPT_HASH.matcher(password).matches();
+    }
+
+    private String hashIfNeeded(String password) {
+        return isHashed(password) ? password : passwordEncoder.encode(password);
+    }
+
+    private static Login withPassword(Login login, String password) {
+        return new Login.Builder()
+                .setLoginId(login.getLoginId())
+                .setRegistrarId(login.getRegistrarId())
+                .setUsername(login.getUsername())
+                .setPassword(password)
+                .build();
     }
 
     @Override
     public Login create(Login login) {
-        return loginRepository.save(login);
+        if (login.getPassword() == null || login.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+        return loginRepository.save(withPassword(login, hashIfNeeded(login.getPassword())));
     }
 
     @Override
@@ -50,7 +79,16 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Login update(Login login) {
-        return loginRepository.save(login);
+        String password = login.getPassword();
+
+        // Passwords are never sent back to clients, so an update without
+        // one keeps the stored hash instead of wiping it.
+        if (password == null || password.isBlank()) {
+            password = loginRepository.findById(login.getLoginId())
+                    .map(Login::getPassword)
+                    .orElseThrow(() -> new IllegalArgumentException("Password is required"));
+        }
+        return loginRepository.save(withPassword(login, hashIfNeeded(password)));
     }
 
     @Override
@@ -65,6 +103,10 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public AuthResponse authenticate(String username, String password) {
 
+        if (username == null || password == null) {
+            return null;
+        }
+
         // 1. Find login by username
         Optional<Login> loginOpt = loginRepository.findByUsername(username);
         if (loginOpt.isEmpty()) {
@@ -73,8 +115,8 @@ public class LoginServiceImpl implements LoginService {
 
         Login login = loginOpt.get();
 
-        // 2. Check password
-        if (!login.getPassword().equals(password)) {
+        // 2. Check the password against the stored BCrypt hash
+        if (!isHashed(login.getPassword()) || !passwordEncoder.matches(password, login.getPassword())) {
             return null;
         }
 
@@ -138,6 +180,19 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public boolean isUsernameTaken(String username) {
         return loginRepository.existsByUsername(username);
+    }
+
+    @Override
+    public int upgradePlaintextPasswords() {
+        int upgraded = 0;
+        for (Login login : loginRepository.findAll()) {
+            String password = login.getPassword();
+            if (password != null && !password.isBlank() && !isHashed(password)) {
+                loginRepository.save(withPassword(login, passwordEncoder.encode(password)));
+                upgraded++;
+            }
+        }
+        return upgraded;
     }
 
     @Override

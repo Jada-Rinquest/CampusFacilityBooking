@@ -114,6 +114,9 @@ public class InvoiceControllerTest {
 
     @Test
     void testUpdate() {
+        // The controller loads the existing invoice and its booking first
+        when(invoiceService.read("INV001")).thenReturn(invoice);
+        when(bookingService.read("B001")).thenReturn(booking);
         when(invoiceService.update(invoice)).thenReturn(invoice);
 
         ResponseEntity<Invoice> response = controller.update(invoice);
@@ -125,6 +128,8 @@ public class InvoiceControllerTest {
 
     @Test
     void testDelete() {
+        // The controller checks the invoice exists before deleting
+        when(invoiceService.read("INV001")).thenReturn(invoice);
         when(invoiceService.delete("INV001")).thenReturn(true);
 
         ResponseEntity<Boolean> response = controller.delete("INV001");

@@ -28,18 +28,26 @@
 
 <script>
 
-    try {
-
-        sessionStorage.removeItem("loggedInUser");
-        localStorage.removeItem("loggedInUser");
-
-    } catch (error) {
-
-        console.error("Could not clear the session:", error);
-
+    function clearLocalSession() {
+        try {
+            ["loggedInUser", "loginId", "registrarId", "username"].forEach(function (key) {
+                sessionStorage.removeItem(key);
+                localStorage.removeItem(key);
+            });
+        } catch (error) {
+            console.error("Could not clear the session:", error);
+        }
     }
 
-    window.location.replace("index.html");
+    clearLocalSession();
+
+    // End the server-side session too, so the session cookie
+    // can no longer be used. Go to sign-in whatever happens.
+    fetch("/auth/logout", { method: "POST", credentials: "same-origin" })
+        .catch(function () { /* server unreachable - nothing to end */ })
+        .finally(function () {
+            window.location.replace("index.html");
+        });
 
 </script>
 

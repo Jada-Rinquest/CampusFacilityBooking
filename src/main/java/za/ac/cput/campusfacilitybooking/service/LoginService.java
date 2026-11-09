@@ -11,4 +11,7 @@ public interface LoginService extends IService<Login, String> {
     AuthResponse authenticate(String username, String password);
 
     boolean isUsernameTaken(String username);
+
+    /** Re-saves any login whose password is still plain text as a BCrypt hash. Returns how many changed. */
+    int upgradePlaintextPasswords();
 }
