@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Login;
-import za.ac.cput.campusfacilitybooking.dto.AuthResponse;
 import za.ac.cput.campusfacilitybooking.factory.LoginFactory;
 import za.ac.cput.campusfacilitybooking.service.LoginService;
 
@@ -61,18 +60,6 @@ public class LoginController {
         return ResponseEntity.ok(service.delete(id));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody LoginRequest request) {
-
-        AuthResponse response = service.authenticate(
-                request.getUsername(),
-                request.getPassword()
-        );
-
-        if (response == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        return ResponseEntity.ok(response);
-    }
+    // Signing in moved to POST /auth/login (AuthController), which also
+    // starts the server-side session. Every other /login endpoint is admin-only.
 }

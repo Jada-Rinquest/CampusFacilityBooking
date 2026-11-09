@@ -288,16 +288,8 @@ async function registerUser() {
 
     try {
 
-        // Generate IDs
-        const stamp = Date.now().toString().substring(6);
-        const userId = "USER-" + stamp;
-        const loginId = "LOGIN-" + stamp;
-        const userRoleId = "UR-" + stamp;
-        const today = new Date().toISOString().split("T")[0];
-
-
         // =================================================
-        // PRE-CHECKS (before anything is saved)
+        // PRE-CHECK (before anything is saved)
         // =================================================
 
         const usernameCheck = await fetch(
@@ -322,117 +314,37 @@ async function registerUser() {
 
 
         // =================================================
-        // STEP 1: CREATE USER
+        // CREATE THE ACCOUNT (one request, done on the server)
+        //
+        // The server creates the User, Register, Login,
+        // UserRole and Student/Staff records together, hashes
+        // the password, and picks the role from the email
+        // domain. The browser cannot choose IDs or roles.
         // =================================================
 
-        const userResponse = await fetch(`${API_BASE_URL}/user/create`, {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userId: userId,
                 firstName: firstName,
                 lastName: lastName,
+                username: username,
                 email: email,
-                dateOfBirth: "2000-01-01",
+                password: password,
+                accountType: accountType,
+                studentNumber: isStaff ? null : studentNumber,
                 departmentId: departmentId
             })
         });
 
-        if (!userResponse.ok) {
+        if (!response.ok) {
             let errorMessage = "Unable to create your account.";
             try {
-                const errorData = await userResponse.json();
+                const errorData = await response.json();
                 if (errorData.message) errorMessage = errorData.message;
             } catch (e) {}
             throw new Error(errorMessage);
-        }
-
-
-        // =================================================
-        // STEP 2: CREATE REGISTER RECORD
-        // =================================================
-
-        const registerResponse = await fetch(`${API_BASE_URL}/register/create`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                registrarId: userId,
-                email: email,
-                dateRegistered: today
-            })
-        });
-
-        if (!registerResponse.ok) {
-            throw new Error("Registration record could not be created.");
-        }
-
-
-        // =================================================
-        // STEP 3: CREATE LOGIN CREDENTIALS
-        // =================================================
-
-        const loginResponse = await fetch(`${API_BASE_URL}/login/create`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                loginId: loginId,
-                registrarId: userId,
-                username: username,
-                password: password
-            })
-        });
-
-        if (!loginResponse.ok) {
-            throw new Error("Login credentials could not be created.");
-        }
-
-
-        // =================================================
-        // STEP 4: CREATE USER ROLE
-        // =================================================
-
-        const roleResponse = await fetch(`${API_BASE_URL}/userrole/create`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userRoleId: userRoleId,
-                userId: userId,
-                role: isStaff ? "LECTURER" : "STUDENT"
-            })
-        });
-
-        if (!roleResponse.ok) {
-            throw new Error("Account role could not be created.");
-        }
-
-
-        // =================================================
-        // STEP 5: CREATE STUDENT OR STAFF RECORD
-        // =================================================
-
-        const profileResponse = isStaff
-            ? await fetch(`${API_BASE_URL}/staff/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    staffId: "STF-" + stamp,
-                    userId: userId
-                })
-            })
-            : await fetch(`${API_BASE_URL}/student/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    studentId: "STU-" + stamp,
-                    studentNumber: studentNumber,
-                    userId: userId
-                })
-            });
-
-        if (!profileResponse.ok) {
-            throw new Error(isStaff
-                ? "Staff record could not be created."
-                : "Student record could not be created.");
         }
 
 
