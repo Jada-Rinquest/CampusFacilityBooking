@@ -199,7 +199,7 @@ All three use the DOM element IDs that were already in the HTML, so no HTML
 changes were needed.
 
 **Note:** `student-dashboard.js` reads `sessionStorage.getItem("loggedInUser")`
-— the same key `script.js` writes on login.
+— the same key `login.js` writes on login.
 
 ---
 

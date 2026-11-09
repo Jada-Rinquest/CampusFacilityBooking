@@ -1,5 +1,6 @@
 package za.ac.cput.campusfacilitybooking.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,10 @@ public class Login {
 
     private String registrarId;
     private String username;
+
+    // Holds a BCrypt hash. WRITE_ONLY: it can be sent in a request
+    // but is never included in a JSON response.
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     protected Login() {

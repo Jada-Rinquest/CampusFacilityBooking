@@ -6,13 +6,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import za.ac.cput.campusfacilitybooking.domain.Login;
-import za.ac.cput.campusfacilitybooking.dto.AuthResponse;
 import za.ac.cput.campusfacilitybooking.factory.LoginFactory;
 import za.ac.cput.campusfacilitybooking.service.LoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "*")  // ← IMPORTANT: Allow CORS
 public class LoginController {
 
     private final LoginService service;
@@ -31,6 +29,11 @@ public class LoginController {
                 request.getPassword()
         );
         return ResponseEntity.ok(service.create(login));
+    }
+
+    @GetMapping("/exists/{username}")
+    public ResponseEntity<Boolean> usernameExists(@PathVariable String username) {
+        return ResponseEntity.ok(service.isUsernameTaken(username));
     }
 
     @GetMapping("/all")
@@ -57,18 +60,6 @@ public class LoginController {
         return ResponseEntity.ok(service.delete(id));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody LoginRequest request) {
-
-        AuthResponse response = service.authenticate(
-                request.getUsername(),
-                request.getPassword()
-        );
-
-        if (response == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        return ResponseEntity.ok(response);
-    }
+    // Signing in moved to POST /auth/login (AuthController), which also
+    // starts the server-side session. Every other /login endpoint is admin-only.
 }

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (forgotPassword) {
         forgotPassword.addEventListener("click", function (event) {
             event.preventDefault();
-            alert("Your password is your User ID. Please contact the campus administrator if you have forgotten it.");
+            alert("Please contact the campus administrator to reset your password.");
         });
     }
 
@@ -108,8 +108,12 @@ async function loginUser() {
         // AUTHENTICATE USING LOGIN ENDPOINT
         // =================================================
 
-        const response = await fetch(`${API_BASE_URL}/login/authenticate`, {
+        // The server checks the password (BCrypt) and starts a session.
+        // The session cookie is HttpOnly, so it is sent automatically
+        // with every later request and never readable from JavaScript.
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 username: username,
@@ -119,11 +123,16 @@ async function loginUser() {
 
 
         // =================================================
-        // AUTHENTICATION FAILED
+        // AUTHENTICATION FAILED / ACCOUNT LOCKED
         // =================================================
 
         if (response.status === 401) {
             showLoginError("Invalid username or password.");
+            return;
+        }
+
+        if (response.status === 429) {
+            showLoginError("Too many failed attempts. Please wait 15 minutes and try again.");
             return;
         }
 
@@ -144,7 +153,6 @@ async function loginUser() {
 
         const authResponse = await response.json();
 
-        console.log("Login successful:", authResponse);
 
 
         // =================================================
@@ -156,9 +164,14 @@ async function loginUser() {
             username: authResponse.username,
             email: authResponse.email,
             role: authResponse.role,
+            accountType: authResponse.accountType,
             firstName: authResponse.firstName,
             lastName: authResponse.lastName
         };
+
+        // Clear any session left over from a different account
+        sessionStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInUser");
 
         const rememberMe = document.getElementById("rememberMe");
 
@@ -168,6 +181,10 @@ async function loginUser() {
             sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
         }
 
+        localStorage.setItem("loginId", authResponse.userId);
+        localStorage.setItem("registrarId", authResponse.userId);
+        localStorage.setItem("username", authResponse.username);
+
 
         // =================================================
         // REDIRECT TO DASHBOARD
@@ -176,11 +193,10 @@ async function loginUser() {
         loginButtonText.textContent = "Success!";
         loginButtonIcon.className = "fa-solid fa-check";
 
-        // Redirect based on role
-        let redirectUrl = "student-dashboard.html";
-        if (authResponse.role === "ADMIN" || authResponse.role === "LECTURER") {
-            redirectUrl = "staff-dashboard.html";
-        }
+        // Redirect based on account type (@cput.ac.za = staff, @mycput = student)
+        const redirectUrl = authResponse.accountType === "STAFF"
+            ? "staff-dashboard.html"
+            : "student-dashboard.html";
 
         setTimeout(function () {
             window.location.href = redirectUrl;

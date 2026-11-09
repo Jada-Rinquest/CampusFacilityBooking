@@ -931,3 +931,115 @@ footer {
     }
 
 }
+
+/* =========================================================
+   STAFF DASHBOARD - CONSISTENT CAMPUS THEME
+========================================================= */
+
+/* Consistent sidebar branding */
+
+.sidebar-logo {
+    font-size: 19px;
+    letter-spacing: -0.4px;
+}
+
+.sidebar-logo i {
+    color: #60a5fa;
+}
+
+/* Consistent dashboard headings */
+
+.page-header h2 {
+    font-weight: 750;
+    letter-spacing: -0.6px;
+}
+
+.page-eyebrow,
+.section-label {
+    color: #3b82f6;
+}
+
+/* Matching statistic cards */
+
+.dashboard-stats .stat-card {
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+}
+
+.dashboard-stats .stat-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+/* Consistent management cards */
+
+.dashboard-card {
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+.dashboard-card:hover {
+    border-color: #bfdbfe;
+}
+
+/* Matching login button style */
+
+.dashboard-button {
+    border-radius: 9px;
+    background: #3b82f6;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.dashboard-button:hover {
+    background: #2563eb;
+}
+
+/* Matching profile avatar */
+
+.staff-avatar {
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+/* Hide the badge when there are no unread notifications */
+
+.notification-count:empty {
+    display: none !important;
+}
+
+/* Consistent keyboard focus */
+
+.sidebar a:focus-visible,
+.dashboard-button:focus-visible,
+.notification-icon:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* Keep the dashboard responsive */
+
+@media (max-width: 700px) {
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        width: 250px;
+        transition: left 0.25s ease;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .dashboard-page {
+        padding: 28px 20px 45px;
+    }
+}

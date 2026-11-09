@@ -4,5 +4,11 @@ public enum FacilityType {
     LAB,
     HALL,
     ROOM,
-    AUDITORIUM
+    AUDITORIUM,
+    LECTURE_HALL,
+    CLASSROOM,
+    LABORATORY,
+    COMPUTER_LAB,
+    MEETING_ROOM,
+    SPORTS_FACILITY
 }

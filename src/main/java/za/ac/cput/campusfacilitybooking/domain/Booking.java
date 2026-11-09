@@ -54,6 +54,12 @@ public class Booking {
         return bookingStatus;
     }
 
+    public String getBookingStatusId() {
+        if (bookingStatus == BookingStatus.APPROVED) return "BS002";
+        if (bookingStatus == BookingStatus.CANCELLED || bookingStatus == BookingStatus.REJECTED) return "BS003";
+        return "BS001";
+    }
+
     public static class Builder {
         private String bookingId;
         private String facilityId;

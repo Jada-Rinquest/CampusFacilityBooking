@@ -1,67 +1,51 @@
+
 /* =========================================================
    INVOICE MANAGEMENT JAVASCRIPT
    Campus Facility Booking System
 ========================================================= */
 
-
-/* =========================================================
-   API CONFIGURATION
-========================================================= */
-
 const API_BASE_URL = "http://localhost:8080";
-
 const INVOICE_API = `${API_BASE_URL}/invoice`;
 const BOOKING_API = `${API_BASE_URL}/booking`;
 
-
 /* =========================================================
-   DOM ELEMENTS
+   ELEMENTS
 ========================================================= */
 
-// New invoice
 const newInvoiceBtn = document.getElementById("newInvoiceBtn");
 const invoiceFormSection = document.getElementById("invoiceFormSection");
 const closeFormBtn = document.getElementById("closeFormBtn");
 const cancelInvoiceBtn = document.getElementById("cancelInvoiceBtn");
 
-// Form
 const invoiceForm = document.getElementById("invoiceForm");
-const invoiceId = document.getElementById("invoiceId");
+const invoiceIdInput = document.getElementById("invoiceId");
 const bookingSelect = document.getElementById("bookingId");
 const amountInput = document.getElementById("amount");
-const dueDate = document.getElementById("dueDate");
+const dueDateInput = document.getElementById("dueDate");
 const statusSelect = document.getElementById("invoiceStatus");
 const descriptionInput = document.getElementById("description");
 const descriptionCount = document.getElementById("descriptionCount");
 const submitInvoiceBtn = document.getElementById("submitInvoiceBtn");
 
-// Table
 const invoiceTableBody = document.getElementById("invoiceTableBody");
 const emptyState = document.getElementById("emptyState");
 
-// Filters
 const invoiceSearch = document.getElementById("invoiceSearch");
 const statusFilter = document.getElementById("statusFilter");
 const dateFilter = document.getElementById("dateFilter");
-
-// Refresh
 const refreshBtn = document.getElementById("refreshBtn");
 
-// Statistics
 const totalInvoices = document.getElementById("totalInvoices");
 const paidInvoices = document.getElementById("paidInvoices");
 const pendingInvoices = document.getElementById("pendingInvoices");
 const overdueInvoices = document.getElementById("overdueInvoices");
-
-// Table count
+const cancelledInvoices = document.getElementById("cancelledInvoices");
 const invoiceCount = document.getElementById("invoiceCount");
 
-// Pagination
 const previousPage = document.getElementById("previousPage");
 const nextPage = document.getElementById("nextPage");
 const currentPage = document.getElementById("currentPage");
 
-// View modal
 const viewInvoiceModal = document.getElementById("viewInvoiceModal");
 const closeViewModalBtn = document.getElementById("closeViewModalBtn");
 
@@ -73,345 +57,74 @@ const viewStatus = document.getElementById("viewStatus");
 const viewCreatedDate = document.getElementById("viewCreatedDate");
 const viewDescription = document.getElementById("viewDescription");
 
-// Mobile menu
 const mobileMenuBtn = document.getElementById("mobileMenuBtn");
 const sidebar = document.querySelector(".sidebar");
 
-
 /* =========================================================
-   APPLICATION STATE
+   STATE
 ========================================================= */
 
 let invoices = [];
 let bookings = [];
-
 let editingInvoiceId = null;
-
 let currentPageNumber = 1;
 
 const invoicesPerPage = 8;
 
+const VALID_STATUSES = [
+    "paid",
+    "pending",
+    "overdue",
+    "cancelled"
+];
 
 /* =========================================================
-   INITIALISE PAGE
+   INITIALISE
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    setMinimumDate();
-
-    await loadInitialData();
-
     setupEventListeners();
 
+    await Promise.all([
+        loadInvoices(),
+        loadBookings()
+    ]);
 });
 
-
 /* =========================================================
-   INITIAL DATA
+   NORMALISE BACKEND DATA
 ========================================================= */
 
-async function loadInitialData() {
+function getBookingId(invoice) {
 
-    try {
-
-        await Promise.all([
-            loadInvoices(),
-            loadBookings()
-        ]);
-
-    } catch (error) {
-
-        console.error("Error loading page data:", error);
-
-        showNotification(
-            "Unable to load invoice data. Make sure the Spring Boot backend is running.",
-            "error"
-        );
-
-    }
-
+    return invoice.booking?.bookingId ||
+        invoice.bookingId ||
+        "";
 }
 
+function getInvoiceStatus(invoice) {
 
-/* =========================================================
-   EVENT LISTENERS
-========================================================= */
+    // Always prefer the status stored in MySQL.
+    const storedStatus = String(
+        invoice.invoiceStatus || ""
+    ).trim().toLowerCase();
 
-function setupEventListeners() {
-
-    /* New invoice */
-
-    if (newInvoiceBtn) {
-
-        newInvoiceBtn.addEventListener("click", openInvoiceForm);
-
+    if (VALID_STATUSES.includes(storedStatus)) {
+        return storedStatus;
     }
 
-
-    /* Close form */
-
-    if (closeFormBtn) {
-
-        closeFormBtn.addEventListener(
-            "click",
-            closeInvoiceForm
-        );
-
-    }
-
-
-    /* Cancel form */
-
-    if (cancelInvoiceBtn) {
-
-        cancelInvoiceBtn.addEventListener(
-            "click",
-            closeInvoiceForm
-        );
-
-    }
-
-
-    /* Invoice form */
-
-    if (invoiceForm) {
-
-        invoiceForm.addEventListener(
-            "submit",
-            handleInvoiceSubmit
-        );
-
-    }
-
-
-    /* Description character counter */
-
-    if (descriptionInput) {
-
-        descriptionInput.addEventListener(
-            "input",
-            updateDescriptionCounter
-        );
-
-    }
-
-
-    /* Search */
-
-    if (invoiceSearch) {
-
-        invoiceSearch.addEventListener(
-            "input",
-            function () {
-
-                currentPageNumber = 1;
-
-                renderInvoices();
-
-            }
-        );
-
-    }
-
-
-    /* Status filter */
-
-    if (statusFilter) {
-
-        statusFilter.addEventListener(
-            "change",
-            function () {
-
-                currentPageNumber = 1;
-
-                renderInvoices();
-
-            }
-        );
-
-    }
-
-
-    /* Date filter */
-
-    if (dateFilter) {
-
-        dateFilter.addEventListener(
-            "change",
-            function () {
-
-                currentPageNumber = 1;
-
-                renderInvoices();
-
-            }
-        );
-
-    }
-
-
-    /* Refresh */
-
-    if (refreshBtn) {
-
-        refreshBtn.addEventListener(
-            "click",
-            async function () {
-
-                await loadInvoices();
-
-                showNotification(
-                    "Invoices refreshed successfully.",
-                    "success"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* Pagination */
-
-    if (previousPage) {
-
-        previousPage.addEventListener(
-            "click",
-            function () {
-
-                if (currentPageNumber > 1) {
-
-                    currentPageNumber--;
-
-                    renderInvoices();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    if (nextPage) {
-
-        nextPage.addEventListener(
-            "click",
-            function () {
-
-                currentPageNumber++;
-
-                renderInvoices();
-
-            }
-        );
-
-    }
-
-
-    /* View modal */
-
-    if (closeViewModalBtn) {
-
-        closeViewModalBtn.addEventListener(
-            "click",
-            closeViewModal
-        );
-
-    }
-
-
-    /* Close modal when clicking outside */
-
-    if (viewInvoiceModal) {
-
-        viewInvoiceModal.addEventListener(
-            "click",
-            function (event) {
-
-                if (event.target === viewInvoiceModal) {
-
-                    closeViewModal();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* Mobile menu */
-
-    if (mobileMenuBtn) {
-
-        mobileMenuBtn.addEventListener(
-            "click",
-            function () {
-
-                sidebar.classList.toggle("open");
-
-            }
-        );
-
-    }
-
+    // Compatibility with older invoice records.
+    return invoice.paid === true ? "paid" : "pending";
 }
 
-
-/* =========================================================
-   OPEN INVOICE FORM
-========================================================= */
-
-function openInvoiceForm() {
-
-    editingInvoiceId = null;
-
-    invoiceForm.reset();
-
-    if (descriptionCount) {
-
-        descriptionCount.textContent = "0 / 500";
-
-    }
-
-    document.getElementById("formTitle").textContent =
-        "Create an Invoice";
-
-    submitInvoiceBtn.innerHTML =
-        '<i class="fa-solid fa-file-invoice"></i> Create Invoice';
-
-    invoiceFormSection.classList.remove("hidden");
-
-    invoiceFormSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
+function isInvoicePaid(invoice) {
+    return getInvoiceStatus(invoice) === "paid";
 }
 
-
-/* =========================================================
-   CLOSE INVOICE FORM
-========================================================= */
-
-function closeInvoiceForm() {
-
-    invoiceFormSection.classList.add("hidden");
-
-    invoiceForm.reset();
-
-    editingInvoiceId = null;
-
-    if (descriptionCount) {
-
-        descriptionCount.textContent = "0 / 500";
-
-    }
-
+function getInvoiceDescription(invoice) {
+    return invoice.description || "";
 }
-
 
 /* =========================================================
    LOAD INVOICES
@@ -421,39 +134,37 @@ async function loadInvoices() {
 
     try {
 
-        const response = await fetch(
-            `${INVOICE_API}/all`
-        );
+        const response = await fetch(`${INVOICE_API}/all`, {
+            cache: "no-store"
+        });
 
         if (!response.ok) {
-
-            throw new Error(
-                `Invoice request failed: ${response.status}`
-            );
-
+            throw new Error(`HTTP ${response.status}`);
         }
 
-        invoices = await response.json();
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid invoice response");
+        }
+
+        invoices = data;
 
         renderInvoices();
-
         updateStatistics();
 
     } catch (error) {
 
-        console.error(
-            "Error loading invoices:",
-            error
+        console.error("Error loading invoices:", error);
+
+        showNotification(
+            "Unable to load invoices.",
+            "error"
         );
 
-        invoices = [];
-
-        renderInvoices();
-
+        throw error;
     }
-
 }
-
 
 /* =========================================================
    LOAD BOOKINGS
@@ -463,16 +174,10 @@ async function loadBookings() {
 
     try {
 
-        const response = await fetch(
-            `${BOOKING_API}/all`
-        );
+        const response = await fetch(`${BOOKING_API}/all`);
 
         if (!response.ok) {
-
-            throw new Error(
-                `Booking request failed: ${response.status}`
-            );
-
+            throw new Error(`HTTP ${response.status}`);
         }
 
         bookings = await response.json();
@@ -481,21 +186,18 @@ async function loadBookings() {
 
     } catch (error) {
 
-        console.error(
-            "Error loading bookings:",
-            error
+        console.error("Error loading bookings:", error);
+
+        showNotification(
+            "Unable to load bookings.",
+            "error"
         );
-
     }
-
 }
 
-
-/* =========================================================
-   POPULATE BOOKING DROPDOWN
-========================================================= */
-
 function populateBookingDropdown() {
+
+    if (!bookingSelect) return;
 
     bookingSelect.innerHTML =
         '<option value="">Select a booking</option>';
@@ -510,146 +212,266 @@ function populateBookingDropdown() {
             `${booking.bookingId} - ${booking.purpose || "No description"}`;
 
         bookingSelect.appendChild(option);
+    });
+}
 
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
+
+function setupEventListeners() {
+
+    newInvoiceBtn?.addEventListener(
+        "click",
+        openInvoiceForm
+    );
+
+    closeFormBtn?.addEventListener(
+        "click",
+        closeInvoiceForm
+    );
+
+    cancelInvoiceBtn?.addEventListener(
+        "click",
+        closeInvoiceForm
+    );
+
+    invoiceForm?.addEventListener(
+        "submit",
+        handleInvoiceSubmit
+    );
+
+    descriptionInput?.addEventListener(
+        "input",
+        updateDescriptionCounter
+    );
+
+    invoiceSearch?.addEventListener(
+        "input",
+        resetAndRender
+    );
+
+    statusFilter?.addEventListener(
+        "change",
+        resetAndRender
+    );
+
+    dateFilter?.addEventListener(
+        "change",
+        resetAndRender
+    );
+
+    refreshBtn?.addEventListener("click", async function () {
+
+        try {
+            await loadInvoices();
+        } catch (error) {
+            // loadInvoices already displays the error.
+        }
     });
 
+    previousPage?.addEventListener("click", function () {
+
+        if (currentPageNumber > 1) {
+            currentPageNumber--;
+            renderInvoices();
+        }
+    });
+
+    nextPage?.addEventListener("click", function () {
+
+        const pages = Math.ceil(
+            getFilteredInvoices().length / invoicesPerPage
+        );
+
+        if (currentPageNumber < pages) {
+            currentPageNumber++;
+            renderInvoices();
+        }
+    });
+
+    closeViewModalBtn?.addEventListener(
+        "click",
+        closeViewModal
+    );
+
+    viewInvoiceModal?.addEventListener("click", function (event) {
+
+        if (event.target === viewInvoiceModal) {
+            closeViewModal();
+        }
+    });
+
+    mobileMenuBtn?.addEventListener("click", function () {
+
+        sidebar?.classList.toggle("open");
+    });
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+            closeViewModal();
+        }
+    });
+
+    // Handle table buttons.
+    invoiceTableBody?.addEventListener("click", function (event) {
+
+        const button = event.target.closest(
+            "button[data-action]"
+        );
+
+        if (!button || button.disabled) return;
+
+        const id = button.dataset.id;
+        const action = button.dataset.action;
+
+        if (action === "view") {
+            viewInvoice(id);
+        }
+
+        if (action === "edit") {
+            editInvoice(id);
+        }
+
+        if (action === "paid") {
+            markAsPaid(id);
+        }
+
+        if (action === "delete") {
+            deleteInvoice(id);
+        }
+    });
 }
 
+function resetAndRender() {
+
+    currentPageNumber = 1;
+    renderInvoices();
+}
 
 /* =========================================================
-   DESCRIPTION CHARACTER COUNTER
+   OPEN CREATE FORM
 ========================================================= */
 
-function updateDescriptionCounter() {
+function openInvoiceForm() {
 
-    if (!descriptionInput || !descriptionCount) {
+    editingInvoiceId = null;
 
-        return;
+    invoiceForm.reset();
 
-    }
+    invoiceIdInput.readOnly = false;
 
-    const length = descriptionInput.value.length;
+    statusSelect.value = "pending";
 
-    descriptionCount.textContent = `${length} / 500`;
+    document.getElementById("formTitle").textContent =
+        "Create an Invoice";
 
+    submitInvoiceBtn.innerHTML =
+        '<i class="fa-solid fa-file-invoice"></i> Create Invoice';
+
+    updateDescriptionCounter();
+
+    invoiceFormSection.classList.remove("hidden");
+
+    invoiceFormSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
-
 /* =========================================================
-   MINIMUM DATE
+   CLOSE FORM
 ========================================================= */
 
-function setMinimumDate() {
+function closeInvoiceForm() {
 
-    if (!dueDate) {
+    invoiceFormSection.classList.add("hidden");
 
-        return;
+    invoiceForm.reset();
 
-    }
+    editingInvoiceId = null;
 
-    const today = new Date();
+    invoiceIdInput.readOnly = false;
 
-    const year = today.getFullYear();
-
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-
-    const day = String(today.getDate()).padStart(2, "0");
-
-    dueDate.min = `${year}-${month}-${day}`;
-
+    updateDescriptionCounter();
 }
 
-
 /* =========================================================
-   CREATE / UPDATE INVOICE
+   CREATE OR UPDATE INVOICE
 ========================================================= */
 
 async function handleInvoiceSubmit(event) {
 
     event.preventDefault();
 
-
-    const id = invoiceId.value.trim();
+    const id = invoiceIdInput.value.trim();
     const bookingId = bookingSelect.value;
-    const amount = amountInput.value;
-    const due = dueDate.value;
-    const status = statusSelect.value;
-    const description = descriptionInput.value.trim();
+    const amount = Number(amountInput.value);
+    const dueDate = dueDateInput.value;
 
+    const selectedStatus = statusSelect.value
+        .trim()
+        .toLowerCase();
 
-    /* Validation */
-
-    if (!id) {
+    if (
+        !id ||
+        !bookingId ||
+        !dueDate ||
+        !Number.isFinite(amount) ||
+        amount <= 0 ||
+        !VALID_STATUSES.includes(selectedStatus)
+    ) {
 
         showNotification(
-            "Please enter an Invoice ID.",
+            "Please complete all required fields correctly.",
             "error"
         );
 
         return;
-
     }
 
+    const original = editingInvoiceId
+        ? invoices.find(i => i.invoiceId === editingInvoiceId)
+        : null;
 
-    if (!bookingId) {
+    const booking = bookings.find(
+        b => String(b.bookingId) === String(bookingId)
+    );
+
+    if (!booking) {
 
         showNotification(
-            "Please select a booking.",
+            "The selected booking could not be found.",
             "error"
         );
 
         return;
-
     }
 
+    // UPDATE: send the status to the Java backend.
+    // CREATE: use the existing InvoiceRequest endpoint.
 
-    if (!amount || parseFloat(amount) <= 0) {
+    const invoiceData = editingInvoiceId
+        ? {
+            invoiceId: editingInvoiceId,
+            booking: {
+                bookingId: bookingId
+            },
+            amount: amount,
+            issueDate: original?.issueDate || todayIso(),
+            dueDate: dueDate,
+            invoiceStatus: selectedStatus.toUpperCase()
+        }
+        : {
+            invoiceId: id,
+            bookingId: bookingId,
+            amount: amount,
+            issueDate: todayIso(),
+            dueDate: dueDate
+        };
 
-        showNotification(
-            "Please enter a valid amount.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if (!due) {
-
-        showNotification(
-            "Please select a due date.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if (!status) {
-
-        showNotification(
-            "Please select an invoice status.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const invoiceData = {
-
-        invoiceId: id,
-        bookingId: bookingId,
-        amount: parseFloat(amount),
-        dueDate: due,
-        invoiceStatus: status,
-        description: description || ""
-
-    };
-
+    const wasEditing = Boolean(editingInvoiceId);
 
     try {
 
@@ -658,15 +480,38 @@ async function handleInvoiceSubmit(event) {
         submitInvoiceBtn.innerHTML =
             '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
+        const response = await fetch(
+            wasEditing
+                ? `${INVOICE_API}/update`
+                : `${INVOICE_API}/create`,
+            {
+                method: wasEditing ? "PUT" : "POST",
 
-        let response;
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
+                body: JSON.stringify(invoiceData)
+            }
+        );
 
-        /* UPDATE */
+        if (!response.ok) {
 
-        if (editingInvoiceId) {
+            const details = await response.text();
 
-            response = await fetch(
+            throw new Error(
+                `HTTP ${response.status}: ${details}`
+            );
+        }
+
+        const savedInvoice = await response.json();
+
+        // The current create endpoint starts invoices as Pending.
+        // For another selected status, update the created invoice.
+
+        if (!wasEditing && selectedStatus !== "pending") {
+
+            const updateResponse = await fetch(
                 `${INVOICE_API}/update`,
                 {
                     method: "PUT",
@@ -675,149 +520,120 @@ async function handleInvoiceSubmit(event) {
                         "Content-Type": "application/json"
                     },
 
-                    body: JSON.stringify(invoiceData)
+                    body: JSON.stringify({
+                        invoiceId: savedInvoice.invoiceId || id,
+                        booking: {
+                            bookingId: bookingId
+                        },
+                        amount: amount,
+                        issueDate: savedInvoice.issueDate || todayIso(),
+                        dueDate: dueDate,
+                        invoiceStatus: selectedStatus.toUpperCase()
+                    })
                 }
             );
 
+            if (!updateResponse.ok) {
+
+                const details = await updateResponse.text();
+
+                throw new Error(
+                    `Invoice created, but status update failed: ${details}`
+                );
+            }
         }
 
-        /* CREATE */
+        // Reload and verify what the backend actually saved.
+        await loadInvoices();
 
-        else {
+        const saved = invoices.find(
+            i => String(i.invoiceId) === String(id)
+        );
 
-            response = await fetch(
-                `${INVOICE_API}/create`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(invoiceData)
-                }
-            );
-
+        if (!saved) {
+            throw new Error("Saved invoice not found after refresh.");
         }
 
-
-        if (!response.ok) {
-
-            const errorText = await response.text();
+        if (getInvoiceStatus(saved) !== selectedStatus) {
 
             throw new Error(
-                errorText || `Server error: ${response.status}`
+                "The database returned a different invoice status."
             );
-
         }
 
-
-        const savedInvoice = await response.json();
-
-        console.log("Saved invoice:", savedInvoice);
-
+        closeInvoiceForm();
 
         showNotification(
-            editingInvoiceId
+            wasEditing
                 ? "Invoice updated successfully."
                 : "Invoice created successfully.",
             "success"
         );
-
-
-        closeInvoiceForm();
-
-        await loadInvoices();
-
 
     } catch (error) {
 
         console.error("Error saving invoice:", error);
 
         showNotification(
-            "Unable to save the invoice.",
+            "Invoice could not be fully saved. Check the console.",
             "error"
         );
-
 
     } finally {
 
         submitInvoiceBtn.disabled = false;
 
-        submitInvoiceBtn.innerHTML =
-            editingInvoiceId
-                ? '<i class="fa-solid fa-floppy-disk"></i> Update Invoice'
-                : '<i class="fa-solid fa-file-invoice"></i> Create Invoice';
-
+        submitInvoiceBtn.innerHTML = editingInvoiceId
+            ? '<i class="fa-solid fa-floppy-disk"></i> Update Invoice'
+            : '<i class="fa-solid fa-file-invoice"></i> Create Invoice';
     }
-
 }
 
-
 /* =========================================================
-   RENDER INVOICES
+   RENDER INVOICE TABLE
 ========================================================= */
 
 function renderInvoices() {
 
-    const filteredInvoices = getFilteredInvoices();
+    if (!invoiceTableBody) return;
 
-
-    if (filteredInvoices.length === 0) {
-
-        invoiceTableBody.innerHTML = "";
-
-        emptyState.style.display = "block";
-
-        updateInvoiceCount(0);
-
-        updatePagination(0);
-
-        return;
-
-    }
-
-
-    emptyState.style.display = "none";
-
+    const filtered = getFilteredInvoices();
 
     const totalPages = Math.ceil(
-        filteredInvoices.length / invoicesPerPage
+        filtered.length / invoicesPerPage
     );
 
+    currentPageNumber = Math.max(
+        1,
+        Math.min(currentPageNumber, totalPages || 1)
+    );
 
-    if (currentPageNumber > totalPages) {
+    const start =
+        (currentPageNumber - 1) * invoicesPerPage;
 
-        currentPageNumber = totalPages;
-
-    }
-
-
-    const startIndex = (currentPageNumber - 1) * invoicesPerPage;
-
-    const endIndex = startIndex + invoicesPerPage;
-
-    const pageInvoices = filteredInvoices.slice(startIndex, endIndex);
-
+    const pageInvoices = filtered.slice(
+        start,
+        start + invoicesPerPage
+    );
 
     invoiceTableBody.innerHTML = "";
 
+    if (emptyState) {
+
+        emptyState.style.display =
+            filtered.length === 0 ? "block" : "none";
+    }
 
     pageInvoices.forEach(function (invoice) {
 
-        const row = createInvoiceRow(invoice);
-
-        invoiceTableBody.appendChild(row);
-
+        invoiceTableBody.appendChild(
+            createInvoiceRow(invoice)
+        );
     });
 
-
-    updateInvoiceCount(filteredInvoices.length);
-
-    updatePagination(filteredInvoices.length);
-
+    updateInvoiceCount(filtered.length);
+    updatePagination(filtered.length);
 }
-
 
 /* =========================================================
    FILTER INVOICES
@@ -825,634 +641,540 @@ function renderInvoices() {
 
 function getFilteredInvoices() {
 
-    const search = invoiceSearch.value.trim().toLowerCase();
+    const search =
+        invoiceSearch?.value.trim().toLowerCase() || "";
 
-    const selectedStatus = statusFilter.value;
+    const status =
+        statusFilter?.value.toLowerCase() || "all";
 
-    const selectedDate = dateFilter.value;
-
+    const dateFilterValue =
+        dateFilter?.value || "all";
 
     return invoices.filter(function (invoice) {
 
-        const searchMatch =
+        const invoiceStatus = getInvoiceStatus(invoice);
 
-            !search ||
+        const searchText = [
+            invoice.invoiceId,
+            getBookingId(invoice),
+            getInvoiceDescription(invoice)
+        ].join(" ").toLowerCase();
 
-            String(invoice.invoiceId).toLowerCase().includes(search) ||
-
-            String(invoice.bookingId).toLowerCase().includes(search) ||
-
-            String(invoice.description).toLowerCase().includes(search);
-
+        const searchMatch = searchText.includes(search);
 
         const statusMatch =
-
-            selectedStatus === "all" ||
-
-            invoice.invoiceStatus === selectedStatus;
-
+            status === "all" || invoiceStatus === status;
 
         let dateMatch = true;
 
-        if (selectedDate !== "all") {
+        if (dateFilterValue !== "all" && invoice.dueDate) {
 
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            const due = new Date(invoice.dueDate);
-
-            const diffDays = Math.ceil(
-                (due - today) / (1000 * 60 * 60 * 24)
+            const due = new Date(
+                invoice.dueDate + "T00:00:00"
             );
 
-            if (selectedDate === "today") {
+            const days = Math.round(
+                (due - today) / 86400000
+            );
 
-                dateMatch = diffDays === 0;
-
-            } else if (selectedDate === "week") {
-
-                dateMatch = diffDays >= 0 && diffDays <= 7;
-
-            } else if (selectedDate === "month") {
-
-                dateMatch = diffDays >= 0 && diffDays <= 30;
-
+            if (dateFilterValue === "today") {
+                dateMatch = days === 0;
             }
 
+            if (dateFilterValue === "week") {
+                dateMatch = days >= 0 && days <= 7;
+            }
+
+            if (dateFilterValue === "month") {
+                dateMatch = days >= 0 && days <= 30;
+            }
         }
 
-
         return searchMatch && statusMatch && dateMatch;
-
     });
-
 }
 
-
 /* =========================================================
-   CREATE TABLE ROW
+   CREATE INVOICE TABLE ROW
 ========================================================= */
 
 function createInvoiceRow(invoice) {
 
     const row = document.createElement("tr");
 
+    const status = getInvoiceStatus(invoice);
+    const paid = isInvoicePaid(invoice);
 
-    const status = invoice.invoiceStatus || "pending";
+    const id = escapeHTML(invoice.invoiceId);
+    const bookingId = escapeHTML(getBookingId(invoice));
 
-    const amount = parseFloat(invoice.amount || 0).toFixed(2);
+    const amount = Number(
+        invoice.amount || 0
+    ).toFixed(2);
 
-    const isPaid = status === "paid";
-    const isOverdue = status === "overdue";
-    const isPending = status === "pending";
-
-    let amountClass = "amount";
-
-    if (isPaid) amountClass += " paid";
-    else if (isOverdue) amountClass += " overdue";
-    else if (isPending) amountClass += " pending";
-
+    const statusLabel =
+        status.charAt(0).toUpperCase() + status.slice(1);
 
     row.innerHTML = `
-
         <td>
-
-            <span class="invoice-id">
-                ${escapeHTML(invoice.invoiceId)}
-            </span>
-
+            <span class="invoice-id">${id}</span>
         </td>
 
+        <td>${bookingId}</td>
 
         <td>
-
-            ${escapeHTML(invoice.bookingId)}
-
-        </td>
-
-
-        <td>
-
-            <span class="${amountClass}">
+            <span class="amount ${status}">
                 R ${amount}
             </span>
-
         </td>
 
-
         <td>
-
-            ${formatDate(invoice.dueDate)}
-
+            ${escapeHTML(formatDate(invoice.dueDate))}
         </td>
 
-
         <td>
-
             <span class="status-badge ${status}">
-
-                ${status}
-
+                ${statusLabel}
             </span>
-
         </td>
 
-
         <td>
-
             <div class="table-actions">
 
                 <button
                     type="button"
                     class="table-action"
                     title="View invoice"
-                    onclick="viewInvoice('${invoice.invoiceId}')">
+                    data-action="view">
 
                     <i class="fa-regular fa-eye"></i>
-
                 </button>
-
 
                 <button
                     type="button"
                     class="table-action"
                     title="Edit invoice"
-                    onclick="editInvoice('${invoice.invoiceId}')">
+                    data-action="edit">
 
                     <i class="fa-solid fa-pen"></i>
-
                 </button>
 
-                ${!isPaid ? `
-                <button
-                    type="button"
-                    class="table-action paid-action"
-                    title="Mark as paid"
-                    onclick="markAsPaid('${invoice.invoiceId}')">
+                ${!paid && status !== "cancelled" ? `
+                    <button
+                        type="button"
+                        class="table-action paid-action"
+                        title="Mark as paid"
+                        data-action="paid">
 
-                    <i class="fa-solid fa-check"></i>
-
-                </button>
-                ` : ''}
+                        <i class="fa-solid fa-check"></i>
+                    </button>
+                ` : ""}
 
                 <button
                     type="button"
                     class="table-action delete"
                     title="Delete invoice"
-                    onclick="deleteInvoice('${invoice.invoiceId}')">
+                    data-action="delete">
 
                     <i class="fa-solid fa-trash"></i>
-
                 </button>
 
             </div>
-
         </td>
-
     `;
 
+    row.querySelectorAll(
+        "button[data-action]"
+    ).forEach(function (button) {
+
+        button.dataset.id = invoice.invoiceId;
+    });
 
     return row;
-
 }
-
 
 /* =========================================================
    VIEW INVOICE
 ========================================================= */
 
-function viewInvoice(invoiceId) {
+function viewInvoice(id) {
 
     const invoice = invoices.find(
-        function (item) {
-
-            return item.invoiceId === invoiceId;
-
-        }
+        i => String(i.invoiceId) === String(id)
     );
-
 
     if (!invoice) {
 
+        showNotification("Invoice not found.", "error");
         return;
-
     }
-
 
     viewInvoiceId.textContent = invoice.invoiceId;
 
-    viewBooking.textContent = invoice.bookingId;
+    viewBooking.textContent = getBookingId(invoice);
 
-    viewAmount.textContent = `R ${parseFloat(invoice.amount || 0).toFixed(2)}`;
+    viewAmount.textContent =
+        `R ${Number(invoice.amount).toFixed(2)}`;
 
-    viewDueDate.textContent = formatDate(invoice.dueDate);
+    viewDueDate.textContent =
+        formatDate(invoice.dueDate);
 
-    viewStatus.textContent = invoice.invoiceStatus || "pending";
+    const status = getInvoiceStatus(invoice);
 
-    viewCreatedDate.textContent = formatDate(invoice.createdDate) || "-";
+    viewStatus.textContent =
+        status.charAt(0).toUpperCase() + status.slice(1);
 
-    viewDescription.textContent = invoice.description || "-";
+    viewCreatedDate.textContent =
+        formatDate(invoice.issueDate);
 
+    viewDescription.textContent =
+        getInvoiceDescription(invoice) || "-";
 
     viewInvoiceModal.classList.add("active");
-
 }
-
-
-/* =========================================================
-   CLOSE VIEW MODAL
-========================================================= */
 
 function closeViewModal() {
 
-    viewInvoiceModal.classList.remove("active");
-
+    viewInvoiceModal?.classList.remove("active");
 }
-
 
 /* =========================================================
    EDIT INVOICE
 ========================================================= */
 
-function editInvoice(invoiceId) {
+function editInvoice(id) {
 
     const invoice = invoices.find(
-        function (item) {
-
-            return item.invoiceId === invoiceId;
-
-        }
+        i => String(i.invoiceId) === String(id)
     );
-
 
     if (!invoice) {
 
+        showNotification("Invoice not found.", "error");
         return;
-
     }
-
 
     editingInvoiceId = invoice.invoiceId;
 
-
     invoiceIdInput.value = invoice.invoiceId;
+    invoiceIdInput.readOnly = true;
 
-    bookingSelect.value = invoice.bookingId;
+    bookingSelect.value = getBookingId(invoice);
 
     amountInput.value = invoice.amount;
 
-    dueDate.value = invoice.dueDate;
+    dueDateInput.value = invoice.dueDate;
 
-    statusSelect.value = invoice.invoiceStatus || "pending";
+    // IMPORTANT: show the actual saved status.
+    statusSelect.value = getInvoiceStatus(invoice);
 
-    descriptionInput.value = invoice.description || "";
+    if (descriptionInput) {
 
+        descriptionInput.value =
+            getInvoiceDescription(invoice);
+    }
 
     updateDescriptionCounter();
-
 
     document.getElementById("formTitle").textContent =
         "Update Invoice";
 
-
     submitInvoiceBtn.innerHTML =
         '<i class="fa-solid fa-floppy-disk"></i> Update Invoice';
 
-
     invoiceFormSection.classList.remove("hidden");
-
 
     invoiceFormSection.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
-
 }
 
-
 /* =========================================================
-   MARK AS PAID
+   MARK INVOICE AS PAID
 ========================================================= */
 
-async function markAsPaid(invoiceId) {
+async function markAsPaid(id) {
 
-    const confirmed = confirm(
-        `Mark invoice ${invoiceId} as paid?`
+    const invoice = invoices.find(
+        i => String(i.invoiceId) === String(id)
     );
 
-
-    if (!confirmed) {
-
+    if (!invoice) {
+        showNotification("Invoice not found.", "error");
         return;
-
     }
 
+    if (getInvoiceStatus(invoice) === "cancelled") {
+
+        showNotification(
+            "Cancelled invoices cannot be marked as paid directly.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!confirm(`Mark invoice ${id} as paid?`)) {
+        return;
+    }
 
     try {
 
         const response = await fetch(
-            `${INVOICE_API}/mark-paid/${invoiceId}`,
+            `${INVOICE_API}/mark-paid/${encodeURIComponent(id)}`,
             {
                 method: "PUT"
             }
         );
 
-
         if (!response.ok) {
-
-            throw new Error(
-                `Update failed: ${response.status}`
-            );
-
+            throw new Error(`HTTP ${response.status}`);
         }
-
-
-        showNotification(
-            "Invoice marked as paid.",
-            "success"
-        );
-
 
         await loadInvoices();
 
+        const updated = invoices.find(
+            i => String(i.invoiceId) === String(id)
+        );
+
+        if (!updated || getInvoiceStatus(updated) !== "paid") {
+            throw new Error("Paid status was not saved.");
+        }
+
+        showNotification(
+            "Invoice marked as paid successfully.",
+            "success"
+        );
 
     } catch (error) {
 
-        console.error(
-            "Error updating invoice status:",
-            error
-        );
-
+        console.error("Mark as paid failed:", error);
 
         showNotification(
-            "Unable to update invoice status.",
+            "Unable to confirm invoice payment update.",
             "error"
         );
-
     }
-
 }
-
 
 /* =========================================================
    DELETE INVOICE
 ========================================================= */
 
-async function deleteInvoice(invoiceId) {
+async function deleteInvoice(id) {
 
-    const confirmed = confirm(
-        `Are you sure you want to delete invoice ${invoiceId}?`
-    );
-
-
-    if (!confirmed) {
-
+    if (!confirm(
+        `Are you sure you want to delete invoice ${id}?`
+    )) {
         return;
-
     }
-
 
     try {
 
         const response = await fetch(
-            `${INVOICE_API}/delete/${invoiceId}`,
+            `${INVOICE_API}/delete/${encodeURIComponent(id)}`,
             {
                 method: "DELETE"
             }
         );
 
-
         if (!response.ok) {
-
-            throw new Error(
-                `Delete failed: ${response.status}`
-            );
-
+            throw new Error(`HTTP ${response.status}`);
         }
 
+        const deleted = await response.json();
+
+        if (deleted !== true) {
+            throw new Error("Server did not delete invoice.");
+        }
+
+        await loadInvoices();
 
         showNotification(
             "Invoice deleted successfully.",
             "success"
         );
 
-
-        await loadInvoices();
-
-
     } catch (error) {
 
-        console.error(
-            "Error deleting invoice:",
-            error
-        );
-
+        console.error("Delete invoice failed:", error);
 
         showNotification(
-            "Unable to delete the invoice.",
+            "Unable to delete invoice.",
             "error"
         );
-
     }
-
 }
 
-
 /* =========================================================
-   UPDATE STATISTICS
+   UPDATE DASHBOARD STATISTICS
 ========================================================= */
 
 function updateStatistics() {
 
-    totalInvoices.textContent = invoices.length;
+    const totalCount = invoices.length;
 
+    const countStatus = function (status) {
 
-    paidInvoices.textContent = invoices.filter(
-        function (invoice) {
+        return invoices.filter(function (invoice) {
 
-            return invoice.invoiceStatus === "paid";
+            return getInvoiceStatus(invoice) === status;
 
-        }
-    ).length;
+        }).length;
+    };
 
+    const paidCount = countStatus("paid");
+    const pendingCount = countStatus("pending");
+    const overdueCount = countStatus("overdue");
+    const cancelledCount = countStatus("cancelled");
 
-    pendingInvoices.textContent = invoices.filter(
-        function (invoice) {
-
-            return invoice.invoiceStatus === "pending";
-
-        }
-    ).length;
-
-
-    overdueInvoices.textContent = invoices.filter(
-        function (invoice) {
-
-            return invoice.invoiceStatus === "overdue";
-
-        }
-    ).length;
-
-}
-
-
-/* =========================================================
-   FORMAT DATE
-========================================================= */
-
-function formatDate(dateString) {
-
-    if (!dateString) {
-
-        return "-";
-
+    if (totalInvoices) {
+        totalInvoices.textContent = totalCount;
     }
 
-
-    const date = new Date(dateString);
-
-    if (isNaN(date.getTime())) {
-
-        return dateString;
-
+    if (paidInvoices) {
+        paidInvoices.textContent = paidCount;
     }
 
-
-    const day = String(date.getDate()).padStart(2, "0");
-
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-
-    const year = date.getFullYear();
-
-
-    return `${day}/${month}/${year}`;
-
-}
-
-
-/* =========================================================
-   UPDATE INVOICE COUNT
-========================================================= */
-
-function updateInvoiceCount(count) {
-
-    if (!invoiceCount) {
-
-        return;
-
+    if (pendingInvoices) {
+        pendingInvoices.textContent = pendingCount;
     }
 
-    invoiceCount.textContent =
-        `Showing ${count} invoice${count === 1 ? "" : "s"}`;
+    if (overdueInvoices) {
+        overdueInvoices.textContent = overdueCount;
+    }
 
+    if (cancelledInvoices) {
+        cancelledInvoices.textContent = cancelledCount;
+    }
 }
-
 
 /* =========================================================
    PAGINATION
 ========================================================= */
 
-function updatePagination(totalItems) {
+function updateInvoiceCount(count) {
 
-    const totalPages = Math.ceil(totalItems / invoicesPerPage);
+    if (invoiceCount) {
 
-    currentPage.textContent = currentPageNumber;
-
-    previousPage.disabled = currentPageNumber <= 1;
-
-    nextPage.disabled = currentPageNumber >= totalPages || totalPages === 0;
-
+        invoiceCount.textContent =
+            `Showing ${count} invoice${count === 1 ? "" : "s"}`;
+    }
 }
 
+function updatePagination(count) {
+
+    const pages = Math.ceil(
+        count / invoicesPerPage
+    );
+
+    if (currentPage) {
+        currentPage.textContent = currentPageNumber;
+    }
+
+    if (previousPage) {
+        previousPage.disabled = currentPageNumber <= 1;
+    }
+
+    if (nextPage) {
+
+        nextPage.disabled =
+            pages === 0 || currentPageNumber >= pages;
+    }
+}
 
 /* =========================================================
-   NOTIFICATION
+   HELPERS
 ========================================================= */
+
+function todayIso() {
+
+    const date = new Date();
+
+    const year = date.getFullYear();
+
+    const month = String(
+        date.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+        date.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+function formatDate(value) {
+
+    if (!value) return "-";
+
+    const date = new Date(
+        value + "T00:00:00"
+    );
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function updateDescriptionCounter() {
+
+    if (descriptionCount && descriptionInput) {
+
+        descriptionCount.textContent =
+            `${descriptionInput.value.length} / 500`;
+    }
+}
 
 function showNotification(message, type = "success") {
 
-    const existing = document.querySelector(".invoice-notification");
-
-    if (existing) {
-
-        existing.remove();
-
-    }
-
+    document.querySelector(
+        ".invoice-notification"
+    )?.remove();
 
     const notification = document.createElement("div");
 
-    notification.className = `invoice-notification ${type}`;
-
-    const icon = type === "success" ? "fa-circle-check" : "fa-circle-exclamation";
-
-    notification.innerHTML = `
-
-        <i class="fa-solid ${icon}"></i>
-
-        <span>
-            ${escapeHTML(message)}
-        </span>
-
-    `;
-
+    notification.className =
+        `invoice-notification ${type}`;
 
     notification.style.cssText = `
-
         position: fixed;
         top: 25px;
         right: 25px;
         z-index: 9999;
-
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        padding: 14px 18px;
-
-        border-radius: 10px;
-
         background: white;
-
-        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-
         border: 1px solid #e5e7eb;
-
-        color: ${
-        type === "success"
-            ? "#16a34a"
-            : "#dc2626"
-    };
-
+        border-radius: 10px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         font-size: 13px;
         font-weight: 600;
-
-        animation: notificationIn 0.25s ease;
-
+        color: ${type === "success" ? "#16a34a" : "#dc2626"};
     `;
 
+    notification.textContent = message;
 
     document.body.appendChild(notification);
 
-
     setTimeout(function () {
-
         notification.remove();
-
     }, 3500);
-
 }
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
 
 function escapeHTML(value) {
 
     if (value === null || value === undefined) {
-
         return "";
-
     }
 
     return String(value)
@@ -1461,38 +1183,4 @@ function escapeHTML(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
-
-
-/* =========================================================
-   NOTIFICATION ANIMATION
-========================================================= */
-
-const notificationStyle = document.createElement("style");
-
-notificationStyle.textContent = `
-
-    @keyframes notificationIn {
-
-        from {
-
-            opacity: 0;
-
-            transform: translateX(20px);
-
-        }
-
-        to {
-
-            opacity: 1;
-
-            transform: translateX(0);
-
-        }
-
-    }
-
-`;
-
-document.head.appendChild(notificationStyle);
