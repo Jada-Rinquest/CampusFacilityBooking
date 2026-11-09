@@ -1,20 +1,11 @@
 
 /* =========================================================
    CAMPUS FACILITY BOOKING SYSTEM
-   SHARED SIGN-IN + ROLE PERMISSIONS
-
-   This script:
-   - Checks whether the user is logged in
-   - Identifies students and staff
-   - Redirects users away from incorrect pages
-   - Updates navigation based on account type
-   - Hides staff-only controls from students
-   - Displays the logged-in user's name and role
-   - Preserves the existing logout navigation
+   AUTH.JS - UPDATED VERSION
+   Shared Login, Session and Role Permissions
 ========================================================= */
 
 (function () {
-
     "use strict";
 
     /* =====================================================
@@ -40,9 +31,7 @@
     ===================================================== */
 
     function readUser() {
-
         try {
-
             const storedUser =
                 sessionStorage.getItem("loggedInUser") ||
                 localStorage.getItem("loggedInUser");
@@ -54,12 +43,10 @@
             return JSON.parse(storedUser);
 
         } catch (error) {
-
             console.error(
                 "Unable to read logged-in user:",
                 error
             );
-
             return null;
         }
     }
@@ -69,7 +56,6 @@
     ===================================================== */
 
     function accountTypeOf(user) {
-
         if (user.accountType) {
             return String(user.accountType)
                 .trim()
@@ -80,12 +66,37 @@
             .trim()
             .toLowerCase();
 
-        // Same email convention as AccountType.java
         if (email.endsWith("@cput.ac.za")) {
             return "STAFF";
         }
 
         return "STUDENT";
+    }
+
+    /* =====================================================
+       SESSION HELPERS
+    ===================================================== */
+
+    function clearStoredUser() {
+        [
+            "loggedInUser",
+            "loginId",
+            "registrarId",
+            "username"
+        ].forEach(function (key) {
+            sessionStorage.removeItem(key);
+            localStorage.removeItem(key);
+        });
+    }
+
+    function sessionExpired() {
+        console.warn(
+            "Your login session has expired."
+        );
+
+        clearStoredUser();
+
+        window.location.replace("index.html");
     }
 
     /* =====================================================
@@ -95,64 +106,63 @@
     const user = readUser();
 
     if (!user || !user.userId) {
+        console.warn(
+            "No valid user information found."
+        );
 
         window.location.replace("index.html");
-
         return;
     }
 
     /* =====================================================
        SERVER SESSION CHECK
-
-       The stored user only decides what the page shows.
-       The server enforces access on every request using the
-       session cookie. If the server answers 401 (session
-       expired, server restarted, signed out elsewhere), the
-       local copy is out of date: clear it and sign in again.
     ===================================================== */
 
     const originalFetch = window.fetch.bind(window);
 
-    function sessionExpired() {
+    // Do not log out because an unrelated API returns 401.
+    // Authentication is checked separately through /auth/me.
 
-        ["loggedInUser", "loginId", "registrarId", "username"]
-            .forEach(function (key) {
-                sessionStorage.removeItem(key);
-                localStorage.removeItem(key);
-            });
-
-        window.location.replace("index.html");
-    }
-
-    window.fetch = function (input, init) {
-
-        return originalFetch(input, init).then(function (response) {
-
-            if (response.status === 401) {
-                sessionExpired();
-            }
-
-            return response;
-        });
-    };
-
-    // Confirm the session is still valid when the page opens
-    originalFetch("/auth/me", { credentials: "same-origin" })
+    originalFetch("/auth/me", {
+        method: "GET",
+        credentials: "same-origin",
+        cache: "no-store"
+    })
         .then(function (response) {
+
             if (response.status === 401) {
+                console.error(
+                    "Server rejected the login session."
+                );
+
                 sessionExpired();
+                return;
             }
+
+            if (!response.ok) {
+                console.error(
+                    "Session verification failed:",
+                    response.status
+                );
+                return;
+            }
+
+            console.log(
+                "Login session verified successfully."
+            );
         })
-        .catch(function () {
-            /* server not reachable - the page shows its own error */
+        .catch(function (error) {
+            console.error(
+                "Unable to verify server session:",
+                error
+            );
         });
 
     /* =====================================================
-       DETERMINE ROLE AND CURRENT PAGE
+       DETERMINE USER ROLE
     ===================================================== */
 
     const accountType = accountTypeOf(user);
-
     const isStudent = accountType === "STUDENT";
 
     const page =
@@ -166,15 +176,10 @@
     if (isStudent && STAFF_ONLY_PAGES.includes(page)) {
 
         if (page === "facility.html") {
-
-            // Students have a separate facility browsing page
             window.location.replace(
                 "student-facility.html"
             );
-
         } else {
-
-            // Other staff-only pages
             window.location.replace(
                 "student-dashboard.html"
             );
@@ -190,12 +195,8 @@
     if (!isStudent && STUDENT_ONLY_PAGES.includes(page)) {
 
         if (page === "student-facility.html") {
-
-            // Staff use the facility management page
             window.location.replace("facility.html");
-
         } else {
-
             window.location.replace(
                 "staff-dashboard.html"
             );
@@ -222,25 +223,19 @@
         );
 
     /* =====================================================
-       MAKE CURRENT USER AVAILABLE TO OTHER SCRIPTS
+       MAKE CURRENT USER AVAILABLE
     ===================================================== */
 
     window.currentUser = {
-
         ...user,
-
         accountType: isStudent ? "STUDENT" : "STAFF",
-
         isStudent: isStudent,
-
         fullName: fullName,
-
         roleLabel: roleLabel
-
     };
 
     /* =====================================================
-       HIDE STAFF-ONLY CONTROLS FOR STUDENTS
+       HIDE STAFF-ONLY CONTROLS
     ===================================================== */
 
     if (isStudent) {
@@ -275,30 +270,22 @@
 
             if (isStudent) {
 
-                // Send students to the Student Facilities page
                 document.querySelectorAll(
                     'a[href="facility.html"]'
                 ).forEach(function (link) {
-
                     link.setAttribute(
                         "href",
                         "student-facility.html"
                     );
-
                 });
 
-                // Hide staff-only navigation links
                 const staffOnlyLinks = STAFF_ONLY_PAGES
                     .filter(function (p) {
-
                         return p !== "staff-dashboard.html" &&
                             p !== "facility.html";
-
                     })
                     .map(function (p) {
-
                         return 'a[href="' + p + '"]';
-
                     })
                     .join(", ");
 
@@ -313,54 +300,41 @@
                         );
 
                         (card || link).remove();
-
                     });
                 }
 
-                // Student dashboard navigation
                 document.querySelectorAll(
                     'a[href="staff-dashboard.html"]'
                 ).forEach(function (link) {
-
                     link.setAttribute(
                         "href",
                         "student-dashboard.html"
                     );
-
                 });
 
-            }
+            } else {
 
-            /* =============================================
-               STAFF NAVIGATION
-            ============================================= */
+                /* =============================================
+                   STAFF NAVIGATION
+                ============================================= */
 
-            else {
-
-                // Staff use the Facility Management page
                 document.querySelectorAll(
                     'a[href="student-facility.html"]'
                 ).forEach(function (link) {
-
                     link.setAttribute(
                         "href",
                         "facility.html"
                     );
-
                 });
 
-                // Staff dashboard navigation
                 document.querySelectorAll(
                     'a[href="student-dashboard.html"]'
                 ).forEach(function (link) {
-
                     link.setAttribute(
                         "href",
                         "staff-dashboard.html"
                     );
-
                 });
-
             }
 
             /* =============================================
@@ -370,12 +344,10 @@
             document.querySelectorAll(
                 "a.logout"
             ).forEach(function (link) {
-
                 link.setAttribute(
                     "href",
                     "login.html"
                 );
-
             });
 
             /* =============================================
@@ -396,9 +368,7 @@
             ============================================= */
 
             setText("topbarName", fullName);
-
             setText("topbarRole", roleLabel);
-
             setText("topbarInitials", initials);
 
             const avatarSpan =
@@ -407,9 +377,7 @@
                 );
 
             if (avatarSpan) {
-
                 avatarSpan.textContent = initials;
-
             }
 
             /* =============================================
@@ -439,29 +407,20 @@
                         avatar.querySelector("span");
 
                     if (avatarText) {
-
                         avatarText.textContent = initials;
-
                     } else {
-
                         avatar.textContent = initials;
-
                     }
                 }
 
                 if (name) {
-
                     name.textContent = fullName;
-
                 }
 
                 if (role) {
-
                     role.textContent = roleLabel;
-
                 }
             }
-
         }
     );
 
@@ -474,9 +433,7 @@
         const element = document.getElementById(id);
 
         if (element) {
-
             element.textContent = value;
-
         }
     }
 
