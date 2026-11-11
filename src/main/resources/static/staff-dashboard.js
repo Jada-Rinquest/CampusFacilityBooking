@@ -1,39 +1,76 @@
-const API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
-    ? (window.location.port === "8080" ? "" : "http://localhost:8080")
+
+/* =========================================================
+   STAFF DASHBOARD JAVASCRIPT
+   Campus Facility Booking System
+========================================================= */
+
+const API_URL = (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+)
+    ? (window.location.port === "8080"
+        ? ""
+        : "http://localhost:8080")
     : window.location.origin;
 
 
-/* =========================
-   DASHBOARD OVERVIEW
-========================= */
+/* =========================================================
+   DASHBOARD INITIALIZATION
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     loadSignedInStaff();
-
     loadOverview();
 
-    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-    const sidebar = document.querySelector(".sidebar");
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
+
+    const sidebar =
+        document.querySelector(".sidebar");
 
     if (mobileMenuBtn && sidebar) {
-        mobileMenuBtn.addEventListener("click", () => sidebar.classList.toggle("open"));
+
+        mobileMenuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+        });
+
     }
+
 });
 
 
+/* =========================================================
+   LOGGED-IN USER
+========================================================= */
+
 function getSignedInUser() {
 
+    if (window.currentUser) {
+        return window.currentUser;
+    }
+
     try {
+
         return JSON.parse(
             sessionStorage.getItem("loggedInUser") ||
-            localStorage.getItem("loggedInUser")
+            localStorage.getItem("loggedInUser") ||
+            "null"
         );
+
     } catch (error) {
+
+        console.error("Unable to read logged-in user:", error);
         return null;
+
     }
+
 }
 
+
+/* =========================================================
+   LOAD STAFF INFORMATION
+========================================================= */
 
 function loadSignedInStaff() {
 
@@ -43,50 +80,100 @@ function loadSignedInStaff() {
         return;
     }
 
-    const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username;
+    const name =
+        `${user.firstName || ""} ${user.lastName || ""}`.trim()
+        || user.username
+        || "Staff Member";
+
     const parts = name.split(/\s+/);
+
     const initials = parts.length > 1
         ? parts[0][0] + parts[parts.length - 1][0]
         : name.substring(0, 2);
 
     setText("topbarName", name);
     setText("topbarInitials", initials.toUpperCase());
-    setText("topbarRole", user.role === "ADMIN" ? "Administrator" : "Staff");
-    setText("welcomeText", `Welcome back, ${user.firstName || name}.`);
+
+    setText(
+        "topbarRole",
+        user.role === "ADMIN" ? "Administrator" : "Staff"
+    );
+
+    setText(
+        "welcomeText",
+        `Welcome back, ${user.firstName || name}.`
+    );
+
+    setText(
+        "staffWelcomeName",
+        user.firstName || name
+    );
+
 }
 
 
+/* =========================================================
+   DASHBOARD OVERVIEW
+========================================================= */
+
 async function loadOverview() {
 
-    const user = getSignedInUser();
+    const [
+        bookings,
+        facilities,
+        equipment,
+        users
+    ] = await Promise.all([
 
-    const [bookings, facilities, equipment, users, notifications] = await Promise.all([
         fetchList("booking"),
         fetchList("facility"),
         fetchList("equipment"),
-        fetchList("user"),
-        fetchList("notification")
+        fetchList("user")
+
     ]);
 
     setText("totalBookings", bookings.length);
     setText("totalFacilities", facilities.length);
     setText("totalEquipment", equipment.length);
     setText("totalUsers", users.length);
-    setText(
-        "notificationCount",
-        user ? notifications.filter((n) => n.userId === user.userId).length : 0
-    );
+
+    /*
+       IMPORTANT:
+
+       The notification bell is managed by
+       notification-badge.js.
+
+       Do not calculate or overwrite the
+       notification count in this file.
+
+       This ensures that all staff and student
+       pages show the same unread count.
+    */
+
 }
 
+
+/* =========================================================
+   FETCH DATA FROM BACKEND
+========================================================= */
 
 async function fetchList(resource) {
 
     try {
 
-        const response = await fetch(`${API_URL}/${resource}/all`);
+        const response = await fetch(
+            `${API_URL}/${resource}/all`,
+            {
+                cache: "no-store"
+            }
+        );
 
         if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
+
+            throw new Error(
+                `Request failed: ${response.status}`
+            );
+
         }
 
         const data = await response.json();
@@ -95,56 +182,91 @@ async function fetchList(resource) {
 
     } catch (error) {
 
-        console.error(`Could not load ${resource}:`, error);
+        console.error(
+            `Could not load ${resource}:`,
+            error
+        );
 
         return [];
+
     }
+
 }
 
 
+/* =========================================================
+   UPDATE ELEMENT TEXT
+========================================================= */
+
 function setText(elementId, value) {
 
-    const element = document.getElementById(elementId);
+    const element =
+        document.getElementById(elementId);
 
     if (element) {
         element.textContent = value;
     }
+
 }
 
 
-/* =========================
+/* =========================================================
    SCREEN NAVIGATION
-========================= */
+========================================================= */
 
 function showSection(sectionId) {
 
-    document.getElementById(sectionId).style.display = "block";
+    const section =
+        document.getElementById(sectionId);
+
+    if (!section) {
+        return;
+    }
+
+    section.style.display = "block";
 
     window.scrollTo({
-        top: document.getElementById(sectionId).offsetTop - 20,
+        top: section.offsetTop - 20,
         behavior: "smooth"
     });
+
 }
 
 
 function hideSection(sectionId) {
 
-    document.getElementById(sectionId).style.display = "none";
+    const section =
+        document.getElementById(sectionId);
+
+    if (section) {
+        section.style.display = "none";
+    }
+
 }
 
 
-/* =========================
-   DEPARTMENT
-========================= */
+/* =========================================================
+   DEPARTMENT MANAGEMENT
+========================================================= */
+
+/* CREATE DEPARTMENT */
 
 async function createDepartment() {
 
     const department = {
-        departmentId: document.getElementById("departmentId").value,
-        name: document.getElementById("departmentName").value,
-        building: document.getElementById("building").value,
+
+        departmentId:
+        document.getElementById("departmentId").value,
+
+        name:
+        document.getElementById("departmentName").value,
+
+        building:
+        document.getElementById("building").value,
+
         headOfDepartment:
         document.getElementById("headOfDepartment").value
+
     };
 
     try {
@@ -183,9 +305,13 @@ async function createDepartment() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* READ DEPARTMENT */
 
 async function readDepartment() {
 
@@ -201,6 +327,7 @@ async function readDepartment() {
         );
 
         return;
+
     }
 
     try {
@@ -230,13 +357,18 @@ async function readDepartment() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* UPDATE DEPARTMENT */
 
 async function updateDepartment() {
 
     const department = {
+
         departmentId:
         document.getElementById("departmentId").value,
 
@@ -248,6 +380,7 @@ async function updateDepartment() {
 
         headOfDepartment:
         document.getElementById("headOfDepartment").value
+
     };
 
     try {
@@ -286,9 +419,13 @@ async function updateDepartment() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* DELETE DEPARTMENT */
 
 async function deleteDepartment() {
 
@@ -304,9 +441,12 @@ async function deleteDepartment() {
         );
 
         return;
+
     }
 
-    if (!confirm("Are you sure you want to delete this department?")) {
+    if (!confirm(
+        "Are you sure you want to delete this department?"
+    )) {
         return;
     }
 
@@ -333,9 +473,12 @@ async function deleteDepartment() {
                 "success"
             );
 
-            document.getElementById(
-                "departmentResult"
-            ).innerHTML = "No department selected.";
+            const result =
+                document.getElementById("departmentResult");
+
+            if (result) {
+                result.innerHTML = "No department selected.";
+            }
 
         } else {
 
@@ -344,6 +487,7 @@ async function deleteDepartment() {
                 "Department was not found.",
                 "error"
             );
+
         }
 
     } catch (error) {
@@ -353,9 +497,13 @@ async function deleteDepartment() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* DISPLAY DEPARTMENT */
 
 function displayDepartment(department) {
 
@@ -382,8 +530,8 @@ function displayDepartment(department) {
             <strong>Head of Department:</strong>
             ${department.headOfDepartment}
         </p>
-    `;
 
+    `;
 
     document.getElementById(
         "departmentId"
@@ -400,12 +548,15 @@ function displayDepartment(department) {
     document.getElementById(
         "headOfDepartment"
     ).value = department.headOfDepartment;
+
 }
 
 
-/* =========================
-   STUDENT
-========================= */
+/* =========================================================
+   STUDENT MANAGEMENT
+========================================================= */
+
+/* CREATE STUDENT */
 
 async function createStudent() {
 
@@ -413,6 +564,7 @@ async function createStudent() {
         document.getElementById("studentDepartment").value;
 
     const student = {
+
         studentId:
         document.getElementById("studentId").value,
 
@@ -431,6 +583,7 @@ async function createStudent() {
         department: {
             departmentId: departmentId
         }
+
     };
 
     try {
@@ -469,9 +622,13 @@ async function createStudent() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* READ STUDENT */
 
 async function readStudent() {
 
@@ -487,6 +644,7 @@ async function readStudent() {
         );
 
         return;
+
     }
 
     try {
@@ -516,9 +674,13 @@ async function readStudent() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* UPDATE STUDENT */
 
 async function updateStudent() {
 
@@ -545,6 +707,7 @@ async function updateStudent() {
         department: {
             departmentId: departmentId
         }
+
     };
 
     try {
@@ -583,9 +746,13 @@ async function updateStudent() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* DELETE STUDENT */
 
 async function deleteStudent() {
 
@@ -601,9 +768,12 @@ async function deleteStudent() {
         );
 
         return;
+
     }
 
-    if (!confirm("Are you sure you want to delete this student?")) {
+    if (!confirm(
+        "Are you sure you want to delete this student?"
+    )) {
         return;
     }
 
@@ -630,9 +800,12 @@ async function deleteStudent() {
                 "success"
             );
 
-            document.getElementById(
-                "studentResult"
-            ).innerHTML = "No student selected.";
+            const result =
+                document.getElementById("studentResult");
+
+            if (result) {
+                result.innerHTML = "No student selected.";
+            }
 
         } else {
 
@@ -641,6 +814,7 @@ async function deleteStudent() {
                 "Student was not found.",
                 "error"
             );
+
         }
 
     } catch (error) {
@@ -650,9 +824,13 @@ async function deleteStudent() {
             error.message,
             "error"
         );
+
     }
+
 }
 
+
+/* DISPLAY STUDENT */
 
 function displayStudent(student) {
 
@@ -662,6 +840,7 @@ function displayStudent(student) {
 
         departmentText =
             student.department.departmentId;
+
     }
 
     document.getElementById(
@@ -693,8 +872,8 @@ function displayStudent(student) {
             <strong>Department:</strong>
             ${departmentText}
         </p>
-    `;
 
+    `;
 
     document.getElementById(
         "studentId"
@@ -722,25 +901,26 @@ function displayStudent(student) {
             "studentDepartment"
         ).value =
             student.department.departmentId;
+
     }
+
 }
 
 
-/* =========================
-   MESSAGES
-========================= */
+/* =========================================================
+   DISPLAY SUCCESS AND ERROR MESSAGES
+========================================================= */
 
-function showMessage(
-    elementId,
-    message,
-    type
-) {
+function showMessage(elementId, message, type) {
 
     const element =
         document.getElementById(elementId);
 
-    element.style.display = "block";
+    if (!element) {
+        return;
+    }
 
+    element.style.display = "block";
     element.textContent = message;
 
     if (type === "success") {
@@ -752,5 +932,7 @@ function showMessage(
 
         element.style.backgroundColor = "#FEE2E2";
         element.style.color = "#991B1B";
+
     }
+
 }

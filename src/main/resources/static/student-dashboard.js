@@ -1,31 +1,43 @@
+
 /* =========================================================
    CAMPUS FACILITY BOOKING
    STUDENT DASHBOARD JAVASCRIPT
-   (wrapped in a function so its names can't clash with auth.js)
 ========================================================= */
 
 (function () {
 
     "use strict";
 
-    const API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
-        ? (window.location.port === "8080" ? "" : "http://localhost:8080")
+    const API_URL = (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+    )
+        ? (window.location.port === "8080"
+            ? ""
+            : "http://localhost:8080")
         : window.location.origin;
 
     const SIGN_IN_PAGE = "index.html";
     const STAFF_DASHBOARD = "staff-dashboard.html";
 
-    // Everything script.js stores at sign-in
-    const STORED_KEYS = ["loggedInUser", "loginId", "registrarId", "username"];
+    const STORED_KEYS = [
+        "loggedInUser",
+        "loginId",
+        "registrarId",
+        "username"
+    ];
 
-    const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const MONTHS = [
+        "JAN", "FEB", "MAR", "APR",
+        "MAY", "JUN", "JUL", "AUG",
+        "SEP", "OCT", "NOV", "DEC"
+    ];
 
     const UPCOMING_LIMIT = 3;
     const NOTIFICATION_LIMIT = 3;
 
-
     /* =====================================================
-       START
+       INITIALIZATION
     ===================================================== */
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -37,17 +49,24 @@
         }
 
         showUser(user);
-
         loadDashboard(user);
 
-        const menuButton = document.getElementById("mobileMenuBtn");
-        const sidebar = document.querySelector(".sidebar");
+        const menuButton =
+            document.getElementById("mobileMenuBtn");
+
+        const sidebar =
+            document.querySelector(".sidebar");
 
         if (menuButton && sidebar) {
-            menuButton.addEventListener("click", () => sidebar.classList.toggle("open"));
+
+            menuButton.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
+            });
+
         }
 
-        const logoutLink = document.getElementById("logoutLink");
+        const logoutLink =
+            document.getElementById("logoutLink");
 
         if (logoutLink) {
             logoutLink.addEventListener("click", signOut);
@@ -55,26 +74,33 @@
 
     });
 
-
     /* =====================================================
-       WHO IS SIGNED IN
+       LOGGED-IN USER
     ===================================================== */
 
     function getSignedInUser() {
 
+        if (window.currentUser) {
+            return window.currentUser;
+        }
+
         try {
+
             return JSON.parse(
                 sessionStorage.getItem("loggedInUser") ||
-                localStorage.getItem("loggedInUser")
+                localStorage.getItem("loggedInUser") ||
+                "null"
             );
+
         } catch (error) {
+
+            console.error("Unable to read user:", error);
             return null;
+
         }
 
     }
 
-
-    // Only a signed-in student may stay on this page
     function requireStudent() {
 
         const user = getSignedInUser();
@@ -93,28 +119,33 @@
 
     }
 
-
     function signOut() {
 
-        // Clear the saved session, otherwise "Logout" leaves the user signed in
         STORED_KEYS.forEach((key) => {
+
             sessionStorage.removeItem(key);
             localStorage.removeItem(key);
+
         });
 
     }
 
+    /* =====================================================
+       STUDENT PROFILE
+    ===================================================== */
 
     function showUser(user) {
 
-        const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username || "Student";
+        const name =
+            `${user.firstName || ""} ${user.lastName || ""}`.trim()
+            || user.username
+            || "Student";
 
         setText("welcomeName", name);
         setText("topbarName", name);
         setText("topbarInitials", initialsOf(name));
 
     }
-
 
     function initialsOf(name) {
 
@@ -124,10 +155,12 @@
             return parts[0].substring(0, 2).toUpperCase();
         }
 
-        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        return (
+            parts[0][0] +
+            parts[parts.length - 1][0]
+        ).toUpperCase();
 
     }
-
 
     /* =====================================================
        DASHBOARD DATA
@@ -135,47 +168,96 @@
 
     async function loadDashboard(user) {
 
-        const [bookings, facilities, notifications, timeSlots] = await Promise.all([
+        const [
+            bookings,
+            facilities,
+            notifications,
+            timeSlots
+        ] = await Promise.all([
+
             fetchList("booking"),
             fetchList("facility"),
             fetchList("notification"),
             fetchList("timeslot")
+
         ]);
 
-        // Only this student's own records
-        const myBookings = bookings.filter((b) => sameId(b.userId, user.userId));
-        const myNotifications = notifications.filter((n) => sameId(n.userId, user.userId));
+        const myBookings = bookings.filter(
+            (booking) => sameId(
+                booking.userId,
+                user.userId
+            )
+        );
 
-        const slotsById = indexBy(timeSlots, "timeSlotId");
-        const facilitiesById = indexBy(facilities, "facilityId");
+        const myNotifications = notifications.filter(
+            (notification) => sameId(
+                notification.userId,
+                user.userId
+            )
+        );
+
+        const slotsById =
+            indexBy(timeSlots, "timeSlotId");
+
+        const facilitiesById =
+            indexBy(facilities, "facilityId");
 
         const upcoming = myBookings
-            .map((b) => ({
-                booking: b,
-                slot: slotsById[b.timeSlotId],
-                facility: facilitiesById[b.facilityId]
+
+            .map((booking) => ({
+
+                booking: booking,
+
+                slot:
+                    slotsById[booking.timeSlotId],
+
+                facility:
+                    facilitiesById[booking.facilityId]
+
             }))
-            .filter((item) => isUpcoming(item.booking, item.slot))
-            .sort((a, b) => dateOf(a.slot) - dateOf(b.slot));
+
+            .filter((item) =>
+                isUpcoming(item.booking, item.slot)
+            )
+
+            .sort((a, b) =>
+                dateOf(a.slot) - dateOf(b.slot)
+            );
 
         setText("totalBookings", myBookings.length);
         setText("upcomingBookings", upcoming.length);
         setText("availableFacilities", facilities.length);
 
-        renderBookings(upcoming.slice(0, UPCOMING_LIMIT));
+        renderBookings(
+            upcoming.slice(0, UPCOMING_LIMIT)
+        );
+
         renderNotifications(myNotifications);
 
-    }
+        // The shared script controls the bell.
+        if (window.updateNotificationBadge) {
+            window.updateNotificationBadge();
+        }
 
+    }
 
     async function fetchList(resource) {
 
         try {
 
-            const response = await fetch(`${API_URL}/${resource}/all`);
+            const response = await fetch(
+                `${API_URL}/${resource}/all`,
+                {
+                    cache: "no-store"
+                }
+            );
 
             if (!response.ok) {
-                throw new Error(`Request failed: ${response.status}`);
+
+                throw new Error(
+                    `Request failed: ${response.status}`
+                );
+
             }
 
             const data = await response.json();
@@ -184,7 +266,10 @@
 
         } catch (error) {
 
-            console.error(`Could not load ${resource}:`, error);
+            console.error(
+                `Could not load ${resource}:`,
+                error
+            );
 
             return [];
 
@@ -192,9 +277,8 @@
 
     }
 
-
     /* =====================================================
-       BOOKINGS
+       UPCOMING BOOKINGS
     ===================================================== */
 
     function isUpcoming(booking, slot) {
@@ -203,22 +287,25 @@
             return false;
         }
 
-        const status = String(booking.bookingStatus || "").toUpperCase();
+        const status = String(
+            booking.bookingStatus || ""
+        ).toUpperCase();
 
-        if (status === "CANCELLED" || status === "REJECTED") {
+        if (
+            status === "CANCELLED" ||
+            status === "REJECTED"
+        ) {
             return false;
         }
 
         const today = new Date();
+
         today.setHours(0, 0, 0, 0);
 
         return dateOf(slot) >= today;
 
     }
 
-
-    // Read a date as a local date so the day never shifts.
-    // Handles "2026-09-03", "2026-09-03T10:00:00" and [2026, 9, 3].
     function dateOf(slot) {
 
         const none = new Date(8640000000000000);
@@ -230,9 +317,16 @@
         let parts;
 
         if (Array.isArray(slot.date)) {
+
             parts = slot.date.map(Number);
+
         } else {
-            parts = String(slot.date).split("T")[0].split("-").map(Number);
+
+            parts = String(slot.date)
+                .split("T")[0]
+                .split("-")
+                .map(Number);
+
         }
 
         const [year, month, day] = parts;
@@ -245,57 +339,100 @@
 
     }
 
-
-    // Handles "10:00:00" and [10, 0]
     function timeText(value) {
 
-        if (value === undefined || value === null || value === "") {
+        if (
+            value === undefined ||
+            value === null ||
+            value === ""
+        ) {
             return "";
         }
 
         if (Array.isArray(value)) {
-            return value.slice(0, 2).map((n) => String(n).padStart(2, "0")).join(":");
+
+            return value.slice(0, 2)
+                .map((number) =>
+                    String(number).padStart(2, "0")
+                )
+                .join(":");
+
         }
 
         return String(value).slice(0, 5);
 
     }
 
-
     function renderBookings(items) {
 
-        const list = document.getElementById("bookingList");
-        const empty = document.getElementById("emptyBookings");
+        const list =
+            document.getElementById("bookingList");
+
+        const empty =
+            document.getElementById("emptyBookings");
 
         if (!list) {
             return;
         }
 
         if (items.length === 0) {
+
             list.innerHTML = "";
-            if (empty) empty.style.display = "block";
+
+            if (empty) {
+                empty.style.display = "block";
+            }
+
             return;
+
         }
 
-        if (empty) empty.style.display = "none";
+        if (empty) {
+            empty.style.display = "none";
+        }
 
-        list.innerHTML = items.map(({ booking, slot, facility }) => {
+        list.innerHTML = items.map((item) => {
+
+            const { booking, slot, facility } = item;
 
             const date = dateOf(slot);
-            const month = MONTHS[date.getMonth()] || "";
-            const day = String(date.getDate()).padStart(2, "0");
 
-            const facilityName = (facility && (facility.name || facility.facilityName))
-                || (booking.facility && booking.facility.name)
-                || "Facility booking";
+            const month =
+                MONTHS[date.getMonth()] || "";
 
-            const place = facility && (facility.location || facility.building);
+            const day = String(
+                date.getDate()
+            ).padStart(2, "0");
 
-            const start = slot ? timeText(slot.startTime) : "";
-            const end = slot ? timeText(slot.endTime) : "";
-            const time = start && end ? `${start} - ${end}` : start;
+            const facilityName =
+                (
+                    facility &&
+                    (facility.name || facility.facilityName)
+                ) ||
+                (
+                    booking.facility &&
+                    booking.facility.name
+                ) ||
+                "Facility booking";
 
-            const status = String(booking.bookingStatus || "PENDING").toUpperCase();
+            const place =
+                facility &&
+                (facility.location || facility.building);
+
+            const start =
+                slot ? timeText(slot.startTime) : "";
+
+            const end =
+                slot ? timeText(slot.endTime) : "";
+
+            const time =
+                start && end
+                    ? `${start} - ${end}`
+                    : start;
+
+            const status = String(
+                booking.bookingStatus || "PENDING"
+            ).toUpperCase();
 
             return `
                 <div class="booking-item">
@@ -306,23 +443,48 @@
                     </div>
 
                     <div class="booking-info">
-                        <strong>${esc(facilityName)}</strong>
-                        ${time ? `<span><i class="fa-regular fa-clock"></i> ${esc(time)}</span>` : ""}
-                        ${place ? `<span><i class="fa-solid fa-location-dot"></i> ${esc(place)}</span>` : ""}
+
+                        <strong>
+                            ${esc(facilityName)}
+                        </strong>
+
+                        ${
+                time
+                    ? `<span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    ${esc(time)}
+                                   </span>`
+                    : ""
+            }
+
+                        ${
+                place
+                    ? `<span>
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    ${esc(place)}
+                                   </span>`
+                    : ""
+            }
+
                     </div>
 
-                    <span class="status-badge ${statusClass(status)}">${esc(titleCase(status))}</span>
+                    <span class="status-badge ${statusClass(status)}">
+                        ${esc(titleCase(status))}
+                    </span>
 
-                </div>`;
+                </div>
+            `;
 
         }).join("");
 
     }
 
-
     function statusClass(status) {
 
-        if (status === "APPROVED" || status === "CONFIRMED") {
+        if (
+            status === "APPROVED" ||
+            status === "CONFIRMED"
+        ) {
             return "confirmed";
         }
 
@@ -334,118 +496,204 @@
 
     }
 
-
     /* =====================================================
        NOTIFICATIONS
     ===================================================== */
 
     function renderNotifications(mine) {
 
-        const list = document.getElementById("notificationList");
+        const list =
+            document.getElementById("notificationList");
 
-        // Newest first, if the records carry a date
-        const sorted = mine.slice().sort((a, b) => notificationDate(b) - notificationDate(a));
+        const sorted = mine.slice().sort(
+            (a, b) =>
+                notificationDate(b) -
+                notificationDate(a)
+        );
 
-        // Count unread only if the records say which are read
-        const hasReadFlag = mine.some((n) => readFlagOf(n) !== undefined);
-        const unreadCount = hasReadFlag
-            ? mine.filter((n) => readFlagOf(n) === false).length
-            : mine.length;
+        const unreadCount = mine.filter(
+            (notification) =>
+                readFlagOf(notification) === false
+        ).length;
 
-        setText("unreadNotifications", unreadCount);
+        // Dashboard statistics only.
+        setText(
+            "unreadNotifications",
+            unreadCount
+        );
 
-        const badge = document.getElementById("topbarNotificationCount");
+        /*
+           IMPORTANT:
 
-        if (badge) {
-            badge.textContent = unreadCount;
-            badge.style.display = unreadCount > 0 ? "" : "none";
-        }
+           Do not update topbarNotificationCount
+           directly here.
+
+           notification-badge.js controls the
+           unread bell count on every page.
+        */
 
         if (!list) {
             return;
         }
 
         if (sorted.length === 0) {
-            list.innerHTML = `<p class="empty-note">You have no notifications.</p>`;
+
+            list.innerHTML = `
+                <p class="empty-note">
+                    You have no notifications.
+                </p>
+            `;
+
             return;
+
         }
 
-        list.innerHTML = sorted.slice(0, NOTIFICATION_LIMIT).map((n) => {
+        list.innerHTML = sorted
+            .slice(0, NOTIFICATION_LIMIT)
+            .map((notification) => {
 
-            const title = n.title || n.subject || n.type || "Notification";
-            const message = n.message || n.description || n.content || "";
-            const when = notificationDate(n);
-            const unread = readFlagOf(n) === false;
+                const title =
+                    notification.title ||
+                    notification.subject ||
+                    notification.type ||
+                    "Notification";
 
-            return `
-                <div class="notification-item">
+                const message =
+                    notification.message ||
+                    notification.description ||
+                    notification.content ||
+                    "";
 
-                    <div class="notification-icon system">
-                        <i class="fa-solid fa-circle-info"></i>
+                const when =
+                    notificationDate(notification);
+
+                const unread =
+                    readFlagOf(notification) === false;
+
+                return `
+                    <div class="notification-item">
+
+                        <div class="notification-icon system">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+
+                        <div class="notification-content">
+
+                            <strong>
+                                ${esc(title)}
+                            </strong>
+
+                            ${
+                    message
+                        ? `<p>${esc(message)}</p>`
+                        : ""
+                }
+
+                            ${
+                    when > 0
+                        ? `<span>
+                                        ${esc(
+                            new Date(when).toLocaleString(
+                                "en-ZA",
+                                {
+                                    dateStyle: "medium",
+                                    timeStyle: "short"
+                                }
+                            )
+                        )}
+                                       </span>`
+                        : ""
+                }
+
+                        </div>
+
+                        ${
+                    unread
+                        ? `<span class="unread-dot"></span>`
+                        : ""
+                }
+
                     </div>
+                `;
 
-                    <div class="notification-content">
-                        <strong>${esc(title)}</strong>
-                        ${message ? `<p>${esc(message)}</p>` : ""}
-                        ${when > 0 ? `<span>${esc(new Date(when).toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" }))}</span>` : ""}
-                    </div>
-
-                    ${unread ? `<span class="unread-dot"></span>` : ""}
-
-                </div>`;
-
-        }).join("");
+            })
+            .join("");
 
     }
 
+    function notificationDate(notification) {
 
-    function notificationDate(n) {
+        const raw =
+            notification.createdAt ||
+            notification.dateTime ||
+            notification.timestamp ||
+            notification.date ||
+            notification.sentDate;
 
-        const raw = n.createdAt || n.dateTime || n.timestamp || n.date;
-        const time = raw ? new Date(raw).getTime() : 0;
+        const time =
+            raw ? new Date(raw).getTime() : 0;
 
         return Number.isNaN(time) ? 0 : time;
 
     }
 
+    function readFlagOf(notification) {
 
-    // true = read, false = unread, undefined = record has no such field
-    function readFlagOf(n) {
+        const value =
+            notification.read ??
+            notification.isRead ??
+            notification.seen;
 
-        if (typeof n.read === "boolean") return n.read;
-        if (typeof n.isRead === "boolean") return n.isRead;
-        if (typeof n.seen === "boolean") return n.seen;
+        if (value === true || value === 1) {
+            return true;
+        }
+
+        if (value === false || value === 0) {
+            return false;
+        }
+
+        if (String(value).toLowerCase() === "true") {
+            return true;
+        }
+
+        if (String(value).toLowerCase() === "false") {
+            return false;
+        }
 
         return undefined;
 
     }
 
-
     /* =====================================================
-       SMALL HELPERS
+       HELPER FUNCTIONS
     ===================================================== */
 
     function sameId(a, b) {
 
-        return a !== undefined && a !== null && String(a) === String(b);
+        return (
+            a !== undefined &&
+            a !== null &&
+            String(a) === String(b)
+        );
 
     }
-
 
     function indexBy(list, key) {
 
         const map = {};
 
-        list.forEach((item) => { map[item[key]] = item; });
+        list.forEach((item) => {
+            map[item[key]] = item;
+        });
 
         return map;
 
     }
 
-
     function setText(elementId, value) {
 
-        const element = document.getElementById(elementId);
+        const element =
+            document.getElementById(elementId);
 
         if (element) {
             element.textContent = value;
@@ -453,20 +701,29 @@
 
     }
 
-
     function titleCase(text) {
 
-        return text.charAt(0) + text.slice(1).toLowerCase();
+        return (
+            text.charAt(0) +
+            text.slice(1).toLowerCase()
+        );
 
     }
 
-
-    // Stop booking or notification text from being treated as HTML
     function esc(value) {
 
-        return String(value).replace(/[&<>"']/g, (c) => ({
-            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-        }[c]));
+        return String(value).replace(
+            /[&<>"']/g,
+            (character) => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+
+            }[character])
+        );
 
     }
 

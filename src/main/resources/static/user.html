@@ -96,11 +96,17 @@
         </div>
 
         <div class="topbar-actions">
-            <button class="notification-icon"
+            <button
+                    class="notification-icon"
                     type="button"
-                    title="Notifications">
+                    title="Notifications"
+                    aria-label="Open notifications"
+                    onclick="window.location.href='notification.html'">
+
                 <i class="fa-solid fa-bell"></i>
-                <span class="notification-count">3</span>
+
+                <span class="notification-count" hidden></span>
+
             </button>
 
             <a href="profile.html" class="staff-profile">
