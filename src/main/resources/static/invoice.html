@@ -18,6 +18,7 @@
 
   <!-- Authentication -->
   <script src="auth.js"></script>
+
 </head>
 
 <body>
@@ -100,7 +101,9 @@
 
 <main class="main-content">
 
-  <!-- TOP BAR -->
+  <!-- =====================================================
+       TOP BAR
+  ====================================================== -->
 
   <header class="topbar">
 
@@ -110,7 +113,9 @@
               class="mobile-menu-btn"
               id="mobileMenuBtn"
               type="button">
+
         <i class="fa-solid fa-bars"></i>
+
       </button>
 
       <div>
@@ -122,18 +127,21 @@
 
     <div class="topbar-actions">
 
+      <!-- DYNAMIC NOTIFICATION BELL -->
       <button
               class="notification-icon"
               type="button"
               title="Notifications"
+              aria-label="Open notifications"
               onclick="window.location.href='notification.html'">
 
         <i class="fa-solid fa-bell"></i>
 
-        <span class="notification-count">3</span>
+        <span class="notification-count" hidden></span>
 
       </button>
 
+      <!-- STAFF PROFILE -->
       <a href="profile.html" class="staff-profile">
 
         <div class="staff-avatar">
@@ -153,13 +161,12 @@
 
 
   <!-- =====================================================
-       PAGE CONTENT
+       INVOICE PAGE
   ====================================================== -->
 
   <section class="invoice-page">
 
     <!-- PAGE HEADER -->
-
     <div class="page-header">
 
       <div>
@@ -192,13 +199,12 @@
 
 
     <!-- =================================================
-         STATISTICS - FIVE CARDS
+         INVOICE STATISTICS - FIVE CARDS
     ================================================== -->
 
     <div class="invoice-stats">
 
       <!-- TOTAL INVOICES -->
-
       <div class="stat-card">
 
         <div class="stat-icon blue">
@@ -214,7 +220,6 @@
 
 
       <!-- PAID -->
-
       <div class="stat-card">
 
         <div class="stat-icon green">
@@ -230,7 +235,6 @@
 
 
       <!-- PENDING -->
-
       <div class="stat-card">
 
         <div class="stat-icon orange">
@@ -246,7 +250,6 @@
 
 
       <!-- OVERDUE -->
-
       <div class="stat-card">
 
         <div class="stat-icon red">
@@ -261,8 +264,7 @@
       </div>
 
 
-      <!-- CANCELLED - NEW -->
-
+      <!-- CANCELLED -->
       <div class="stat-card">
 
         <div class="stat-icon cancelled-icon">
@@ -320,7 +322,6 @@
       <form id="invoiceForm">
 
         <!-- INVOICE ID -->
-
         <div class="form-group">
 
           <label for="invoiceId">
@@ -344,7 +345,6 @@
 
 
         <!-- BOOKING ID -->
-
         <div class="form-group">
 
           <label for="bookingId">
@@ -372,7 +372,6 @@
 
 
         <!-- AMOUNT -->
-
         <div class="form-group">
 
           <label for="amount">
@@ -398,7 +397,6 @@
 
 
         <!-- DUE DATE -->
-
         <div class="form-group">
 
           <label for="dueDate">
@@ -421,7 +419,6 @@
 
 
         <!-- INVOICE STATUS -->
-
         <div class="form-group">
 
           <label for="invoiceStatus">
@@ -465,7 +462,6 @@
 
 
         <!-- DESCRIPTION -->
-
         <div class="form-group full-width">
 
           <label for="description">
@@ -493,14 +489,15 @@
 
 
         <!-- FORM ACTIONS -->
-
         <div class="form-actions">
 
           <button
                   type="button"
                   id="cancelInvoiceBtn"
                   class="secondary-btn">
+
             Cancel
+
           </button>
 
           <button
@@ -526,8 +523,7 @@
 
     <section class="invoice-card">
 
-      <!-- HEADER -->
-
+      <!-- CARD HEADER -->
       <div class="card-header invoice-list-header">
 
         <div>
@@ -558,7 +554,6 @@
 
 
       <!-- FILTERS -->
-
       <div class="invoice-filters">
 
         <div class="search-box">
@@ -571,9 +566,6 @@
                   placeholder="Search invoices...">
 
         </div>
-
-
-        <!-- STATUS FILTER -->
 
         <select id="statusFilter">
 
@@ -599,9 +591,6 @@
 
         </select>
 
-
-        <!-- DATE FILTER -->
-
         <select id="dateFilter">
 
           <option value="all">
@@ -625,14 +614,12 @@
       </div>
 
 
-      <!-- TABLE -->
-
+      <!-- INVOICE TABLE -->
       <div class="table-container">
 
         <table class="invoice-table">
 
           <thead>
-
           <tr>
             <th>Invoice</th>
             <th>Booking</th>
@@ -641,12 +628,11 @@
             <th>Status</th>
             <th>Actions</th>
           </tr>
-
           </thead>
 
           <tbody id="invoiceTableBody">
 
-          <!-- JavaScript inserts invoices here -->
+          <!-- Populated by invoice.js -->
 
           </tbody>
 
@@ -654,7 +640,6 @@
 
 
         <!-- EMPTY STATE -->
-
         <div
                 id="emptyState"
                 class="empty-state">
@@ -676,7 +661,6 @@
 
 
       <!-- TABLE FOOTER -->
-
       <div class="table-footer">
 
                 <span id="invoiceCount">
@@ -755,58 +739,34 @@
     <div class="invoice-details">
 
       <div class="detail-item">
-
         <span>Invoice ID</span>
-
         <strong id="viewInvoiceId">-</strong>
-
       </div>
 
-
       <div class="detail-item">
-
         <span>Booking ID</span>
-
         <strong id="viewBooking">-</strong>
-
       </div>
 
-
       <div class="detail-item">
-
         <span>Amount</span>
-
         <strong id="viewAmount">-</strong>
-
       </div>
 
-
       <div class="detail-item">
-
         <span>Due Date</span>
-
         <strong id="viewDueDate">-</strong>
-
       </div>
 
-
       <div class="detail-item">
-
         <span>Status</span>
-
         <strong id="viewStatus">-</strong>
-
       </div>
-
 
       <div class="detail-item">
-
         <span>Created Date</span>
-
         <strong id="viewCreatedDate">-</strong>
-
       </div>
-
 
       <div class="detail-description">
 
@@ -827,7 +787,12 @@
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Invoice functionality -->
 <script src="invoice.js"></script>
 
+<!-- Shared Staff / Student notification badge -->
+<script src="notification-badge.js"></script>
+
 </body>
+
 </html>

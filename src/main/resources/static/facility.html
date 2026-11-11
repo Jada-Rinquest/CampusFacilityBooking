@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,15 +13,15 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <!-- Facility Styles -->
     <link rel="stylesheet" href="facility.css">
 
-    <!-- Sign-in check + student/staff permissions -->
+    <!-- Authentication -->
     <script src="auth.js"></script>
 
 </head>
 
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -29,7 +30,6 @@
 <aside class="sidebar">
 
     <!-- LOGO -->
-
     <div class="sidebar-logo">
 
         <i class="fa-solid fa-building-columns"></i>
@@ -38,9 +38,7 @@
 
     </div>
 
-
     <!-- NAVIGATION -->
-
     <nav class="sidebar-nav">
 
         <a href="staff-dashboard.html">
@@ -51,7 +49,6 @@
 
         </a>
 
-
         <a href="booking.html">
 
             <i class="fa-solid fa-calendar-check"></i>
@@ -59,7 +56,6 @@
             <span>Bookings</span>
 
         </a>
-
 
         <a href="facility.html" class="active">
 
@@ -69,7 +65,6 @@
 
         </a>
 
-
         <a href="equipment.html">
 
             <i class="fa-solid fa-desktop"></i>
@@ -77,7 +72,6 @@
             <span>Equipment</span>
 
         </a>
-
 
         <a href="maintenance.html">
 
@@ -87,7 +81,6 @@
 
         </a>
 
-
         <a href="notification.html">
 
             <i class="fa-solid fa-bell"></i>
@@ -96,7 +89,6 @@
 
         </a>
 
-
         <a href="user.html">
 
             <i class="fa-solid fa-users"></i>
@@ -104,7 +96,6 @@
             <span>Users</span>
 
         </a>
-
 
         <a href="invoice.html">
 
@@ -116,9 +107,7 @@
 
     </nav>
 
-
     <!-- BOTTOM NAVIGATION -->
-
     <div class="sidebar-bottom">
 
         <a href="profile.html">
@@ -128,7 +117,6 @@
             <span>Profile</span>
 
         </a>
-
 
         <a href="login.html" class="logout">
 
@@ -143,13 +131,11 @@
 </aside>
 
 
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
-
 
     <!-- =====================================================
          TOP BAR
@@ -168,7 +154,6 @@
 
             </button>
 
-
             <div>
 
                 <h1>Facilities</h1>
@@ -181,47 +166,38 @@
 
         </div>
 
-
         <!-- TOPBAR ACTIONS -->
-
         <div class="topbar-actions">
 
+            <!-- DYNAMIC NOTIFICATION BELL -->
             <button
                     class="notification-icon"
                     type="button"
-                    title="Notifications">
+                    title="Notifications"
+                    aria-label="Open notifications"
+                    onclick="window.location.href='notification.html'">
 
                 <i class="fa-solid fa-bell"></i>
 
-                <span class="notification-count">
-                    3
-                </span>
+                <!-- Updated automatically by notification-badge.js -->
+                <span class="notification-count" hidden></span>
 
             </button>
 
-
-            <!-- USER -->
-
+            <!-- USER PROFILE -->
             <a href="profile.html" class="staff-profile">
 
                 <div class="staff-avatar">
 
-                    <span>
-                        ST
-                    </span>
+                    <span>ST</span>
 
                 </div>
 
-
                 <div class="staff-info">
 
-                    <strong>
-                        Staff Member
-                    </strong>
+                    <strong>Staff Member</strong>
 
-                    <span>
-                        Administrator
-                    </span>
+                    <span>Administrator</span>
 
                 </div>
 
@@ -232,16 +208,13 @@
     </header>
 
 
-
     <!-- =====================================================
          FACILITY PAGE
     ====================================================== -->
 
     <section class="facility-page">
 
-
         <!-- PAGE HEADER -->
-
         <div class="page-header">
 
             <div>
@@ -254,11 +227,7 @@
 
                 </span>
 
-
-                <h2>
-                    Campus Facilities
-                </h2>
-
+                <h2>Campus Facilities</h2>
 
                 <p>
                     Create, search, update and delete campus
@@ -270,13 +239,11 @@
         </div>
 
 
-
         <!-- =================================================
              FACILITY CONTENT
         ================================================== -->
 
         <div class="facility-content">
-
 
             <!-- =================================================
                  FACILITY FORM
@@ -288,9 +255,7 @@
 
                     <div>
 
-                        <h3>
-                            Facility Details
-                        </h3>
+                        <h3>Facility Details</h3>
 
                         <p>
                             Enter the facility information below.
@@ -307,17 +272,12 @@
                 </div>
 
 
-
                 <form id="facilityForm">
 
-
                     <!-- FORM GRID -->
-
                     <div class="form-grid">
 
-
                         <!-- FACILITY ID -->
-
                         <div class="form-group">
 
                             <label for="facilityId">
@@ -339,9 +299,7 @@
                         </div>
 
 
-
                         <!-- FACILITY NAME -->
-
                         <div class="form-group">
 
                             <label for="facilityName">
@@ -363,9 +321,7 @@
                         </div>
 
 
-
                         <!-- CAPACITY -->
-
                         <div class="form-group">
 
                             <label for="capacity">
@@ -388,9 +344,7 @@
                         </div>
 
 
-
                         <!-- LOCATION -->
-
                         <div class="form-group">
 
                             <label for="location">
@@ -412,9 +366,7 @@
                         </div>
 
 
-
                         <!-- DEPARTMENT ID -->
-
                         <div class="form-group">
 
                             <label for="departmentId">
@@ -436,9 +388,7 @@
                         </div>
 
 
-
                         <!-- FACILITY TYPE -->
-
                         <div class="form-group">
 
                             <label for="facilityType">
@@ -457,10 +407,7 @@
                                         Select facility type
                                     </option>
 
-                                    <!--
-                                    These values MUST match
-                                    your Java FacilityType enum.
-                                    -->
+                                    <!-- Values match the Java FacilityType enum -->
 
                                     <option value="LECTURE_HALL">
                                         Lecture Hall
@@ -495,14 +442,13 @@
                     </div>
 
 
-
                     <!-- =================================================
                          BUTTONS
                     ================================================== -->
 
                     <div class="button-group">
 
-
+                        <!-- CREATE -->
                         <button
                                 type="button"
                                 class="primary-button"
@@ -515,7 +461,7 @@
                         </button>
 
 
-
+                        <!-- SEARCH -->
                         <button
                                 type="button"
                                 class="secondary-button"
@@ -528,7 +474,7 @@
                         </button>
 
 
-
+                        <!-- UPDATE -->
                         <button
                                 type="button"
                                 class="secondary-button"
@@ -541,7 +487,7 @@
                         </button>
 
 
-
+                        <!-- DELETE -->
                         <button
                                 type="button"
                                 class="delete-button"
@@ -554,7 +500,7 @@
                         </button>
 
 
-
+                        <!-- CLEAR -->
                         <button
                                 type="reset"
                                 class="clear-button">
@@ -570,16 +516,13 @@
                 </form>
 
 
-                <!-- MESSAGE -->
-
+                <!-- FORM MESSAGE -->
                 <div
                         id="facilityMessage"
                         class="message">
-
                 </div>
 
             </div>
-
 
 
             <!-- =================================================
@@ -592,9 +535,7 @@
 
                     <div>
 
-                        <h3>
-                            Facility Information
-                        </h3>
+                        <h3>Facility Information</h3>
 
                         <p>
                             Details of the selected facility.
@@ -619,9 +560,7 @@
 
                         <i class="fa-solid fa-building"></i>
 
-                        <h4>
-                            No Facility Selected
-                        </h4>
+                        <h4>No Facility Selected</h4>
 
                         <p>
                             Search for a facility to view
@@ -641,12 +580,15 @@
 </main>
 
 
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Facility CRUD functionality -->
 <script src="facility.js"></script>
+
+<!-- Shared Staff / Student notification badge -->
+<script src="notification-badge.js"></script>
 
 </body>
 
