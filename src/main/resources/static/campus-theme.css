@@ -1,63 +1,140 @@
-
 /* =========================================================
    CAMPUS FACILITY BOOKING SYSTEM
-   SHARED STUDENT AND STAFF THEME
-   Matches Login and Registration branding
+   SHARED STUDENT AND STAFF THEME  (glass version)
+   Matches Login: campus photo, frosted navy glass, Sora + DM Sans.
+   Photo: images/campus.jpg
 ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap");
 
 :root {
     --navy: #172033;
-    --navy-light: #23344f;
+    --navy-light: #202b42;
+
     --blue: #3b82f6;
     --blue-dark: #2563eb;
-    --blue-soft: #eff6ff;
+    --blue-light: #93c5fd;
+    --blue-soft: rgba(96, 165, 250, 0.16);
+
     --white: #ffffff;
-    --ivory: #f8fafc;
-    --background: #f8fafc;
-    --light-gray: #f1f5f9;
-    --border: #e2e8f0;
-    --text: #1e293b;
-    --muted: #64748b;
-    --success: #16a34a;
-    --warning: #d97706;
-    --danger: #dc2626;
-    --sidebar-width: 250px;
-    --radius: 14px;
-    --shadow-sm: 0 2px 8px rgba(15,23,42,.05);
-    --shadow-md: 0 8px 24px rgba(15,23,42,.08);
+
+    --text: #f1f5f9;
+    --muted: #b6c4d4;
+    --faint: #8ea0b5;
+
+    --glass: rgba(23, 32, 51, 0.62);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-hover: rgba(255, 255, 255, 0.07);
+    --field: rgba(255, 255, 255, 0.08);
+
+    /* Old names, kept so any rule that still uses them stays dark */
+    --ivory: transparent;
+    --background: transparent;
+    --light-gray: rgba(255, 255, 255, 0.07);
+    --border: rgba(255, 255, 255, 0.14);
+
+    --success: #4ade80;
+    --success-light: rgba(74, 222, 128, 0.14);
+
+    --warning: #fbbf24;
+    --warning-light: rgba(251, 191, 36, 0.14);
+
+    --danger: #f87171;
+    --danger-light: rgba(248, 113, 113, 0.14);
+
+    --sidebar-width: 260px;
+
+    --shadow-sm: 0 8px 24px rgba(8, 13, 25, 0.30);
+    --shadow-md: 0 18px 44px rgba(8, 13, 25, 0.45);
+
+    --radius: 18px;
+
+    --font-body: "DM Sans", Arial, Helvetica, sans-serif;
+    --font-display: "Sora", "DM Sans", Arial, Helvetica, sans-serif;
 }
+
+
+/* =========================================================
+   PAGE BACKGROUND
+========================================================= */
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--background);
+    font-family: var(--font-body);
     color: var(--text);
+
+    background: var(--navy) url("images/campus.jpg") center / cover no-repeat fixed;
 }
 
-/* SHARED SIDEBAR */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    background:
+        radial-gradient(900px 500px at 85% -10%, rgba(59, 130, 246, 0.22), transparent 60%),
+        linear-gradient(
+            180deg,
+            rgba(23, 32, 51, 0.72) 0%,
+            rgba(23, 32, 51, 0.50) 30%,
+            rgba(23, 32, 51, 0.72) 60%,
+            rgba(23, 32, 51, 0.94) 100%
+        );
+}
+
+
+/* =========================================================
+   SHARED SIDEBAR
+========================================================= */
 
 .sidebar {
     width: var(--sidebar-width);
-    background: var(--navy);
-    color: white;
+
+    background: rgba(15, 22, 38, 0.78);
+    border-right: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+
+    color: var(--white);
+
     display: flex;
     flex-direction: column;
 }
 
 .sidebar-logo {
-    min-height: 82px;
+    height: 88px;
+
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 20px 22px;
-    border-bottom: 1px solid rgba(255,255,255,.09);
-    color: white;
+
+    padding: 0 26px;
+
+    border-bottom: 1px solid var(--glass-border);
+
+    color: var(--white);
+
+    font-family: var(--font-display);
     font-size: 19px;
     font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .sidebar-logo i {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
     color: #60a5fa;
-    font-size: 24px;
+
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--glass-border);
+    border-radius: 11px;
 }
 
 .sidebar-nav a,
@@ -65,51 +142,89 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+
     padding: 13px 16px;
-    border-radius: 10px;
-    color: #cbd5e1;
+
+    border-radius: 12px;
+
+    color: #c3d0de;
+
     font-size: 14px;
+    font-weight: 500;
+
     text-decoration: none;
-    transition: background .2s, color .2s;
+
+    transition: all 0.2s ease;
 }
 
 .sidebar-nav a:hover,
 .sidebar-bottom a:hover {
-    background: rgba(255,255,255,.08);
-    color: white;
+    background: var(--glass-hover);
+    color: var(--white);
+    transform: translateX(3px);
 }
 
-.sidebar-nav a.active {
-    background: var(--blue);
-    color: white;
-    box-shadow: 0 5px 15px rgba(59,130,246,.22);
+.sidebar-nav a.active,
+.sidebar-bottom a.active {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: var(--white);
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.40);
 }
 
-/* MAIN AREA */
+.sidebar-bottom {
+    border-top: 1px solid var(--glass-border);
+}
+
+.sidebar-bottom .logout {
+    color: #fca5a5;
+}
+
+.sidebar-bottom .logout:hover {
+    background: rgba(220, 38, 38, 0.16);
+    color: #fecaca;
+}
+
+
+/* =========================================================
+   MAIN AREA
+========================================================= */
 
 .main-content {
+    position: relative;
+    z-index: 1;
+
     margin-left: var(--sidebar-width);
     min-height: 100vh;
-    background: var(--background);
+
+    background: transparent;
 }
 
-/* TOP NAVIGATION */
+
+/* =========================================================
+   TOP NAVIGATION
+========================================================= */
 
 .topbar {
-    min-height: 82px;
-    background: white;
-    border-bottom: 1px solid var(--border);
+    min-height: 88px;
+
+    background: rgba(15, 22, 38, 0.55);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 18px;
-    padding: 16px 32px;
+
+    padding: 16px 40px;
 }
 
 .topbar h1 {
-    color: var(--text);
-    font-size: 21px;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--white);
 }
 
 .topbar p {
@@ -120,200 +235,291 @@ body {
 .topbar-actions {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
 }
 
-/* NOTIFICATION BELL */
+
+/* =========================================================
+   NOTIFICATION BELL
+========================================================= */
 
 .notification-icon {
     position: relative;
-    width: 42px;
-    height: 42px;
+
+    width: 44px;
+    height: 44px;
+
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: white;
-    color: var(--muted);
+
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #d6e2ef;
+
     cursor: pointer;
     text-decoration: none;
+
+    transition: all 0.2s ease;
 }
 
 .notification-icon:hover {
-    color: var(--blue);
-    background: var(--blue-soft);
+    background: rgba(96, 165, 250, 0.20);
+    border-color: rgba(147, 197, 253, 0.5);
+    color: var(--white);
 }
 
 .notification-count {
     position: absolute;
     top: -6px;
     right: -6px;
+
     min-width: 19px;
     height: 19px;
     padding: 0 4px;
+
     border-radius: 999px;
-    background: var(--danger);
-    color: white;
+
+    background: #ef4444;
+    color: var(--white);
+
     font-size: 10px;
     font-weight: 700;
+
     align-items: center;
     justify-content: center;
-    border: 2px solid white;
+
+    border: 2px solid #1b2538;
 }
 
-/* USER PROFILE */
+.notification-count:empty {
+    display: none !important;
+}
+
+
+/* =========================================================
+   USER PROFILE
+========================================================= */
 
 .student-profile,
 .staff-profile {
     display: flex;
     align-items: center;
     gap: 11px;
+
     color: var(--text);
     text-decoration: none;
+
+    padding: 6px 14px 6px 6px;
+
+    border: 1px solid transparent;
+    border-radius: 999px;
+
+    transition: all 0.2s ease;
+}
+
+.student-profile:hover,
+.staff-profile:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--glass-border);
 }
 
 .student-avatar,
 .staff-avatar {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+
     flex-shrink: 0;
+
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--blue-soft);
-    color: var(--blue);
-    font-size: 15px;
+
+    background: linear-gradient(135deg, #60a5fa, var(--blue-dark));
+    color: var(--white);
+
+    font-size: 13px;
     font-weight: 700;
+
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
 }
 
 .student-info,
 .staff-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
 }
 
 .student-info strong,
 .staff-info strong {
     font-size: 13px;
-    color: var(--text);
+    color: var(--white);
 }
 
 .student-info span,
 .staff-info span {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
 }
 
-/* CARDS AND PANELS */
+
+/* =========================================================
+   CARDS AND PANELS
+========================================================= */
 
 .summary-card,
 .stat-card,
 .dashboard-panel,
+.dashboard-card,
 .facility-card,
 .student-facility-card,
 .booking-card,
 .notification-panel {
-    background: white;
-    border: 1px solid var(--border);
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
+
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 .summary-card,
 .stat-card,
-.student-facility-card {
-    transition: transform .2s, box-shadow .2s;
+.dashboard-card,
+.student-facility-card,
+.facility-card {
+    transition: all 0.25s ease;
 }
 
 .summary-card:hover,
 .stat-card:hover,
-.student-facility-card:hover {
-    transform: translateY(-2px);
+.dashboard-card:hover,
+.student-facility-card:hover,
+.facility-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(147, 197, 253, 0.4);
     box-shadow: var(--shadow-md);
 }
 
-/* BUTTONS */
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 .primary-btn,
 .student-book-button {
-    background: var(--blue);
-    color: white;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: var(--white);
+
     border: none;
-    border-radius: 9px;
-    font-weight: 700;
+    border-radius: 11px;
+
+    font-weight: 600;
+
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.40);
+
     cursor: pointer;
+
+    transition: all 0.2s ease;
 }
 
 .primary-btn:hover,
 .student-book-button:hover {
-    background: var(--blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.55);
 }
 
 .secondary-btn,
 .secondary-button {
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
-    color: var(--text);
+    border: 1px solid var(--glass-border);
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.10);
+    color: var(--white);
+
     font-weight: 600;
+
     cursor: pointer;
+
+    transition: all 0.2s ease;
 }
 
 .secondary-btn:hover,
 .secondary-button:hover {
-    background: var(--blue-soft);
-    color: var(--blue-dark);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--white);
 }
 
-/* FORM CONTROLS */
+
+/* =========================================================
+   FORM CONTROLS
+========================================================= */
 
 input,
 select,
 textarea {
     font-family: inherit;
+    color-scheme: dark;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    outline-color: var(--blue);
+    outline-color: #60a5fa;
 }
 
-/* TABLES */
+select option {
+    background: #1b2538;
+    color: var(--white);
+}
+
+
+/* =========================================================
+   TABLES
+========================================================= */
 
 table {
     border-collapse: collapse;
 }
 
 thead {
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 th {
-    color: #475569;
-    font-size: 12px;
+    color: #9fb8d6;
+    font-size: 11px;
     font-weight: 700;
 }
 
 td {
-    color: var(--text);
+    color: #e2e8f0;
     font-size: 13px;
 }
 
-/* RESPONSIVE */
 
-@media (max-width: 850px) {
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
     :root {
-        --sidebar-width: 220px;
+        --sidebar-width: 224px;
     }
 }
 
 @media (max-width: 700px) {
+
     .sidebar {
-        width: 250px;
+        width: var(--sidebar-width);
     }
 
     .main-content {
@@ -325,7 +531,7 @@ td {
     }
 
     .topbar-actions {
-        gap: 12px;
+        gap: 10px;
     }
 
     .student-info,

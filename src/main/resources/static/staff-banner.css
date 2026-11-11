@@ -1,8 +1,9 @@
-
 /* =========================================================
    CAMPUS FACILITY BOOKING SYSTEM
    STAFF DASHBOARD WELCOME BANNER
-   Matches Student Dashboard and Login Branding
+   Matches the glass theme: campus photo, frosted navy, Sora.
+   (Stat cards, management cards and buttons are styled in
+   staff-dashboard.css, so nothing here overrides them.)
 ========================================================= */
 
 /* MAIN WELCOME BANNER */
@@ -17,43 +18,50 @@
 
     gap: 30px;
 
-    min-height: 185px;
+    min-height: 210px;
 
-    margin-bottom: 28px;
-    padding: 36px 42px;
+    margin-bottom: 26px;
+    padding: 40px 46px;
 
-    background: linear-gradient(
-            115deg,
-            #172033 0%,
-            #1c2b46 65%,
-            #263f68 100%
-    );
+    background:
+        radial-gradient(520px 260px at 100% 0%, rgba(96, 165, 250, 0.38), transparent 65%),
+        linear-gradient(120deg, rgba(23, 32, 51, 0.88) 0%, rgba(23, 32, 51, 0.55) 100%);
 
-    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+
+    box-shadow: 0 18px 44px rgba(8, 13, 25, 0.45);
+
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
 
     color: #ffffff;
 }
 
-/* DECORATIVE BACKGROUND CIRCLE */
+/* DECORATIVE RINGS */
 
+.staff-welcome-banner::before,
 .staff-welcome-banner::after {
     content: "";
-
     position: absolute;
-
-    right: -65px;
-    top: -115px;
-
-    width: 330px;
-    height: 330px;
-
-    border: 45px solid rgba(
-            255, 255, 255, 0.035
-    );
-
     border-radius: 50%;
-
     pointer-events: none;
+}
+
+.staff-welcome-banner::before {
+    width: 360px;
+    height: 360px;
+    right: -90px;
+    top: -170px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.staff-welcome-banner::after {
+    width: 240px;
+    height: 240px;
+    right: 10px;
+    top: -110px;
+    border: 40px solid rgba(147, 197, 253, 0.07);
 }
 
 /* WELCOME CONTENT */
@@ -65,26 +73,30 @@
     flex: 1;
 }
 
-/* STAFF PORTAL LABEL */
+/* STAFF PORTAL LABEL (pill) */
 
 .staff-welcome-label {
     display: inline-flex;
     align-items: center;
+    gap: 8px;
 
-    gap: 10px;
+    margin-bottom: 16px;
+    padding: 7px 14px;
 
-    margin-bottom: 15px;
-
-    color: #a9c9ff;
+    color: #dbeafe;
 
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: 1.4px;
 
-    letter-spacing: 1.5px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
 }
 
 .staff-welcome-label i {
-    font-size: 14px;
+    font-size: 12px;
+    color: #93c5fd;
 }
 
 /* WELCOME HEADING */
@@ -94,22 +106,17 @@
 
     color: #ffffff;
 
-    font-size: clamp(
-            24px,
-            2.5vw,
-            34px
-    );
-
-    font-weight: 750;
-    line-height: 1.25;
-
-    letter-spacing: -0.6px;
+    font-family: "Sora", "DM Sans", Arial, sans-serif;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
 }
 
 /* LOGGED-IN STAFF NAME */
 
 .staff-welcome-banner h2 span {
-    color: #a9c9ff;
+    color: #bfdbfe;
 }
 
 /* DESCRIPTION */
@@ -119,9 +126,9 @@
 
     margin: 0;
 
-    color: #dbeafe;
+    color: #dbe5f0;
 
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.7;
 }
 
@@ -139,87 +146,47 @@
 
     flex-shrink: 0;
 
-    padding: 15px 20px;
+    padding: 15px 26px;
 
-    background: #ffffff;
-    color: #172033;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
 
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
 
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
 
     text-decoration: none;
 
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.45);
+
     transition:
-            transform 0.2s ease,
-            background 0.2s ease,
-            box-shadow 0.2s ease;
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.staff-welcome-button i:last-child {
+    font-size: 12px;
+    transition: transform 0.2s ease;
 }
 
 .staff-welcome-button:hover {
-    background: #eff6ff;
-
     transform: translateY(-2px);
 
-    box-shadow: 0 8px 22px rgba(
-            0, 0, 0, 0.15
-    );
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.55);
 }
 
-/* DASHBOARD STATISTICS */
+.staff-welcome-button:hover i:last-child {
+    transform: translateX(4px);
+}
+
+/* DASHBOARD STATISTICS SPACING */
 
 .dashboard-stats {
     margin-top: 0;
-    margin-bottom: 38px;
-}
-
-.dashboard-stats .stat-card {
-    background: #ffffff;
-
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-
-    box-shadow: 0 3px 12px rgba(
-            15, 23, 42, 0.05
-    );
-}
-
-.dashboard-stats .stat-card:hover {
-    border-color: #bfdbfe;
-
-    box-shadow: 0 10px 25px rgba(
-            15, 23, 42, 0.08
-    );
-}
-
-/* MANAGEMENT CARDS */
-
-.dashboard-card {
-    background: #ffffff;
-
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-}
-
-.dashboard-card:hover {
-    border-color: #bfdbfe;
-}
-
-/* MANAGEMENT BUTTONS */
-
-.dashboard-button {
-    background: #3b82f6;
-    color: #ffffff;
-
-    border-radius: 9px;
-
-    font-weight: 700;
-}
-
-.dashboard-button:hover {
-    background: #2563eb;
+    margin-bottom: 44px;
 }
 
 /* HIDE EMPTY NOTIFICATION BADGE */
@@ -230,9 +197,8 @@
 
 /* ACCESSIBILITY */
 
-.staff-welcome-button:focus-visible,
-.dashboard-button:focus-visible {
-    outline: 3px solid #93c5fd;
+.staff-welcome-button:focus-visible {
+    outline: 2px solid #93c5fd;
     outline-offset: 3px;
 }
 
@@ -243,12 +209,12 @@
 @media (max-width: 900px) {
 
     .staff-welcome-banner {
-        padding: 30px;
+        padding: 32px;
         gap: 20px;
     }
 
     .staff-welcome-banner h2 {
-        font-size: 27px;
+        font-size: 28px;
     }
 
 }
@@ -262,6 +228,8 @@
     .staff-welcome-banner {
         flex-direction: column;
         align-items: flex-start;
+
+        min-height: 0;
 
         padding: 28px 24px;
 
@@ -290,7 +258,7 @@
 
     .staff-welcome-banner {
         padding: 24px 20px;
-        border-radius: 13px;
+        border-radius: 18px;
     }
 
     .staff-welcome-banner h2 {
