@@ -3,22 +3,17 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Facilities | Campus Facility Booking</title>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Facility Styles -->
     <link rel="stylesheet" href="facility.css">
 
-    <!-- Authentication -->
     <script src="auth.js"></script>
-
 </head>
 
 <body>
@@ -29,107 +24,70 @@
 
 <aside class="sidebar">
 
-    <!-- LOGO -->
     <div class="sidebar-logo">
-
         <i class="fa-solid fa-building-columns"></i>
-
         <span>CampusBooking</span>
-
     </div>
 
-    <!-- NAVIGATION -->
     <nav class="sidebar-nav">
 
         <a href="staff-dashboard.html">
-
             <i class="fa-solid fa-chart-line"></i>
-
             <span>Dashboard</span>
-
         </a>
 
         <a href="booking.html">
-
             <i class="fa-solid fa-calendar-check"></i>
-
             <span>Bookings</span>
-
         </a>
 
         <a href="facility.html" class="active">
-
             <i class="fa-solid fa-building"></i>
-
             <span>Facilities</span>
-
         </a>
 
         <a href="equipment.html">
-
             <i class="fa-solid fa-desktop"></i>
-
             <span>Equipment</span>
-
         </a>
 
         <a href="maintenance.html">
-
             <i class="fa-solid fa-screwdriver-wrench"></i>
-
             <span>Maintenance</span>
-
         </a>
 
         <a href="notification.html">
-
             <i class="fa-solid fa-bell"></i>
-
             <span>Notifications</span>
-
         </a>
 
         <a href="user.html">
-
             <i class="fa-solid fa-users"></i>
-
             <span>Users</span>
-
         </a>
 
         <a href="invoice.html">
-
             <i class="fa-solid fa-file-invoice-dollar"></i>
-
             <span>Invoices</span>
-
         </a>
 
     </nav>
 
-    <!-- BOTTOM NAVIGATION -->
     <div class="sidebar-bottom">
 
         <a href="profile.html">
-
             <i class="fa-solid fa-user"></i>
-
             <span>Profile</span>
-
         </a>
 
         <a href="login.html" class="logout">
-
             <i class="fa-solid fa-right-from-bracket"></i>
-
             <span>Logout</span>
-
         </a>
 
     </div>
 
 </aside>
-
 
 <!-- =========================================================
      MAIN CONTENT
@@ -137,10 +95,7 @@
 
 <main class="main-content">
 
-    <!-- =====================================================
-         TOP BAR
-    ====================================================== -->
-
+    <!-- TOP BAR -->
     <header class="topbar">
 
         <div class="topbar-title">
@@ -148,28 +103,22 @@
             <button
                     class="mobile-menu-btn"
                     id="mobileMenuBtn"
-                    type="button">
+                    type="button"
+                    aria-label="Toggle navigation">
 
                 <i class="fa-solid fa-bars"></i>
 
             </button>
 
             <div>
-
                 <h1>Facilities</h1>
-
-                <p>
-                    Manage campus facilities and their information.
-                </p>
-
+                <p>Manage campus facilities and their information.</p>
             </div>
 
         </div>
 
-        <!-- TOPBAR ACTIONS -->
         <div class="topbar-actions">
 
-            <!-- DYNAMIC NOTIFICATION BELL -->
             <button
                     class="notification-icon"
                     type="button"
@@ -179,26 +128,19 @@
 
                 <i class="fa-solid fa-bell"></i>
 
-                <!-- Updated automatically by notification-badge.js -->
                 <span class="notification-count" hidden></span>
 
             </button>
 
-            <!-- USER PROFILE -->
             <a href="profile.html" class="staff-profile">
 
                 <div class="staff-avatar">
-
                     <span>ST</span>
-
                 </div>
 
                 <div class="staff-info">
-
                     <strong>Staff Member</strong>
-
                     <span>Administrator</span>
-
                 </div>
 
             </a>
@@ -207,74 +149,55 @@
 
     </header>
 
-
     <!-- =====================================================
-         FACILITY PAGE
+         FACILITY MANAGEMENT
     ====================================================== -->
 
     <section class="facility-page">
 
-        <!-- PAGE HEADER -->
         <div class="page-header">
 
             <div>
 
                 <span class="page-eyebrow">
-
                     <i class="fa-solid fa-building"></i>
-
                     FACILITY MANAGEMENT
-
                 </span>
 
                 <h2>Campus Facilities</h2>
 
                 <p>
-                    Create, search, update and delete campus
-                    facilities.
+                    Create, search, update and delete campus facilities.
                 </p>
 
             </div>
 
         </div>
 
-
         <!-- =================================================
-             FACILITY CONTENT
+             FACILITY FORM AND RESULT
         ================================================== -->
 
         <div class="facility-content">
 
-            <!-- =================================================
-                 FACILITY FORM
-            ================================================== -->
-
+            <!-- FACILITY FORM -->
             <div class="facility-card">
 
                 <div class="card-header">
 
                     <div>
-
                         <h3>Facility Details</h3>
-
-                        <p>
-                            Enter the facility information below.
-                        </p>
-
+                        <p>Enter the facility information below.</p>
                     </div>
 
                     <div class="card-header-icon">
-
                         <i class="fa-solid fa-building"></i>
-
                     </div>
 
                 </div>
 
-
                 <form id="facilityForm">
 
-                    <!-- FORM GRID -->
                     <div class="form-grid">
 
                         <!-- FACILITY ID -->
@@ -298,7 +221,6 @@
 
                         </div>
 
-
                         <!-- FACILITY NAME -->
                         <div class="form-group">
 
@@ -319,7 +241,6 @@
                             </div>
 
                         </div>
-
 
                         <!-- CAPACITY -->
                         <div class="form-group">
@@ -343,7 +264,6 @@
 
                         </div>
 
-
                         <!-- LOCATION -->
                         <div class="form-group">
 
@@ -365,8 +285,7 @@
 
                         </div>
 
-
-                        <!-- DEPARTMENT ID -->
+                        <!-- DEPARTMENT -->
                         <div class="form-group">
 
                             <label for="departmentId">
@@ -387,7 +306,6 @@
 
                         </div>
 
-
                         <!-- FACILITY TYPE -->
                         <div class="form-group">
 
@@ -399,15 +317,11 @@
 
                                 <i class="fa-solid fa-layer-group"></i>
 
-                                <select
-                                        id="facilityType"
-                                        required>
+                                <select id="facilityType" required>
 
                                     <option value="">
                                         Select facility type
                                     </option>
-
-                                    <!-- Values match the Java FacilityType enum -->
 
                                     <option value="LECTURE_HALL">
                                         Lecture Hall
@@ -441,72 +355,54 @@
 
                     </div>
 
-
-                    <!-- =================================================
-                         BUTTONS
-                    ================================================== -->
-
+                    <!-- CRUD BUTTONS -->
                     <div class="button-group">
 
-                        <!-- CREATE -->
                         <button
                                 type="button"
                                 class="primary-button"
                                 id="createFacilityButton">
 
                             <i class="fa-solid fa-plus"></i>
-
                             Create Facility
 
                         </button>
 
-
-                        <!-- SEARCH -->
                         <button
                                 type="button"
                                 class="secondary-button"
                                 id="readFacilityButton">
 
                             <i class="fa-solid fa-magnifying-glass"></i>
-
                             Search Facility
 
                         </button>
 
-
-                        <!-- UPDATE -->
                         <button
                                 type="button"
                                 class="secondary-button"
                                 id="updateFacilityButton">
 
                             <i class="fa-solid fa-pen"></i>
-
                             Update Facility
 
                         </button>
 
-
-                        <!-- DELETE -->
                         <button
                                 type="button"
                                 class="delete-button"
                                 id="deleteFacilityButton">
 
                             <i class="fa-solid fa-trash"></i>
-
                             Delete Facility
 
                         </button>
 
-
-                        <!-- CLEAR -->
                         <button
                                 type="reset"
                                 class="clear-button">
 
                             <i class="fa-solid fa-rotate-left"></i>
-
                             Clear
 
                         </button>
@@ -515,46 +411,27 @@
 
                 </form>
 
-
-                <!-- FORM MESSAGE -->
-                <div
-                        id="facilityMessage"
-                        class="message">
-                </div>
+                <div id="facilityMessage" class="message"></div>
 
             </div>
 
-
-            <!-- =================================================
-                 FACILITY RESULT
-            ================================================== -->
-
+            <!-- FACILITY INFORMATION -->
             <div class="facility-card result-card">
 
                 <div class="card-header">
 
                     <div>
-
                         <h3>Facility Information</h3>
-
-                        <p>
-                            Details of the selected facility.
-                        </p>
-
+                        <p>Details of the selected facility.</p>
                     </div>
 
                     <div class="card-header-icon">
-
                         <i class="fa-solid fa-circle-info"></i>
-
                     </div>
 
                 </div>
 
-
-                <div
-                        id="facilityResult"
-                        class="facility-result">
+                <div id="facilityResult" class="facility-result">
 
                     <div class="empty-result">
 
@@ -563,8 +440,7 @@
                         <h4>No Facility Selected</h4>
 
                         <p>
-                            Search for a facility to view
-                            its information.
+                            Search for a facility to view its information.
                         </p>
 
                     </div>
@@ -575,21 +451,93 @@
 
         </div>
 
+        <!-- =====================================================
+             ALL CAMPUS FACILITIES
+        ====================================================== -->
+
+        <section class="all-facilities-section">
+
+            <div class="facilities-section-header">
+
+                <div>
+
+                    <span class="page-eyebrow">
+                        <i class="fa-solid fa-building"></i>
+                        FACILITY DIRECTORY
+                    </span>
+
+                    <h2>All Campus Facilities</h2>
+
+                    <p>
+                        View, edit and delete registered campus facilities.
+                    </p>
+
+                </div>
+
+                <button
+                        type="button"
+                        id="refreshFacilitiesBtn"
+                        class="secondary-button">
+
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh
+
+                </button>
+
+            </div>
+
+            <!-- SEARCH AND COUNT -->
+            <div class="facilities-toolbar">
+
+                <div class="facilities-search">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                            type="search"
+                            id="facilityListSearch"
+                            placeholder="Search facilities..."
+                            aria-label="Search facilities">
+
+                </div>
+
+                <span id="facilityListCount">
+                    Loading facilities...
+                </span>
+
+            </div>
+
+            <!-- FACILITY CARDS -->
+            <div
+                    id="staffFacilitiesGrid"
+                    class="staff-facilities-grid">
+
+                <!-- Loaded by staff-facilities-list.js -->
+
+            </div>
+
+            <p
+                    id="facilitiesListMessage"
+                    class="facilities-list-message"
+                    role="status"
+                    aria-live="polite">
+            </p>
+
+        </section>
+
     </section>
 
 </main>
-
 
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
-<!-- Facility CRUD functionality -->
 <script src="facility.js"></script>
 
-<!-- Shared Staff / Student notification badge -->
+<script src="staff-facilities-list.js"></script>
+
 <script src="notification-badge.js"></script>
 
 </body>
-
 </html>
