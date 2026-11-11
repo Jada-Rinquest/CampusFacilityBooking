@@ -1,26 +1,44 @@
 
 /* =========================================================
+   CAMPUS FACILITY BOOKING SYSTEM
    STAFF FACILITIES DIRECTORY
-   Campus Facility Booking System
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Match these routes to FacilityController.java.
+    "use strict";
+
+    /* =====================================================
+       API CONFIGURATION
+    ===================================================== */
+
     const FACILITY_API = `${window.location.origin}/facility`;
 
-    const grid = document.getElementById("staffFacilitiesGrid");
-    const searchInput = document.getElementById("facilityListSearch");
-    const countLabel = document.getElementById("facilityListCount");
-    const message = document.getElementById("facilitiesListMessage");
-    const refreshButton = document.getElementById("refreshFacilitiesBtn");
+    /* =====================================================
+       HTML ELEMENTS
+    ===================================================== */
+
+    const grid =
+        document.getElementById("staffFacilitiesGrid");
+
+    const searchInput =
+        document.getElementById("facilityListSearch");
+
+    const countLabel =
+        document.getElementById("facilityListCount");
+
+    const message =
+        document.getElementById("facilitiesListMessage");
+
+    const refreshButton =
+        document.getElementById("refreshFacilitiesBtn");
 
     if (!grid) return;
 
     let facilities = [];
 
     /* =====================================================
-       HELPERS
+       HELPER FUNCTIONS
     ===================================================== */
 
     function showMessage(text) {
@@ -43,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getFacilityName(facility) {
-        return facility.facilityName ?? facility.name ?? "";
+        return facility.name ?? facility.facilityName ?? "";
     }
 
     function getFacilityType(facility) {
@@ -61,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =====================================================
-       LOAD FACILITIES
+       LOAD ALL FACILITIES
     ===================================================== */
 
     async function loadFacilities() {
@@ -70,11 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
 
-            const response = await fetch(`${FACILITY_API}/all`);
+            const response = await fetch(
+                `${FACILITY_API}/all`,
+                {
+                    cache: "no-store"
+                }
+            );
 
             if (!response.ok) {
                 throw new Error(
-                    `Unable to load facilities (${response.status})`
+                    `Unable to load facilities (HTTP ${response.status})`
                 );
             }
 
@@ -94,12 +117,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
 
-            console.error("Facility loading error:", error);
+            console.error(
+                "Error loading staff facilities:",
+                error
+            );
 
             grid.innerHTML = "";
 
             if (countLabel) {
-                countLabel.textContent = "Unable to load facilities";
+                countLabel.textContent =
+                    "Unable to load facilities";
             }
 
             showMessage(error.message);
@@ -107,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =====================================================
-       RENDER FACILITY CARDS
+       DISPLAY FACILITY CARDS
     ===================================================== */
 
     function renderFacilities() {
@@ -116,124 +143,146 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim()
             .toLowerCase();
 
-        const filtered = facilities.filter(facility => {
+        const filteredFacilities = facilities.filter(
+            facility => {
 
-            const searchable = [
-                getFacilityId(facility),
-                getFacilityName(facility),
-                getFacilityType(facility),
-                facility.location,
-                getDepartmentId(facility)
-            ].join(" ").toLowerCase();
+                const searchable = [
+                    getFacilityId(facility),
+                    getFacilityName(facility),
+                    getFacilityType(facility),
+                    facility.location,
+                    getDepartmentId(facility)
+                ]
+                    .join(" ")
+                    .toLowerCase();
 
-            return searchable.includes(query);
-        });
+                return searchable.includes(query);
+            }
+        );
 
         if (countLabel) {
             countLabel.textContent =
-                `${filtered.length} of ${facilities.length} facilities`;
+                `${filteredFacilities.length} of ${facilities.length} facilities`;
         }
 
-        if (filtered.length === 0) {
+        if (filteredFacilities.length === 0) {
 
             grid.innerHTML = `
                 <div class="staff-facility-card">
-                    <h3>No facilities found</h3>
-                    <p>No facilities match your search.</p>
+                    <div class="staff-facility-icon">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+
+                    <h3>No Facilities Found</h3>
+
+                    <p>
+                        No campus facilities match your search.
+                    </p>
                 </div>
             `;
 
             return;
         }
 
-        grid.innerHTML = filtered.map(facility => {
+        grid.innerHTML = filteredFacilities.map(
+            facility => {
 
-            const id = escapeHtml(getFacilityId(facility));
-            const name = escapeHtml(getFacilityName(facility));
-            const location = escapeHtml(
-                facility.location || "Not specified"
-            );
-            const capacity = escapeHtml(
-                facility.capacity ?? "Not specified"
-            );
-            const type = escapeHtml(
-                formatType(getFacilityType(facility))
-            );
-            const department = escapeHtml(
-                getDepartmentId(facility) || "Not specified"
-            );
+                const id = escapeHtml(
+                    getFacilityId(facility)
+                );
 
-            return `
-                <article class="staff-facility-card">
+                const name = escapeHtml(
+                    getFacilityName(facility)
+                );
 
-                    <div class="staff-facility-card-header">
+                const location = escapeHtml(
+                    facility.location || "Not specified"
+                );
 
-                        <div class="staff-facility-icon">
-                            <i class="fa-solid fa-building"></i>
+                const capacity = escapeHtml(
+                    facility.capacity ?? "Not specified"
+                );
+
+                const type = escapeHtml(
+                    formatType(getFacilityType(facility))
+                );
+
+                const department = escapeHtml(
+                    getDepartmentId(facility) || "Not specified"
+                );
+
+                return `
+                    <article class="staff-facility-card">
+
+                        <div class="staff-facility-card-header">
+
+                            <div class="staff-facility-icon">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+
+                            <span class="staff-facility-id">
+                                ${id}
+                            </span>
+
                         </div>
 
-                        <span class="staff-facility-id">
-                            ${id}
-                        </span>
+                        <h3>${name}</h3>
 
-                    </div>
+                        <div class="staff-facility-details">
 
-                    <h3>${name}</h3>
+                            <div class="staff-facility-detail">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>${location}</span>
+                            </div>
 
-                    <div class="staff-facility-details">
+                            <div class="staff-facility-detail">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Capacity: ${capacity}</span>
+                            </div>
 
-                        <div class="staff-facility-detail">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span>${location}</span>
+                            <div class="staff-facility-detail">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <span>${type}</span>
+                            </div>
+
+                            <div class="staff-facility-detail">
+                                <i class="fa-solid fa-sitemap"></i>
+                                <span>Department: ${department}</span>
+                            </div>
+
                         </div>
 
-                        <div class="staff-facility-detail">
-                            <i class="fa-solid fa-users"></i>
-                            <span>Capacity: ${capacity}</span>
+                        <div class="staff-facility-actions">
+
+                            <button
+                                type="button"
+                                class="staff-edit-btn"
+                                data-action="edit"
+                                data-id="${id}">
+
+                                <i class="fa-solid fa-pen"></i>
+                                Edit
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="staff-delete-btn"
+                                data-action="delete"
+                                data-id="${id}">
+
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+
+                            </button>
+
                         </div>
 
-                        <div class="staff-facility-detail">
-                            <i class="fa-solid fa-layer-group"></i>
-                            <span>${type}</span>
-                        </div>
+                    </article>
+                `;
 
-                        <div class="staff-facility-detail">
-                            <i class="fa-solid fa-sitemap"></i>
-                            <span>Department: ${department}</span>
-                        </div>
-
-                    </div>
-
-                    <div class="staff-facility-actions">
-
-                        <button
-                            type="button"
-                            class="staff-edit-btn"
-                            data-action="edit"
-                            data-id="${id}">
-
-                            <i class="fa-solid fa-pen"></i>
-                            Edit
-
-                        </button>
-
-                        <button
-                            type="button"
-                            class="staff-delete-btn"
-                            data-action="delete"
-                            data-id="${id}">
-
-                            <i class="fa-solid fa-trash"></i>
-                            Delete
-
-                        </button>
-
-                    </div>
-
-                </article>
-            `;
-
-        }).join("");
+            }
+        ).join("");
     }
 
     /* =====================================================
@@ -243,7 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function editFacility(id) {
 
         const facility = facilities.find(
-            item => String(getFacilityId(item)) === String(id)
+            item =>
+                String(getFacilityId(item)) === String(id)
         );
 
         if (!facility) {
@@ -251,33 +301,24 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const values = {
-            facilityId: getFacilityId(facility),
-            facilityName: getFacilityName(facility),
-            capacity: facility.capacity ?? "",
-            location: facility.location ?? "",
-            departmentId: getDepartmentId(facility),
-            facilityType: getFacilityType(facility)
-        };
+        // Use the shared form function from facility.js.
+        if (
+            typeof window.fillStaffFacilityForm === "function"
+        ) {
 
-        Object.entries(values).forEach(([fieldId, value]) => {
+            window.fillStaffFacilityForm(facility);
 
-            const input = document.getElementById(fieldId);
+            showMessage(
+                `Editing facility ${id}. Make your changes and click Update Facility.`
+            );
 
-            if (input) {
-                input.value = value;
-            }
-        });
+        } else {
 
-        document.getElementById("facilityForm")
-            ?.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            showMessage(
+                "Unable to open the facility editor. Check that facility.js is loaded."
+            );
 
-        showMessage(
-            `Editing facility ${id}. Make your changes and click Update Facility.`
-        );
+        }
     }
 
     /* =====================================================
@@ -294,6 +335,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
 
+            showMessage(`Deleting facility ${id}...`);
+
             const response = await fetch(
                 `${FACILITY_API}/delete/${encodeURIComponent(id)}`,
                 {
@@ -302,8 +345,11 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             if (!response.ok) {
+
+                const errorText = await response.text();
+
                 throw new Error(
-                    `Delete failed (${response.status})`
+                    `HTTP ${response.status}: ${errorText || response.statusText}`
                 );
             }
 
@@ -313,12 +359,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 `Facility ${id} deleted successfully.`
             );
 
+            // Clear the form if the deleted facility is selected.
+            const selectedId =
+                document.getElementById("facilityId")?.value;
+
+            if (String(selectedId) === String(id)) {
+
+                document.getElementById("facilityForm")?.reset();
+
+                const result =
+                    document.getElementById("facilityResult");
+
+                if (result) {
+                    result.innerHTML = `
+                        <div class="empty-result">
+                            <i class="fa-solid fa-building"></i>
+                            <h4>No Facility Selected</h4>
+                            <p>
+                                Search for a facility to view
+                                its information.
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+
         } catch (error) {
 
-            console.error("Facility deletion error:", error);
+            console.error(
+                "Error deleting facility:",
+                error
+            );
 
             showMessage(
-                `Unable to delete facility ${id}: ${error.message}`
+                `Could not delete facility ${id}. ${error.message}`
             );
         }
     }
@@ -357,8 +431,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Can be called after a successful Create or Update.
+    /* =====================================================
+       SHARED REFRESH FUNCTION
+    ===================================================== */
+
     window.refreshStaffFacilities = loadFacilities;
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
 
     loadFacilities();
 
