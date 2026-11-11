@@ -306,7 +306,9 @@
 
                         </div>
 
-                        <!-- FACILITY TYPE -->
+                        <!-- =================================================
+                             FACILITY TYPE - FIXED TO MATCH MYSQL
+                        ================================================== -->
                         <div class="form-group">
 
                             <label for="facilityType">
@@ -323,28 +325,20 @@
                                         Select facility type
                                     </option>
 
-                                    <option value="LECTURE_HALL">
-                                        Lecture Hall
+                                    <option value="AUDITORIUM">
+                                        Auditorium
                                     </option>
 
-                                    <option value="CLASSROOM">
-                                        Classroom
+                                    <option value="HALL">
+                                        Hall / Lecture Hall
                                     </option>
 
-                                    <option value="LABORATORY">
-                                        Laboratory
+                                    <option value="LAB">
+                                        Laboratory / Computer Lab
                                     </option>
 
-                                    <option value="COMPUTER_LAB">
-                                        Computer Lab
-                                    </option>
-
-                                    <option value="MEETING_ROOM">
-                                        Meeting Room
-                                    </option>
-
-                                    <option value="SPORTS_FACILITY">
-                                        Sports Facility
+                                    <option value="ROOM">
+                                        Classroom / Meeting Room
                                     </option>
 
                                 </select>
@@ -355,7 +349,9 @@
 
                     </div>
 
-                    <!-- CRUD BUTTONS -->
+                    <!-- =================================================
+                         CRUD BUTTONS
+                    ================================================== -->
                     <div class="button-group">
 
                         <button
@@ -411,11 +407,18 @@
 
                 </form>
 
-                <div id="facilityMessage" class="message"></div>
+                <div
+                        id="facilityMessage"
+                        class="message"
+                        role="status"
+                        aria-live="polite">
+                </div>
 
             </div>
 
-            <!-- FACILITY INFORMATION -->
+            <!-- =================================================
+                 FACILITY INFORMATION
+            ================================================== -->
             <div class="facility-card result-card">
 
                 <div class="card-header">
@@ -452,7 +455,7 @@
         </div>
 
         <!-- =====================================================
-             ALL CAMPUS FACILITIES
+             ALL CAMPUS FACILITIES - STAFF DIRECTORY
         ====================================================== -->
 
         <section class="all-facilities-section">
@@ -486,7 +489,7 @@
 
             </div>
 
-            <!-- SEARCH AND COUNT -->
+            <!-- SEARCH AND FACILITY COUNT -->
             <div class="facilities-toolbar">
 
                 <div class="facilities-search">
@@ -512,10 +515,11 @@
                     id="staffFacilitiesGrid"
                     class="staff-facilities-grid">
 
-                <!-- Loaded by staff-facilities-list.js -->
+                <!-- Facility cards loaded by JavaScript -->
 
             </div>
 
+            <!-- FACILITY DIRECTORY MESSAGES -->
             <p
                     id="facilitiesListMessage"
                     class="facilities-list-message"
