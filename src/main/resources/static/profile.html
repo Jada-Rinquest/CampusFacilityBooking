@@ -145,20 +145,26 @@
 
         <!-- Topbar Actions -->
 
-        <div class="topbar-actions">
 
-            <button
-                    class="notification-icon"
-                    type="button"
-                    title="Notifications">
+        <!-- DYNAMIC NOTIFICATION BELL -->
 
-                <i class="fa-solid fa-bell"></i>
+        <button
+                class="notification-icon"
+                type="button"
+                title="Notifications"
+                aria-label="Open notifications"
+                onclick="window.location.href='notification.html'">
 
-                <span class="notification-count">
-                    3
-                </span>
+            <i class="fa-solid fa-bell"></i>
 
-            </button>
+            <span
+                    class="notification-count"
+                    style="display: none;"
+                    hidden
+                    aria-live="polite">
+    </span>
+
+        </button>
 
 
             <!-- Logged-in user -->
@@ -772,7 +778,13 @@
      JAVASCRIPT
 ========================================================= -->
 
+
+<!-- SHARED NOTIFICATION COUNTER -->
+<script src="notification-badge.js"></script>
+
+<!-- EXISTING PROFILE FUNCTIONALITY -->
 <script src="profile.js"></script>
+
 
 </body>
 

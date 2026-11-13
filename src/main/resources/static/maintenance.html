@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,19 +8,18 @@
 
     <title>Maintenance Requests | Campus Facility Booking</title>
 
+    <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Maintenance Styles -->
     <link rel="stylesheet" href="maintenance.css">
 
-    <!-- Font Awesome -->
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- Sign-in check + student/staff permissions -->
+    <!-- Authentication and Permissions -->
     <script src="auth.js"></script>
-
 </head>
 
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -28,15 +28,9 @@
 <aside class="sidebar">
 
     <div class="sidebar-logo">
-
         <i class="fa-solid fa-building"></i>
-
-        <span>
-            Campus Booking
-        </span>
-
+        <span>Campus Booking</span>
     </div>
-
 
     <nav class="sidebar-nav">
 
@@ -76,15 +70,11 @@
         </a>
 
         <a href="invoice.html">
-
             <i class="fa-solid fa-file-invoice-dollar"></i>
-
             <span>Invoices</span>
-
         </a>
 
     </nav>
-
 
     <div class="sidebar-bottom">
 
@@ -103,18 +93,13 @@
 </aside>
 
 
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
 
-
-    <!-- =====================================================
-         TOP BAR
-    ====================================================== -->
-
+    <!-- TOP BAR -->
     <header class="topbar">
 
         <div class="topbar-left">
@@ -128,12 +113,9 @@
 
             </button>
 
-
             <div>
 
-                <h1>
-                    Maintenance Requests
-                </h1>
+                <h1>Maintenance Requests</h1>
 
                 <p>
                     Log and track equipment maintenance across campus.
@@ -143,23 +125,23 @@
 
         </div>
 
-
         <div class="topbar-actions">
 
+            <!-- DYNAMIC NOTIFICATION BELL -->
             <button
                     type="button"
                     class="notification-icon"
+                    title="Notifications"
+                    aria-label="Open notifications"
                     onclick="window.location.href='notification.html'">
 
                 <i class="fa-regular fa-bell"></i>
 
-                <span class="notification-count">
-                    3
-                </span>
+                <span class="notification-count" hidden></span>
 
             </button>
 
-
+            <!-- STAFF PROFILE -->
             <div class="staff-profile">
 
                 <div class="staff-avatar">
@@ -168,13 +150,9 @@
 
                 <div class="staff-info">
 
-                    <strong>
-                        Staff Member
-                    </strong>
+                    <strong>Staff Member</strong>
 
-                    <span>
-                        Administrator
-                    </span>
+                    <span>Administrator</span>
 
                 </div>
 
@@ -185,18 +163,13 @@
     </header>
 
 
-
     <!-- =====================================================
-         PAGE
+         MAINTENANCE PAGE
     ====================================================== -->
 
     <section class="maintenance-page">
 
-
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
-
+        <!-- PAGE HEADER -->
         <div class="page-header">
 
             <div>
@@ -209,9 +182,7 @@
 
                 </span>
 
-                <h2>
-                    Manage Maintenance Requests
-                </h2>
+                <h2>Manage Maintenance Requests</h2>
 
                 <p>
                     Report faulty equipment, monitor repair progress,
@@ -219,7 +190,6 @@
                 </p>
 
             </div>
-
 
             <button
                     type="button"
@@ -235,92 +205,64 @@
         </div>
 
 
-
         <!-- =================================================
-             STATISTICS
+             MAINTENANCE STATISTICS
         ================================================== -->
 
         <div class="maintenance-stats">
 
+            <!-- TOTAL REQUESTS -->
             <div class="stat-card">
 
                 <div class="stat-icon blue">
-
                     <i class="fa-solid fa-clipboard-list"></i>
-
                 </div>
 
                 <div>
-
                     <span>Total Requests</span>
-
-                    <strong id="totalRequests">
-                        0
-                    </strong>
-
+                    <strong id="totalRequests">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- OPEN REQUESTS -->
             <div class="stat-card">
 
                 <div class="stat-icon red">
-
                     <i class="fa-solid fa-folder-open"></i>
-
                 </div>
 
                 <div>
-
                     <span>Open</span>
-
-                    <strong id="openRequests">
-                        0
-                    </strong>
-
+                    <strong id="openRequests">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- IN PROGRESS -->
             <div class="stat-card">
 
                 <div class="stat-icon orange">
-
                     <i class="fa-solid fa-spinner"></i>
-
                 </div>
 
                 <div>
-
                     <span>In Progress</span>
-
-                    <strong id="inProgressRequests">
-                        0
-                    </strong>
-
+                    <strong id="inProgressRequests">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- RESOLVED -->
             <div class="stat-card">
 
                 <div class="stat-icon green">
-
                     <i class="fa-solid fa-circle-check"></i>
-
                 </div>
 
                 <div>
-
                     <span>Resolved</span>
-
-                    <strong id="resolvedRequests">
-                        0
-                    </strong>
-
+                    <strong id="resolvedRequests">0</strong>
                 </div>
 
             </div>
@@ -328,9 +270,8 @@
         </div>
 
 
-
         <!-- =================================================
-             CREATE MAINTENANCE REQUEST FORM
+             CREATE / UPDATE MAINTENANCE REQUEST FORM
         ================================================== -->
 
         <section
@@ -355,7 +296,6 @@
 
                 </div>
 
-
                 <button
                         type="button"
                         id="closeFormBtn"
@@ -370,16 +310,11 @@
 
             <form id="requestForm">
 
-
-                <!-- =========================================
-                     REQUEST ID
-                ========================================== -->
-
+                <!-- REQUEST ID -->
                 <div class="form-group">
 
                     <label for="requestId">
-                        Request ID
-                        <span>*</span>
+                        Request ID <span>*</span>
                     </label>
 
                     <input
@@ -396,16 +331,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     EQUIPMENT
-                ========================================== -->
-
+                <!-- EQUIPMENT -->
                 <div class="form-group">
 
                     <label for="equipmentId">
-                        Equipment
-                        <span>*</span>
+                        Equipment <span>*</span>
                     </label>
 
                     <select
@@ -417,10 +347,7 @@
                             Select equipment
                         </option>
 
-                        <!--
-                            JavaScript will populate equipment
-                            from the backend.
-                        -->
+                        <!-- Populated by maintenance.js -->
 
                     </select>
 
@@ -431,16 +358,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     REPORTED BY
-                ========================================== -->
-
+                <!-- REPORTED BY -->
                 <div class="form-group">
 
                     <label for="reportedBy">
-                        Reported By
-                        <span>*</span>
+                        Reported By <span>*</span>
                     </label>
 
                     <input
@@ -457,16 +379,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     DATE REPORTED
-                ========================================== -->
-
+                <!-- DATE REPORTED -->
                 <div class="form-group">
 
                     <label for="dateReported">
-                        Date Reported
-                        <span>*</span>
+                        Date Reported <span>*</span>
                     </label>
 
                     <input
@@ -478,16 +395,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     PRIORITY
-                ========================================== -->
-
+                <!-- PRIORITY -->
                 <div class="form-group">
 
                     <label for="maintenancePriority">
-                        Priority
-                        <span>*</span>
+                        Priority <span>*</span>
                     </label>
 
                     <select
@@ -516,16 +428,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     STATUS
-                ========================================== -->
-
+                <!-- STATUS -->
                 <div class="form-group">
 
                     <label for="maintenanceStatus">
-                        Status
-                        <span>*</span>
+                        Status <span>*</span>
                     </label>
 
                     <select
@@ -550,16 +457,11 @@
                 </div>
 
 
-
-                <!-- =========================================
-                     DESCRIPTION
-                ========================================== -->
-
+                <!-- DESCRIPTION -->
                 <div class="form-group full-width">
 
                     <label for="description">
-                        Description of Fault
-                        <span>*</span>
+                        Description of Fault <span>*</span>
                     </label>
 
                     <textarea
@@ -570,19 +472,14 @@
                             placeholder="Describe the fault or maintenance required..."
                             required></textarea>
 
-                    <small
-                            id="descriptionCount">
+                    <small id="descriptionCount">
                         0 / 500
                     </small>
 
                 </div>
 
 
-
-                <!-- =========================================
-                     ACTIONS
-                ========================================== -->
-
+                <!-- FORM ACTIONS -->
                 <div class="form-actions">
 
                     <button
@@ -593,7 +490,6 @@
                         Cancel
 
                     </button>
-
 
                     <button
                             type="submit"
@@ -613,16 +509,13 @@
         </section>
 
 
-
         <!-- =================================================
              MAINTENANCE REQUESTS LIST
         ================================================== -->
 
         <section class="maintenance-card">
 
-
-            <!-- Card header -->
-
+            <!-- CARD HEADER -->
             <div class="card-header maintenance-list-header">
 
                 <div>
@@ -631,16 +524,13 @@
                         RECORDS
                     </span>
 
-                    <h3>
-                        All Maintenance Requests
-                    </h3>
+                    <h3>All Maintenance Requests</h3>
 
                     <p>
                         View and manage reported equipment faults.
                     </p>
 
                 </div>
-
 
                 <button
                         type="button"
@@ -656,9 +546,7 @@
             </div>
 
 
-
-            <!-- Filters -->
-
+            <!-- FILTERS -->
             <div class="maintenance-filters">
 
                 <div class="search-box">
@@ -671,7 +559,6 @@
                             placeholder="Search requests...">
 
                 </div>
-
 
                 <select id="statusFilter">
 
@@ -692,7 +579,6 @@
                     </option>
 
                 </select>
-
 
                 <select id="priorityFilter">
 
@@ -717,61 +603,33 @@
             </div>
 
 
-
-            <!-- Table -->
-
+            <!-- MAINTENANCE TABLE -->
             <div class="table-container">
 
                 <table class="maintenance-table">
 
                     <thead>
-
                     <tr>
-
-                        <th>
-                            Request
-                        </th>
-
-                        <th>
-                            Equipment
-                        </th>
-
-                        <th>
-                            Reported By
-                        </th>
-
-                        <th>
-                            Date
-                        </th>
-
-                        <th>
-                            Priority
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Actions
-                        </th>
-
+                        <th>Request</th>
+                        <th>Equipment</th>
+                        <th>Reported By</th>
+                        <th>Date</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
-
                     </thead>
-
 
                     <tbody id="requestTableBody">
 
-                    <!-- JavaScript inserts maintenance requests here -->
+                    <!-- Populated by maintenance.js -->
 
                     </tbody>
 
                 </table>
 
 
-                <!-- Empty state -->
-
+                <!-- EMPTY STATE -->
                 <div
                         id="emptyState"
                         class="empty-state">
@@ -782,9 +640,7 @@
 
                     </div>
 
-                    <h4>
-                        No maintenance requests found
-                    </h4>
+                    <h4>No maintenance requests found</h4>
 
                     <p>
                         There are currently no requests matching your search.
@@ -795,15 +651,12 @@
             </div>
 
 
-
-            <!-- Table footer -->
-
+            <!-- TABLE FOOTER -->
             <div class="table-footer">
 
                 <span id="requestCount">
                     Showing 0 requests
                 </span>
-
 
                 <div class="pagination">
 
@@ -817,11 +670,7 @@
 
                     </button>
 
-
-                    <span id="currentPage">
-                        1
-                    </span>
-
+                    <span id="currentPage">1</span>
 
                     <button
                             type="button"
@@ -839,11 +688,9 @@
 
         </section>
 
-
     </section>
 
 </main>
-
 
 
 <!-- =========================================================
@@ -856,7 +703,6 @@
 
     <div class="maintenance-modal">
 
-
         <div class="modal-header">
 
             <div>
@@ -865,12 +711,9 @@
                     REQUEST DETAILS
                 </span>
 
-                <h3>
-                    Maintenance Information
-                </h3>
+                <h3>Maintenance Information</h3>
 
             </div>
-
 
             <button
                     type="button"
@@ -886,97 +729,43 @@
 
         <div class="maintenance-details">
 
-
             <div class="detail-item">
-
-                <span>
-                    Request ID
-                </span>
-
-                <strong id="viewRequestId">
-                    -
-                </strong>
-
+                <span>Request ID</span>
+                <strong id="viewRequestId">-</strong>
             </div>
 
-
             <div class="detail-item">
-
-                <span>
-                    Equipment
-                </span>
-
-                <strong id="viewEquipment">
-                    -
-                </strong>
-
+                <span>Equipment</span>
+                <strong id="viewEquipment">-</strong>
             </div>
 
-
             <div class="detail-item">
-
-                <span>
-                    Reported By
-                </span>
-
-                <strong id="viewReportedBy">
-                    -
-                </strong>
-
+                <span>Reported By</span>
+                <strong id="viewReportedBy">-</strong>
             </div>
 
-
             <div class="detail-item">
-
-                <span>
-                    Date Reported
-                </span>
-
-                <strong id="viewDateReported">
-                    -
-                </strong>
-
+                <span>Date Reported</span>
+                <strong id="viewDateReported">-</strong>
             </div>
 
-
             <div class="detail-item">
-
-                <span>
-                    Priority
-                </span>
-
-                <strong id="viewPriority">
-                    -
-                </strong>
-
+                <span>Priority</span>
+                <strong id="viewPriority">-</strong>
             </div>
 
-
             <div class="detail-item">
-
-                <span>
-                    Status
-                </span>
-
-                <strong id="viewStatus">
-                    -
-                </strong>
-
+                <span>Status</span>
+                <strong id="viewStatus">-</strong>
             </div>
-
 
             <div class="detail-description">
 
-                <span>
-                    Description
-                </span>
+                <span>Description</span>
 
-                <p id="viewDescription">
-                    -
-                </p>
+                <p id="viewDescription">-</p>
 
             </div>
-
 
         </div>
 
@@ -985,12 +774,15 @@
 </div>
 
 
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Maintenance functionality -->
 <script src="maintenance.js"></script>
+
+<!-- Shared Staff / Student notification badge -->
+<script src="notification-badge.js"></script>
 
 </body>
 
