@@ -1,0 +1,272 @@
+/* =========================================================
+   CAMPUS FACILITY BOOKING SYSTEM
+   STAFF DASHBOARD WELCOME BANNER
+   Matches the glass theme: campus photo, frosted navy, Sora.
+   (Stat cards, management cards and buttons are styled in
+   staff-dashboard.css, so nothing here overrides them.)
+========================================================= */
+
+/* MAIN WELCOME BANNER */
+
+.staff-welcome-banner {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 210px;
+
+    margin-bottom: 26px;
+    padding: 40px 46px;
+
+    background:
+        radial-gradient(520px 260px at 100% 0%, rgba(96, 165, 250, 0.38), transparent 65%),
+        linear-gradient(120deg, rgba(23, 32, 51, 0.88) 0%, rgba(23, 32, 51, 0.55) 100%);
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+
+    box-shadow: 0 18px 44px rgba(8, 13, 25, 0.45);
+
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+    color: #ffffff;
+}
+
+/* DECORATIVE RINGS */
+
+.staff-welcome-banner::before,
+.staff-welcome-banner::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.staff-welcome-banner::before {
+    width: 360px;
+    height: 360px;
+    right: -90px;
+    top: -170px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.staff-welcome-banner::after {
+    width: 240px;
+    height: 240px;
+    right: 10px;
+    top: -110px;
+    border: 40px solid rgba(147, 197, 253, 0.07);
+}
+
+/* WELCOME CONTENT */
+
+.staff-welcome-content {
+    position: relative;
+    z-index: 1;
+
+    flex: 1;
+}
+
+/* STAFF PORTAL LABEL (pill) */
+
+.staff-welcome-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 16px;
+    padding: 7px 14px;
+
+    color: #dbeafe;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+}
+
+.staff-welcome-label i {
+    font-size: 12px;
+    color: #93c5fd;
+}
+
+/* WELCOME HEADING */
+
+.staff-welcome-banner h2 {
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-family: "Sora", "DM Sans", Arial, sans-serif;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+/* LOGGED-IN STAFF NAME */
+
+.staff-welcome-banner h2 span {
+    color: #bfdbfe;
+}
+
+/* DESCRIPTION */
+
+.staff-welcome-banner p {
+    max-width: 620px;
+
+    margin: 0;
+
+    color: #dbe5f0;
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* MANAGE BOOKINGS BUTTON */
+
+.staff-welcome-button {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    padding: 15px 26px;
+
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    text-decoration: none;
+
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.45);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.staff-welcome-button i:last-child {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.staff-welcome-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.55);
+}
+
+.staff-welcome-button:hover i:last-child {
+    transform: translateX(4px);
+}
+
+/* DASHBOARD STATISTICS SPACING */
+
+.dashboard-stats {
+    margin-top: 0;
+    margin-bottom: 44px;
+}
+
+/* HIDE EMPTY NOTIFICATION BADGE */
+
+.notification-count:empty {
+    display: none !important;
+}
+
+/* ACCESSIBILITY */
+
+.staff-welcome-button:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .staff-welcome-banner {
+        padding: 32px;
+        gap: 20px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 28px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .staff-welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+
+        min-height: 0;
+
+        padding: 28px 24px;
+
+        gap: 22px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 25px;
+    }
+
+    .staff-welcome-banner p {
+        font-size: 13px;
+    }
+
+    .staff-welcome-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 450px) {
+
+    .staff-welcome-banner {
+        padding: 24px 20px;
+        border-radius: 18px;
+    }
+
+    .staff-welcome-banner h2 {
+        font-size: 23px;
+    }
+
+    .staff-welcome-label {
+        font-size: 10px;
+    }
+
+}

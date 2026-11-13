@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,16 +8,18 @@
 
     <title>Booking Management | Campus Facility Booking</title>
 
+    <!-- Booking CSS -->
     <link rel="stylesheet" href="booking.css">
 
     <!-- Font Awesome -->
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Authentication and permissions -->
+    <script src="auth.js"></script>
 </head>
 
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -25,15 +28,9 @@
 <aside class="sidebar">
 
     <div class="sidebar-logo">
-
         <i class="fa-solid fa-building-columns"></i>
-
-        <span>
-            CampusBooking
-        </span>
-
+        <span>CampusBooking</span>
     </div>
-
 
     <nav class="sidebar-nav">
 
@@ -73,15 +70,11 @@
         </a>
 
         <a href="invoice.html">
-
             <i class="fa-solid fa-file-invoice-dollar"></i>
-
             <span>Invoices</span>
-
         </a>
 
     </nav>
-
 
     <div class="sidebar-bottom">
 
@@ -99,64 +92,51 @@
 
 </aside>
 
-
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
 
-
-    <!-- =====================================================
-         TOP BAR
-    ====================================================== -->
-
+    <!-- TOP BAR -->
     <header class="topbar">
 
         <div class="topbar-left">
 
-            <button
-                    type="button"
+            <button type="button"
                     id="mobileMenuBtn"
-                    class="mobile-menu-btn">
+                    class="mobile-menu-btn"
+                    aria-label="Toggle menu">
 
                 <i class="fa-solid fa-bars"></i>
 
             </button>
 
-
             <div>
-
-                <h1>
-                    Booking Management
-                </h1>
-
-                <p>
-                    Create and manage campus facility bookings.
-                </p>
-
+                <h1>Booking Management</h1>
+                <p>Create and manage campus facility bookings.</p>
             </div>
 
         </div>
 
-
         <div class="topbar-actions">
 
-            <button
-                    type="button"
+            <!-- DYNAMIC NOTIFICATION BELL -->
+            <button type="button"
                     class="notification-icon"
-                    onclick="window.location.href='notification.html'">
+                    onclick="window.location.href='notification.html'"
+                    aria-label="Open notifications">
 
                 <i class="fa-regular fa-bell"></i>
 
-                <span class="notification-count">
-                    3
-                </span>
+                <!-- No hardcoded number -->
+                <span class="notification-count"
+                      style="display: none;"
+                      aria-live="polite"></span>
 
             </button>
 
-
+            <!-- LOGGED-IN USER -->
             <div class="staff-profile">
 
                 <div class="staff-avatar">
@@ -164,15 +144,8 @@
                 </div>
 
                 <div class="staff-info">
-
-                    <strong>
-                        Staff Member
-                    </strong>
-
-                    <span>
-                        Administrator
-                    </span>
-
+                    <strong>Staff Member</strong>
+                    <span>Administrator</span>
                 </div>
 
             </div>
@@ -181,34 +154,23 @@
 
     </header>
 
-
-
     <!-- =====================================================
-         PAGE
+         BOOKING PAGE
     ====================================================== -->
 
     <section class="booking-page">
 
-
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
-
+        <!-- PAGE HEADER -->
         <div class="page-header">
 
             <div>
 
                 <span class="page-eyebrow">
-
                     <i class="fa-solid fa-calendar-plus"></i>
-
                     FACILITY BOOKINGS
-
                 </span>
 
-                <h2>
-                    Manage Bookings
-                </h2>
+                <h2>Manage Bookings</h2>
 
                 <p>
                     Create new bookings, review existing reservations,
@@ -217,122 +179,87 @@
 
             </div>
 
-
-            <button
-                    type="button"
+            <button type="button"
                     id="newBookingBtn"
                     class="primary-btn">
 
                 <i class="fa-solid fa-plus"></i>
-
                 New Booking
 
             </button>
 
         </div>
 
-
-
         <!-- =================================================
-             STATISTICS
+             BOOKING STATISTICS
         ================================================== -->
 
         <div class="booking-stats">
 
+            <!-- TOTAL BOOKINGS -->
             <div class="stat-card">
 
                 <div class="stat-icon blue">
-
                     <i class="fa-solid fa-calendar-days"></i>
-
                 </div>
 
                 <div>
-
                     <span>Total Bookings</span>
-
-                    <strong id="totalBookings">
-                        0
-                    </strong>
-
+                    <strong id="totalBookings">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- APPROVED -->
             <div class="stat-card">
 
                 <div class="stat-icon green">
-
                     <i class="fa-solid fa-circle-check"></i>
-
                 </div>
 
                 <div>
-
                     <span>Approved</span>
-
-                    <strong id="approvedBookings">
-                        0
-                    </strong>
-
+                    <strong id="approvedBookings">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- PENDING -->
             <div class="stat-card">
 
                 <div class="stat-icon orange">
-
                     <i class="fa-solid fa-clock"></i>
-
                 </div>
 
                 <div>
-
                     <span>Pending</span>
-
-                    <strong id="pendingBookings">
-                        0
-                    </strong>
-
+                    <strong id="pendingBookings">0</strong>
                 </div>
 
             </div>
 
-
+            <!-- CANCELLED -->
             <div class="stat-card">
 
                 <div class="stat-icon red">
-
                     <i class="fa-solid fa-ban"></i>
-
                 </div>
 
                 <div>
-
                     <span>Cancelled</span>
-
-                    <strong id="cancelledBookings">
-                        0
-                    </strong>
-
+                    <strong id="cancelledBookings">0</strong>
                 </div>
 
             </div>
 
         </div>
 
-
-
         <!-- =================================================
              CREATE BOOKING FORM
         ================================================== -->
 
-        <section
-                id="bookingFormSection"
-                class="booking-card hidden">
+        <section id="bookingFormSection"
+                 class="booking-card hidden">
 
             <div class="card-header">
 
@@ -352,11 +279,10 @@
 
                 </div>
 
-
-                <button
-                        type="button"
+                <button type="button"
                         id="closeFormBtn"
-                        class="close-btn">
+                        class="close-btn"
+                        aria-label="Close booking form">
 
                     <i class="fa-solid fa-xmark"></i>
 
@@ -364,14 +290,9 @@
 
             </div>
 
-
             <form id="bookingForm">
 
-
-                <!-- =========================================
-                     USER
-                ========================================== -->
-
+                <!-- USER -->
                 <div class="form-group">
 
                     <label for="userId">
@@ -379,8 +300,7 @@
                         <span>*</span>
                     </label>
 
-                    <select
-                            id="userId"
+                    <select id="userId"
                             name="userId"
                             required>
 
@@ -388,10 +308,7 @@
                             Select a user
                         </option>
 
-                        <!--
-                            JavaScript will populate users
-                            from the backend.
-                        -->
+                        <!-- Populated by booking.js -->
 
                     </select>
 
@@ -401,12 +318,7 @@
 
                 </div>
 
-
-
-                <!-- =========================================
-                     FACILITY
-                ========================================== -->
-
+                <!-- FACILITY -->
                 <div class="form-group">
 
                     <label for="facilityId">
@@ -414,8 +326,7 @@
                         <span>*</span>
                     </label>
 
-                    <select
-                            id="facilityId"
+                    <select id="facilityId"
                             name="facilityId"
                             required>
 
@@ -423,16 +334,13 @@
                             Select a facility
                         </option>
 
+                        <!-- Populated by booking.js -->
+
                     </select>
 
                 </div>
 
-
-
-                <!-- =========================================
-                     DATE
-                ========================================== -->
-
+                <!-- DATE -->
                 <div class="form-group">
 
                     <label for="bookingDate">
@@ -440,20 +348,14 @@
                         <span>*</span>
                     </label>
 
-                    <input
-                            type="date"
-                            id="bookingDate"
-                            name="bookingDate"
-                            required>
+                    <input type="date"
+                           id="bookingDate"
+                           name="bookingDate"
+                           required>
 
                 </div>
 
-
-
-                <!-- =========================================
-                     TIME SLOT
-                ========================================== -->
-
+                <!-- TIME SLOT -->
                 <div class="form-group">
 
                     <label for="timeSlotId">
@@ -461,14 +363,15 @@
                         <span>*</span>
                     </label>
 
-                    <select
-                            id="timeSlotId"
+                    <select id="timeSlotId"
                             name="timeSlotId"
                             required>
 
                         <option value="">
                             Select a time slot
                         </option>
+
+                        <!-- Populated by booking.js -->
 
                     </select>
 
@@ -478,12 +381,7 @@
 
                 </div>
 
-
-
-                <!-- =========================================
-                     PURPOSE
-                ========================================== -->
-
+                <!-- PURPOSE -->
                 <div class="form-group full-width">
 
                     <label for="purpose">
@@ -491,31 +389,23 @@
                         <span>*</span>
                     </label>
 
-                    <textarea
-                            id="purpose"
-                            name="purpose"
-                            rows="4"
-                            maxlength="500"
-                            placeholder="Explain the purpose of this booking..."
-                            required></textarea>
+                    <textarea id="purpose"
+                              name="purpose"
+                              rows="4"
+                              maxlength="500"
+                              placeholder="Explain the purpose of this booking..."
+                              required></textarea>
 
-                    <small
-                            id="purposeCount">
+                    <small id="purposeCount">
                         0 / 500
                     </small>
 
                 </div>
 
-
-
-                <!-- =========================================
-                     ACTIONS
-                ========================================== -->
-
+                <!-- FORM ACTIONS -->
                 <div class="form-actions">
 
-                    <button
-                            type="button"
+                    <button type="button"
                             id="cancelBookingBtn"
                             class="secondary-btn">
 
@@ -523,14 +413,11 @@
 
                     </button>
 
-
-                    <button
-                            type="submit"
+                    <button type="submit"
                             id="submitBookingBtn"
                             class="primary-btn">
 
                         <i class="fa-solid fa-calendar-check"></i>
-
                         Create Booking
 
                     </button>
@@ -541,17 +428,13 @@
 
         </section>
 
-
-
         <!-- =================================================
              BOOKINGS LIST
         ================================================== -->
 
         <section class="booking-card">
 
-
-            <!-- Card header -->
-
+            <!-- LIST HEADER -->
             <div class="card-header booking-list-header">
 
                 <div>
@@ -560,9 +443,7 @@
                         RECORDS
                     </span>
 
-                    <h3>
-                        All Bookings
-                    </h3>
+                    <h3>All Bookings</h3>
 
                     <p>
                         View and manage facility reservations.
@@ -570,38 +451,32 @@
 
                 </div>
 
-
-                <button
-                        type="button"
+                <button type="button"
                         id="refreshBtn"
                         class="secondary-btn">
 
                     <i class="fa-solid fa-rotate"></i>
-
                     Refresh
 
                 </button>
 
             </div>
 
-
-
-            <!-- Filters -->
-
+            <!-- FILTERS -->
             <div class="booking-filters">
 
+                <!-- SEARCH -->
                 <div class="search-box">
 
                     <i class="fa-solid fa-magnifying-glass"></i>
 
-                    <input
-                            type="text"
-                            id="bookingSearch"
-                            placeholder="Search bookings...">
+                    <input type="text"
+                           id="bookingSearch"
+                           placeholder="Search bookings...">
 
                 </div>
 
-
+                <!-- STATUS FILTER -->
                 <select id="statusFilter">
 
                     <option value="all">
@@ -616,13 +491,17 @@
                         Pending
                     </option>
 
+                    <option value="rejected">
+                        Rejected
+                    </option>
+
                     <option value="cancelled">
                         Cancelled
                     </option>
 
                 </select>
 
-
+                <!-- FACILITY FILTER -->
                 <select id="facilityFilter">
 
                     <option value="all">
@@ -633,9 +512,9 @@
 
             </div>
 
-
-
-            <!-- Table -->
+            <!-- =================================================
+                 BOOKING TABLE
+            ================================================== -->
 
             <div class="table-container">
 
@@ -644,64 +523,34 @@
                     <thead>
 
                     <tr>
-
-                        <th>
-                            Booking
-                        </th>
-
-                        <th>
-                            User
-                        </th>
-
-                        <th>
-                            Facility
-                        </th>
-
-                        <th>
-                            Date
-                        </th>
-
-                        <th>
-                            Time
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Actions
-                        </th>
-
+                        <th>Booking</th>
+                        <th>User</th>
+                        <th>Facility</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
 
                     </thead>
 
-
                     <tbody id="bookingTableBody">
 
-                    <!-- JavaScript inserts bookings here -->
+                    <!-- Bookings inserted by booking.js -->
 
                     </tbody>
 
                 </table>
 
-
-                <!-- Empty state -->
-
-                <div
-                        id="emptyState"
-                        class="empty-state">
+                <!-- EMPTY STATE -->
+                <div id="emptyState"
+                     class="empty-state">
 
                     <div class="empty-icon">
-
                         <i class="fa-regular fa-calendar-xmark"></i>
-
                     </div>
 
-                    <h4>
-                        No bookings found
-                    </h4>
+                    <h4>No bookings found</h4>
 
                     <p>
                         There are currently no bookings matching your search.
@@ -711,40 +560,32 @@
 
             </div>
 
-
-
-            <!-- Table footer -->
-
+            <!-- TABLE FOOTER -->
             <div class="table-footer">
 
                 <span id="bookingCount">
                     Showing 0 bookings
                 </span>
 
-
                 <div class="pagination">
 
-                    <button
-                            type="button"
+                    <button type="button"
                             id="previousPage"
                             class="pagination-btn"
-                            disabled>
+                            disabled
+                            aria-label="Previous page">
 
                         <i class="fa-solid fa-chevron-left"></i>
 
                     </button>
 
+                    <span id="currentPage">1</span>
 
-                    <span id="currentPage">
-                        1
-                    </span>
-
-
-                    <button
-                            type="button"
+                    <button type="button"
                             id="nextPage"
                             class="pagination-btn"
-                            disabled>
+                            disabled
+                            aria-label="Next page">
 
                         <i class="fa-solid fa-chevron-right"></i>
 
@@ -756,24 +597,20 @@
 
         </section>
 
-
     </section>
 
 </main>
-
-
 
 <!-- =========================================================
      VIEW BOOKING MODAL
 ========================================================= -->
 
-<div
-        id="viewBookingModal"
-        class="modal-overlay">
+<div id="viewBookingModal"
+     class="modal-overlay">
 
     <div class="booking-modal">
 
-
+        <!-- MODAL HEADER -->
         <div class="modal-header">
 
             <div>
@@ -782,17 +619,14 @@
                     BOOKING DETAILS
                 </span>
 
-                <h3>
-                    Booking Information
-                </h3>
+                <h3>Booking Information</h3>
 
             </div>
 
-
-            <button
-                    type="button"
+            <button type="button"
                     id="closeViewModalBtn"
-                    class="close-btn">
+                    class="close-btn"
+                    aria-label="Close booking details">
 
                 <i class="fa-solid fa-xmark"></i>
 
@@ -800,100 +634,58 @@
 
         </div>
 
-
+        <!-- BOOKING DETAILS -->
         <div class="booking-details">
 
-
             <div class="detail-item">
 
-                <span>
-                    Booking ID
-                </span>
-
-                <strong id="viewBookingId">
-                    -
-                </strong>
+                <span>Booking ID</span>
+                <strong id="viewBookingId">-</strong>
 
             </div>
 
-
             <div class="detail-item">
 
-                <span>
-                    User
-                </span>
-
-                <strong id="viewUser">
-                    -
-                </strong>
+                <span>User</span>
+                <strong id="viewUser">-</strong>
 
             </div>
 
-
             <div class="detail-item">
 
-                <span>
-                    Facility
-                </span>
-
-                <strong id="viewFacility">
-                    -
-                </strong>
+                <span>Facility</span>
+                <strong id="viewFacility">-</strong>
 
             </div>
 
-
             <div class="detail-item">
 
-                <span>
-                    Date
-                </span>
-
-                <strong id="viewDate">
-                    -
-                </strong>
+                <span>Date</span>
+                <strong id="viewDate">-</strong>
 
             </div>
 
-
             <div class="detail-item">
 
-                <span>
-                    Time
-                </span>
-
-                <strong id="viewTime">
-                    -
-                </strong>
+                <span>Time</span>
+                <strong id="viewTime">-</strong>
 
             </div>
 
-
             <div class="detail-item">
 
-                <span>
-                    Status
-                </span>
-
-                <strong id="viewStatus">
-                    -
-                </strong>
+                <span>Status</span>
+                <strong id="viewStatus">-</strong>
 
             </div>
-
 
             <div class="detail-purpose">
 
-                <span>
-                    Purpose
-                </span>
+                <span>Purpose</span>
 
-                <p id="viewPurpose">
-                    -
-                </p>
+                <p id="viewPurpose">-</p>
 
             </div>
-
 
         </div>
 
@@ -901,14 +693,15 @@
 
 </div>
 
-
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Shared notification counter -->
+<script src="notification-badge.js"></script>
+
+<!-- Existing booking functionality -->
 <script src="booking.js"></script>
 
 </body>
-
 </html>

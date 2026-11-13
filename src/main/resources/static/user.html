@@ -1,8 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,14 +12,14 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- User CSS -->
+    <!-- User Management Styles -->
     <link rel="stylesheet" href="user.css">
 
+    <!-- Authentication and Permissions -->
+    <script src="auth.js"></script>
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -27,114 +27,65 @@
 
 <aside class="sidebar">
 
-    <!-- Logo -->
-
     <div class="sidebar-logo">
-
         <i class="fa-solid fa-building-columns"></i>
-
         <span>CampusBooking</span>
-
     </div>
-
-
-    <!-- Navigation -->
 
     <nav class="sidebar-nav">
 
         <a href="staff-dashboard.html">
-
             <i class="fa-solid fa-chart-line"></i>
-
             <span>Dashboard</span>
-
         </a>
-
 
         <a href="booking.html">
-
             <i class="fa-solid fa-calendar-check"></i>
-
             <span>Bookings</span>
-
         </a>
-
 
         <a href="facility.html">
-
             <i class="fa-solid fa-building"></i>
-
             <span>Facilities</span>
-
         </a>
-
 
         <a href="equipment.html">
-
             <i class="fa-solid fa-desktop"></i>
-
             <span>Equipment</span>
-
         </a>
-
 
         <a href="maintenance.html">
-
             <i class="fa-solid fa-screwdriver-wrench"></i>
-
             <span>Maintenance</span>
-
         </a>
-
 
         <a href="notification.html">
-
             <i class="fa-solid fa-bell"></i>
-
             <span>Notifications</span>
-
         </a>
-
 
         <a href="user.html" class="active">
-
             <i class="fa-solid fa-users"></i>
-
             <span>Users</span>
-
         </a>
 
-
         <a href="invoice.html">
-
             <i class="fa-solid fa-file-invoice-dollar"></i>
-
             <span>Invoices</span>
-
         </a>
 
     </nav>
 
-
-    <!-- Bottom Navigation -->
-
     <div class="sidebar-bottom">
 
         <a href="profile.html">
-
             <i class="fa-solid fa-user"></i>
-
             <span>Profile</span>
-
         </a>
 
-
-        <a href="index.html" class="logout">
-
+        <a href="login.html" class="logout">
             <i class="fa-solid fa-right-from-bracket"></i>
-
             <span>Logout</span>
-
         </a>
 
     </div>
@@ -142,13 +93,11 @@
 </aside>
 
 
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
-
 
     <!-- =====================================================
          TOP BAR
@@ -167,61 +116,41 @@
 
             </button>
 
-
             <div>
-
                 <h1>User Management</h1>
-
                 <p>
-                    Create, search, update and manage system users.
+                    Manage registered users and their facility bookings.
                 </p>
-
             </div>
 
         </div>
 
-
-        <!-- Topbar Actions -->
-
         <div class="topbar-actions">
 
+            <!-- DYNAMIC NOTIFICATION BELL -->
             <button
                     class="notification-icon"
                     type="button"
-                    title="Notifications">
+                    title="Notifications"
+                    aria-label="Open notifications"
+                    onclick="window.location.href='notification.html'">
 
                 <i class="fa-solid fa-bell"></i>
 
-                <span class="notification-count">
-                    3
-                </span>
+                <span class="notification-count" hidden></span>
 
             </button>
 
-
-            <!-- Logged-in User -->
-
+            <!-- STAFF PROFILE -->
             <a href="profile.html" class="staff-profile">
 
                 <div class="staff-avatar">
-
-                    <span>
-                        ST
-                    </span>
-
+                    <span>ST</span>
                 </div>
 
-
                 <div class="staff-info">
-
-                    <strong>
-                        Staff Member
-                    </strong>
-
-                    <span>
-                        Administrator
-                    </span>
-
+                    <strong>Staff Member</strong>
+                    <span>Administrator</span>
                 </div>
 
             </a>
@@ -231,39 +160,27 @@
     </header>
 
 
-
     <!-- =====================================================
-         PAGE CONTENT
+         USER MANAGEMENT PAGE
     ====================================================== -->
 
     <section class="user-page">
 
-
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
-
+        <!-- PAGE HEADING -->
         <div class="page-header">
 
             <div>
 
                 <span class="page-eyebrow">
-
                     <i class="fa-solid fa-users"></i>
-
                     USER MANAGEMENT
-
                 </span>
 
-
-                <h2>
-                    Manage Users
-                </h2>
-
+                <h2>Manage Users</h2>
 
                 <p>
-                    Create and manage users registered on the
-                    Campus Facility Booking System.
+                    View registered users, monitor their booking
+                    activity and manually create or update user accounts.
                 </p>
 
             </div>
@@ -271,63 +188,36 @@
         </div>
 
 
-
         <!-- =================================================
-             USER FORM CARD
+             USER INFORMATION FORM
         ================================================== -->
 
         <div class="content-card">
 
-
             <div class="card-header">
 
                 <div>
-
-                    <h3>
-                        User Information
-                    </h3>
-
-                    <p>
-                        Enter the user's details below.
-                    </p>
-
+                    <h3>User Information</h3>
+                    <p>Enter the user's details below.</p>
                 </div>
 
-
                 <div class="card-icon">
-
                     <i class="fa-solid fa-user-plus"></i>
-
                 </div>
 
             </div>
 
 
-
-            <!-- =================================================
-                 USER FORM
-            ================================================== -->
-
             <form id="userForm">
-
 
                 <div class="form-grid">
 
-
                     <!-- USER ID -->
-
                     <div class="form-group">
 
                         <label for="userId">
-
-                            User ID
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            User ID <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -345,21 +235,12 @@
                     </div>
 
 
-
                     <!-- FIRST NAME -->
-
                     <div class="form-group">
 
                         <label for="firstName">
-
-                            First Name
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            First Name <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -377,21 +258,12 @@
                     </div>
 
 
-
                     <!-- LAST NAME -->
-
                     <div class="form-group">
 
                         <label for="lastName">
-
-                            Last Name
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            Last Name <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -409,21 +281,12 @@
                     </div>
 
 
-
                     <!-- EMAIL -->
-
                     <div class="form-group">
 
                         <label for="email">
-
-                            Email Address
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            Email Address <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -441,21 +304,12 @@
                     </div>
 
 
-
                     <!-- DATE OF BIRTH -->
-
                     <div class="form-group">
 
                         <label for="dateOfBirth">
-
-                            Date of Birth
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            Date of Birth <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -472,21 +326,12 @@
                     </div>
 
 
-
                     <!-- DEPARTMENT ID -->
-
                     <div class="form-group">
 
                         <label for="departmentId">
-
-                            Department ID
-
-                            <span class="required">
-                                *
-                            </span>
-
+                            Department ID <span class="required">*</span>
                         </label>
-
 
                         <div class="input-wrapper">
 
@@ -506,13 +351,8 @@
                 </div>
 
 
-
-                <!-- =================================================
-                     FORM BUTTONS
-                ================================================== -->
-
+                <!-- CRUD ACTION BUTTONS -->
                 <div class="form-actions">
-
 
                     <button
                             type="submit"
@@ -520,11 +360,9 @@
                             id="createButton">
 
                         <i class="fa-solid fa-plus"></i>
-
                         Create User
 
                     </button>
-
 
                     <button
                             type="button"
@@ -532,11 +370,9 @@
                             id="readButton">
 
                         <i class="fa-solid fa-magnifying-glass"></i>
-
                         Search User
 
                     </button>
-
 
                     <button
                             type="button"
@@ -544,11 +380,9 @@
                             id="updateButton">
 
                         <i class="fa-solid fa-pen"></i>
-
                         Update User
 
                     </button>
-
 
                     <button
                             type="button"
@@ -556,11 +390,9 @@
                             id="deleteButton">
 
                         <i class="fa-solid fa-trash"></i>
-
                         Delete User
 
                     </button>
-
 
                     <button
                             type="reset"
@@ -568,7 +400,6 @@
                             id="clearButton">
 
                         <i class="fa-solid fa-rotate-left"></i>
-
                         Clear
 
                     </button>
@@ -580,67 +411,41 @@
         </div>
 
 
-
-        <!-- =================================================
-             MESSAGE
-        ================================================== -->
-
+        <!-- FORM MESSAGE -->
         <div
                 id="userMessage"
                 class="message"
-                role="alert">
-
+                role="alert"
+                aria-live="polite">
         </div>
 
 
-
         <!-- =================================================
-             USER RESULT
+             SELECTED USER RESULT
         ================================================== -->
 
         <div class="content-card result-card">
 
-
             <div class="card-header">
 
                 <div>
-
-                    <h3>
-                        User Information
-                    </h3>
-
-                    <p>
-                        Details of the selected user.
-                    </p>
-
+                    <h3>User Information</h3>
+                    <p>Details of the selected user.</p>
                 </div>
 
-
                 <div class="card-icon">
-
                     <i class="fa-solid fa-address-card"></i>
-
                 </div>
 
             </div>
 
-
-
-            <!-- =================================================
-                 RESULT CONTENT
-            ================================================== -->
-
-            <div
-                    id="userResult"
-                    class="user-result">
+            <div id="userResult" class="user-result">
 
                 <div class="empty-result">
 
                     <i class="fa-solid fa-user"></i>
 
-                    <h4>
-                        No User Selected
-                    </h4>
+                    <h4>No User Selected</h4>
 
                     <p>
                         Search for a user using their User ID
@@ -654,18 +459,248 @@
         </div>
 
 
+        <!-- =================================================
+             USER AND BOOKING STATISTICS
+        ================================================== -->
+
+        <div class="user-stats-grid">
+
+            <!-- TOTAL REGISTERED USERS -->
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon blue">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <div>
+                    <p>Total Registered Users</p>
+                    <h3 id="totalUsers">—</h3>
+                </div>
+
+            </div>
+
+
+            <!-- USERS WITH BOOKINGS -->
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon green">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <div>
+                    <p>Users With Bookings</p>
+                    <h3 id="usersWithBookings">—</h3>
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL BOOKINGS -->
+            <div class="user-stat-card">
+
+                <div class="user-stat-icon orange">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+
+                <div>
+                    <p>Total Bookings</p>
+                    <h3 id="totalUserBookings">—</h3>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REGISTERED USERS TABLE
+        ================================================== -->
+
+        <div class="content-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>Registered Users &amp; Booking Records</h3>
+
+                    <p>
+                        View users and the bookings associated
+                        with their accounts.
+                    </p>
+
+                </div>
+
+                <div class="card-icon">
+                    <i class="fa-solid fa-address-book"></i>
+                </div>
+
+            </div>
+
+
+            <!-- USER TABLE TOOLBAR -->
+            <div class="users-toolbar">
+
+                <div class="users-search">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                            type="search"
+                            id="userTableSearch"
+                            placeholder="Search ID, name or email..."
+                            aria-label="Search registered users">
+
+                </div>
+
+                <select
+                        id="bookingFilter"
+                        aria-label="Filter users by booking activity">
+
+                    <option value="all">
+                        All Users
+                    </option>
+
+                    <option value="booked">
+                        With Bookings
+                    </option>
+
+                    <option value="not-booked">
+                        Without Bookings
+                    </option>
+
+                </select>
+
+                <button
+                        type="button"
+                        class="secondary-button refresh-users-btn"
+                        id="refreshUsersBtn">
+
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh
+
+                </button>
+
+            </div>
+
+
+            <!-- TABLE MESSAGE -->
+            <p
+                    id="usersTableMessage"
+                    class="users-table-message"
+                    role="status"
+                    aria-live="polite">
+
+                Loading registered users...
+
+            </p>
+
+
+            <!-- REGISTERED USERS TABLE -->
+            <div class="users-table-wrapper">
+
+                <table class="users-table">
+
+                    <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Bookings</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="registeredUsersBody">
+
+                    <!-- Populated by user.js -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SELECTED USER BOOKING HISTORY
+        ================================================== -->
+
+        <div
+                class="content-card"
+                id="userBookingsCard"
+                hidden>
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3 id="selectedUserBookingTitle">
+                        User Booking History
+                    </h3>
+
+                    <p id="selectedUserBookingSubtitle">
+                        Booking records for the selected user.
+                    </p>
+
+                </div>
+
+                <button
+                        type="button"
+                        class="secondary-button close-bookings-btn"
+                        id="closeUserBookingsBtn">
+
+                    <i class="fa-solid fa-xmark"></i>
+                    Close
+
+                </button>
+
+            </div>
+
+
+            <div class="users-table-wrapper">
+
+                <table class="users-table">
+
+                    <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Facility ID</th>
+                        <th>Time Slot ID</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="selectedUserBookingsBody">
+
+                    <!-- Populated by user.js -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
 
     </section>
 
 </main>
 
 
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- User Management CRUD and Booking Records -->
 <script src="user.js"></script>
+
+<!-- Shared Staff / Student Notification Badge -->
+<script src="notification-badge.js"></script>
 
 </body>
 
