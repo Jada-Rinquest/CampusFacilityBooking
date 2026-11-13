@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>Invoices | Campus Facility Booking</title>
 
@@ -15,11 +16,12 @@
   <!-- Invoice CSS -->
   <link rel="stylesheet" href="invoice.css">
 
+  <!-- Authentication -->
+  <script src="auth.js"></script>
+
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -27,114 +29,65 @@
 
 <aside class="sidebar">
 
-  <!-- Logo -->
-
   <div class="sidebar-logo">
-
     <i class="fa-solid fa-building-columns"></i>
-
     <span>CampusBooking</span>
-
   </div>
-
-
-  <!-- Navigation -->
 
   <nav class="sidebar-nav">
 
     <a href="staff-dashboard.html">
-
       <i class="fa-solid fa-chart-line"></i>
-
       <span>Dashboard</span>
-
     </a>
-
 
     <a href="booking.html">
-
       <i class="fa-solid fa-calendar-check"></i>
-
       <span>Bookings</span>
-
     </a>
-
 
     <a href="facility.html">
-
       <i class="fa-solid fa-building"></i>
-
       <span>Facilities</span>
-
     </a>
-
 
     <a href="equipment.html">
-
       <i class="fa-solid fa-desktop"></i>
-
       <span>Equipment</span>
-
     </a>
-
 
     <a href="maintenance.html">
-
       <i class="fa-solid fa-screwdriver-wrench"></i>
-
       <span>Maintenance</span>
-
     </a>
-
 
     <a href="notification.html">
-
       <i class="fa-solid fa-bell"></i>
-
       <span>Notifications</span>
-
     </a>
-
 
     <a href="user.html">
-
       <i class="fa-solid fa-users"></i>
-
       <span>Users</span>
-
     </a>
 
-
     <a href="invoice.html" class="active">
-
       <i class="fa-solid fa-file-invoice-dollar"></i>
-
       <span>Invoices</span>
-
     </a>
 
   </nav>
 
-
-  <!-- Bottom Navigation -->
-
   <div class="sidebar-bottom">
 
     <a href="profile.html">
-
       <i class="fa-solid fa-user"></i>
-
       <span>Profile</span>
-
     </a>
 
-
-    <a href="index.html" class="logout">
-
+    <a href="login.html" class="logout">
       <i class="fa-solid fa-right-from-bracket"></i>
-
       <span>Logout</span>
-
     </a>
 
   </div>
@@ -142,13 +95,11 @@
 </aside>
 
 
-
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
 
 <main class="main-content">
-
 
   <!-- =====================================================
        TOP BAR
@@ -167,62 +118,39 @@
 
       </button>
 
-
       <div>
-
         <h1>Invoice Management</h1>
-
-        <p>
-          Manage booking invoices and payments.
-        </p>
-
+        <p>Manage booking invoices and payments.</p>
       </div>
 
     </div>
 
-
-    <!-- Topbar Actions -->
-
     <div class="topbar-actions">
 
+      <!-- DYNAMIC NOTIFICATION BELL -->
       <button
               class="notification-icon"
               type="button"
               title="Notifications"
+              aria-label="Open notifications"
               onclick="window.location.href='notification.html'">
 
         <i class="fa-solid fa-bell"></i>
 
-        <span class="notification-count">
-                    3
-                </span>
+        <span class="notification-count" hidden></span>
 
       </button>
 
-
-      <!-- Logged-in User -->
-
+      <!-- STAFF PROFILE -->
       <a href="profile.html" class="staff-profile">
 
         <div class="staff-avatar">
-
-                    <span>
-                        ST
-                    </span>
-
+          <span>ST</span>
         </div>
 
-
         <div class="staff-info">
-
-          <strong>
-            Staff Member
-          </strong>
-
-          <span>
-                        Administrator
-                    </span>
-
+          <strong>Staff Member</strong>
+          <span>Administrator</span>
         </div>
 
       </a>
@@ -232,35 +160,23 @@
   </header>
 
 
-
   <!-- =====================================================
-       PAGE CONTENT
+       INVOICE PAGE
   ====================================================== -->
 
   <section class="invoice-page">
 
-
-    <!-- =================================================
-         PAGE HEADER
-    ================================================== -->
-
+    <!-- PAGE HEADER -->
     <div class="page-header">
 
       <div>
 
                 <span class="page-eyebrow">
-
                     <i class="fa-solid fa-file-invoice-dollar"></i>
-
                     FINANCIAL MANAGEMENT
-
                 </span>
 
-
-        <h2>
-          Invoices
-        </h2>
-
+        <h2>Invoices</h2>
 
         <p>
           Create, view, update and manage booking
@@ -269,14 +185,12 @@
 
       </div>
 
-
       <button
               type="button"
               id="newInvoiceBtn"
               class="primary-btn">
 
         <i class="fa-solid fa-plus"></i>
-
         New Invoice
 
       </button>
@@ -284,92 +198,82 @@
     </div>
 
 
-
     <!-- =================================================
-         STATISTICS
+         INVOICE STATISTICS - FIVE CARDS
     ================================================== -->
 
     <div class="invoice-stats">
 
+      <!-- TOTAL INVOICES -->
       <div class="stat-card">
 
         <div class="stat-icon blue">
-
           <i class="fa-solid fa-file-invoice"></i>
-
         </div>
 
         <div>
-
           <span>Total Invoices</span>
-
-          <strong id="totalInvoices">
-            0
-          </strong>
-
+          <strong id="totalInvoices">0</strong>
         </div>
 
       </div>
 
 
+      <!-- PAID -->
       <div class="stat-card">
 
         <div class="stat-icon green">
-
           <i class="fa-solid fa-circle-check"></i>
-
         </div>
 
         <div>
-
           <span>Paid</span>
-
-          <strong id="paidInvoices">
-            0
-          </strong>
-
+          <strong id="paidInvoices">0</strong>
         </div>
 
       </div>
 
 
+      <!-- PENDING -->
       <div class="stat-card">
 
         <div class="stat-icon orange">
-
           <i class="fa-solid fa-clock"></i>
-
         </div>
 
         <div>
-
           <span>Pending</span>
-
-          <strong id="pendingInvoices">
-            0
-          </strong>
-
+          <strong id="pendingInvoices">0</strong>
         </div>
 
       </div>
 
 
+      <!-- OVERDUE -->
       <div class="stat-card">
 
         <div class="stat-icon red">
-
           <i class="fa-solid fa-exclamation-circle"></i>
-
         </div>
 
         <div>
-
           <span>Overdue</span>
+          <strong id="overdueInvoices">0</strong>
+        </div>
 
-          <strong id="overdueInvoices">
-            0
-          </strong>
+      </div>
 
+
+      <!-- CANCELLED -->
+      <div class="stat-card">
+
+        <div class="stat-icon cancelled-icon">
+          <i class="fa-solid fa-ban"></i>
+        </div>
+
+        <div>
+          <span>Cancelled</span>
+          <strong id="cancelledInvoices">0</strong>
         </div>
 
       </div>
@@ -377,9 +281,8 @@
     </div>
 
 
-
     <!-- =================================================
-         CREATE INVOICE FORM
+         CREATE / EDIT INVOICE FORM
     ================================================== -->
 
     <section
@@ -391,7 +294,7 @@
         <div>
 
                     <span class="card-eyebrow">
-                        NEW INVOICE
+                        INVOICE DETAILS
                     </span>
 
           <h3 id="formTitle">
@@ -399,11 +302,10 @@
           </h3>
 
           <p>
-            Enter the invoice details below.
+            Enter or update the invoice details below.
           </p>
 
         </div>
-
 
         <button
                 type="button"
@@ -419,16 +321,11 @@
 
       <form id="invoiceForm">
 
-
-        <!-- =========================================
-             INVOICE ID
-        ========================================== -->
-
+        <!-- INVOICE ID -->
         <div class="form-group">
 
           <label for="invoiceId">
-            Invoice ID
-            <span>*</span>
+            Invoice ID <span>*</span>
           </label>
 
           <div class="input-wrapper">
@@ -447,16 +344,11 @@
         </div>
 
 
-
-        <!-- =========================================
-             BOOKING ID
-        ========================================== -->
-
+        <!-- BOOKING ID -->
         <div class="form-group">
 
           <label for="bookingId">
-            Booking ID
-            <span>*</span>
+            Booking ID <span>*</span>
           </label>
 
           <div class="input-wrapper">
@@ -472,8 +364,6 @@
                 Select a booking
               </option>
 
-              <!-- JavaScript will populate bookings -->
-
             </select>
 
           </div>
@@ -481,16 +371,11 @@
         </div>
 
 
-
-        <!-- =========================================
-             AMOUNT
-        ========================================== -->
-
+        <!-- AMOUNT -->
         <div class="form-group">
 
           <label for="amount">
-            Amount (ZAR)
-            <span>*</span>
+            Amount (ZAR) <span>*</span>
           </label>
 
           <div class="input-wrapper">
@@ -502,7 +387,7 @@
                     id="amount"
                     name="amount"
                     placeholder="0.00"
-                    min="0"
+                    min="0.01"
                     step="0.01"
                     required>
 
@@ -511,16 +396,11 @@
         </div>
 
 
-
-        <!-- =========================================
-             DUE DATE
-        ========================================== -->
-
+        <!-- DUE DATE -->
         <div class="form-group">
 
           <label for="dueDate">
-            Due Date
-            <span>*</span>
+            Due Date <span>*</span>
           </label>
 
           <div class="input-wrapper">
@@ -538,16 +418,11 @@
         </div>
 
 
-
-        <!-- =========================================
-             STATUS
-        ========================================== -->
-
+        <!-- INVOICE STATUS -->
         <div class="form-group">
 
           <label for="invoiceStatus">
-            Invoice Status
-            <span>*</span>
+            Invoice Status <span>*</span>
           </label>
 
           <div class="input-wrapper">
@@ -586,11 +461,7 @@
         </div>
 
 
-
-        <!-- =========================================
-             DESCRIPTION
-        ========================================== -->
-
+        <!-- DESCRIPTION -->
         <div class="form-group full-width">
 
           <label for="description">
@@ -610,19 +481,14 @@
 
           </div>
 
-          <small
-                  id="descriptionCount">
+          <small id="descriptionCount">
             0 / 500
           </small>
 
         </div>
 
 
-
-        <!-- =========================================
-             ACTIONS
-        ========================================== -->
-
+        <!-- FORM ACTIONS -->
         <div class="form-actions">
 
           <button
@@ -634,14 +500,12 @@
 
           </button>
 
-
           <button
                   type="submit"
                   id="submitInvoiceBtn"
                   class="primary-btn">
 
             <i class="fa-solid fa-file-invoice"></i>
-
             Create Invoice
 
           </button>
@@ -653,16 +517,13 @@
     </section>
 
 
-
     <!-- =================================================
          INVOICES LIST
     ================================================== -->
 
     <section class="invoice-card">
 
-
-      <!-- Card header -->
-
+      <!-- CARD HEADER -->
       <div class="card-header invoice-list-header">
 
         <div>
@@ -671,9 +532,7 @@
                         RECORDS
                     </span>
 
-          <h3>
-            All Invoices
-          </h3>
+          <h3>All Invoices</h3>
 
           <p>
             View and manage all booking invoices.
@@ -681,14 +540,12 @@
 
         </div>
 
-
         <button
                 type="button"
                 id="refreshBtn"
                 class="secondary-btn">
 
           <i class="fa-solid fa-rotate"></i>
-
           Refresh
 
         </button>
@@ -696,9 +553,7 @@
       </div>
 
 
-
-      <!-- Filters -->
-
+      <!-- FILTERS -->
       <div class="invoice-filters">
 
         <div class="search-box">
@@ -711,7 +566,6 @@
                   placeholder="Search invoices...">
 
         </div>
-
 
         <select id="statusFilter">
 
@@ -737,7 +591,6 @@
 
         </select>
 
-
         <select id="dateFilter">
 
           <option value="all">
@@ -761,73 +614,45 @@
       </div>
 
 
-
-      <!-- Table -->
-
+      <!-- INVOICE TABLE -->
       <div class="table-container">
 
         <table class="invoice-table">
 
           <thead>
-
           <tr>
-
-            <th>
-              Invoice
-            </th>
-
-            <th>
-              Booking
-            </th>
-
-            <th>
-              Amount
-            </th>
-
-            <th>
-              Due Date
-            </th>
-
-            <th>
-              Status
-            </th>
-
-            <th>
-              Actions
-            </th>
-
+            <th>Invoice</th>
+            <th>Booking</th>
+            <th>Amount</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
-
           </thead>
-
 
           <tbody id="invoiceTableBody">
 
-          <!-- JavaScript inserts invoices here -->
+          <!-- Populated by invoice.js -->
 
           </tbody>
 
         </table>
 
 
-        <!-- Empty state -->
-
+        <!-- EMPTY STATE -->
         <div
                 id="emptyState"
                 class="empty-state">
 
           <div class="empty-icon">
-
-            <i class="fa-regular fa-file-invoice"></i>
-
+            <i class="fa-regular fa-file-lines"></i>
           </div>
 
-          <h4>
-            No invoices found
-          </h4>
+          <h4>No invoices found</h4>
 
           <p>
-            There are currently no invoices matching your search.
+            There are currently no invoices
+            matching your search.
           </p>
 
         </div>
@@ -835,15 +660,12 @@
       </div>
 
 
-
-      <!-- Table footer -->
-
+      <!-- TABLE FOOTER -->
       <div class="table-footer">
 
                 <span id="invoiceCount">
                     Showing 0 invoices
                 </span>
-
 
         <div class="pagination">
 
@@ -857,11 +679,7 @@
 
           </button>
 
-
-          <span id="currentPage">
-                        1
-                    </span>
-
+          <span id="currentPage">1</span>
 
           <button
                   type="button"
@@ -879,11 +697,9 @@
 
     </section>
 
-
   </section>
 
 </main>
-
 
 
 <!-- =========================================================
@@ -896,7 +712,6 @@
 
   <div class="invoice-modal">
 
-
     <div class="modal-header">
 
       <div>
@@ -905,12 +720,9 @@
                     INVOICE DETAILS
                 </span>
 
-        <h3>
-          Invoice Information
-        </h3>
+        <h3>Invoice Information</h3>
 
       </div>
-
 
       <button
               type="button"
@@ -926,97 +738,43 @@
 
     <div class="invoice-details">
 
-
       <div class="detail-item">
-
-                <span>
-                    Invoice ID
-                </span>
-
-        <strong id="viewInvoiceId">
-          -
-        </strong>
-
+        <span>Invoice ID</span>
+        <strong id="viewInvoiceId">-</strong>
       </div>
 
-
       <div class="detail-item">
-
-                <span>
-                    Booking ID
-                </span>
-
-        <strong id="viewBooking">
-          -
-        </strong>
-
+        <span>Booking ID</span>
+        <strong id="viewBooking">-</strong>
       </div>
 
-
       <div class="detail-item">
-
-                <span>
-                    Amount
-                </span>
-
-        <strong id="viewAmount">
-          -
-        </strong>
-
+        <span>Amount</span>
+        <strong id="viewAmount">-</strong>
       </div>
 
-
       <div class="detail-item">
-
-                <span>
-                    Due Date
-                </span>
-
-        <strong id="viewDueDate">
-          -
-        </strong>
-
+        <span>Due Date</span>
+        <strong id="viewDueDate">-</strong>
       </div>
 
-
       <div class="detail-item">
-
-                <span>
-                    Status
-                </span>
-
-        <strong id="viewStatus">
-          -
-        </strong>
-
+        <span>Status</span>
+        <strong id="viewStatus">-</strong>
       </div>
 
-
       <div class="detail-item">
-
-                <span>
-                    Created Date
-                </span>
-
-        <strong id="viewCreatedDate">
-          -
-        </strong>
-
+        <span>Created Date</span>
+        <strong id="viewCreatedDate">-</strong>
       </div>
-
 
       <div class="detail-description">
 
-                <span>
-                    Description
-                </span>
+        <span>Description</span>
 
-        <p id="viewDescription">
-          -
-        </p>
+        <p id="viewDescription">-</p>
 
       </div>
-
 
     </div>
 
@@ -1025,12 +783,15 @@
 </div>
 
 
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
+<!-- Invoice functionality -->
 <script src="invoice.js"></script>
+
+<!-- Shared Staff / Student notification badge -->
+<script src="notification-badge.js"></script>
 
 </body>
 

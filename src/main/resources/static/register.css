@@ -14,241 +14,217 @@
 
     --blue: #3b82f6;
     --blue-dark: #2563eb;
-    --blue-soft: #eff6ff;
 
     --white: #ffffff;
-    --ivory: #f8fafc;
-    --light-gray: #f1f5f9;
-    --border: #e2e8f0;
 
-    --text: #1e293b;
-    --muted: #64748b;
+    /* Text on the dark glass card */
+    --text-soft: #c5d2df;
+    --text-faint: #9fb0c4;
+    --link: #93c5fd;
 
-    --success: #16a34a;
-    --success-light: #f0fdf4;
+    /* Form fields on the dark glass card */
+    --field-bg: rgba(255, 255, 255, 0.08);
+    --field-bg-focus: rgba(255, 255, 255, 0.12);
+    --field-border: rgba(255, 255, 255, 0.18);
 
-    --danger: #dc2626;
-    --danger-light: #fef2f2;
+    --success: #4ade80;
+    --danger: #fca5a5;
 
     --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+    --font-body: "DM Sans", Arial, Helvetica, sans-serif;
+    --font-display: "Sora", "DM Sans", Arial, Helvetica, sans-serif;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--ivory);
-    color: var(--text);
+    font-family: var(--font-body);
+    background: var(--navy);
+    color: var(--white);
+}
+
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
 }
 
 
 /* =========================================================
-   REGISTER PAGE
+   REGISTER PAGE  (full-page campus photo)
+   Photo: images/campus.jpg
 ========================================================= */
 
 .register-page {
+    position: relative;
+
     min-height: 100vh;
     display: flex;
+
+    background: var(--navy) url("images/campus.jpg") center / cover no-repeat fixed;
+}
+
+/* One navy tint over the whole page */
+.register-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background: linear-gradient(
+        180deg,
+        rgba(23, 32, 51, 0.70) 0%,
+        rgba(23, 32, 51, 0.28) 30%,
+        rgba(23, 32, 51, 0.58) 55%,
+        rgba(23, 32, 51, 0.92) 100%
+    );
+
+    pointer-events: none;
 }
 
 
 /* =========================================================
-   LEFT BRANDING
+   LEFT BRANDING  (stays in view while the form scrolls)
 ========================================================= */
 
 .register-branding {
-    width: 45%;
-    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 
-    background: var(--navy);
-    color: var(--white);
+    align-self: flex-start;
+
+    width: 45%;
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-    padding: 55px 65px;
+    padding: 44px 64px 40px;
 
-    position: relative;
-    overflow: hidden;
-}
-
-.register-branding::before {
-    content: "";
-
-    position: absolute;
-
-    width: 420px;
-    height: 420px;
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 50%;
-
-    right: -170px;
-    top: -130px;
-}
-
-.register-branding::after {
-    content: "";
-
-    position: absolute;
-
-    width: 500px;
-    height: 500px;
-
-    border: 1px solid rgba(255, 255, 255, 0.05);
-
-    border-radius: 50%;
-
-    left: -300px;
-    bottom: -250px;
+    color: var(--white);
 }
 
 
-.branding-content {
-    position: relative;
-    z-index: 2;
+/* Brand chip (top) */
 
-    max-width: 560px;
+.brand-row {
+    align-self: flex-start;
 
-    margin: auto 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 8px 18px 8px 8px;
+
+    background: rgba(23, 32, 51, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
-
-
-/* =========================================================
-   LOGO
-========================================================= */
 
 .logo {
-    width: 64px;
-    height: 64px;
+    width: 40px;
+    height: 40px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: rgba(255, 255, 255, 0.1);
-
-    border: 1px solid rgba(255, 255, 255, 0.15);
-
-    border-radius: 16px;
-
-    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
 }
 
 .logo i {
-    font-size: 30px;
+    font-size: 19px;
     color: #60a5fa;
 }
 
+.brand-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+}
 
-/* =========================================================
-   BRANDING TEXT
-========================================================= */
 
-.eyebrow {
-    display: inline-block;
+/* Headline block (bottom) */
 
-    color: #9db8d4;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    margin-bottom: 18px;
+.branding-content {
+    max-width: 560px;
 }
 
 .branding-content h1 {
-    font-size: clamp(40px, 4vw, 58px);
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.4vw, 50px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    font-weight: 700;
 
-    line-height: 1.08;
-
-    margin-bottom: 25px;
+    margin-bottom: 16px;
 }
 
 .branding-content h1 span {
     display: block;
-
-    color: #9db8d4;
+    color: #bfdbfe;
 }
 
 .branding-content > p {
-    max-width: 500px;
+    max-width: 460px;
 
-    color: #c5d2df;
+    font-size: 16px;
+    line-height: 1.7;
 
-    font-size: 15px;
+    color: #dbe5f0;
 
-    line-height: 1.8;
-
-    margin-bottom: 38px;
+    margin-bottom: 28px;
 }
 
 
-/* =========================================================
-   FEATURES
-========================================================= */
+/* Feature pills */
 
 .branding-features {
-    display: flex;
-    flex-direction: column;
+    list-style: none;
 
-    gap: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.feature {
-    display: flex;
-    align-items: center;
-
-    gap: 16px;
-}
-
-.feature-icon {
-    width: 45px;
-    height: 45px;
-
-    flex-shrink: 0;
-
+.branding-features li {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 9px;
 
-    background: rgba(255, 255, 255, 0.08);
+    padding: 9px 15px;
 
-    border-radius: 11px;
+    font-size: 13px;
+    color: var(--white);
+
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-.feature-icon i {
-    color: #b9cee1;
-}
-
-.feature strong {
-    display: block;
-
-    font-size: 14px;
-
-    margin-bottom: 4px;
-}
-
-.feature span {
-    color: #aebdcd;
-
-    font-size: 12px;
+.branding-features i {
+    font-size: 13px;
+    color: #93c5fd;
 }
 
 
-/* =========================================================
-   BRANDING FOOTER
-========================================================= */
+/* Footer */
 
 .branding-footer {
-    position: relative;
-    z-index: 2;
+    margin-top: 28px;
+    padding-top: 18px;
 
-    color: #8195aa;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
 
-    font-size: 11px;
+    color: #b3c2d3;
+    font-size: 12px;
+    letter-spacing: 0.3px;
 }
 
 
@@ -257,6 +233,9 @@ body {
 ========================================================= */
 
 .register-section {
+    position: relative;
+    z-index: 1;
+
     width: 55%;
     min-height: 100vh;
 
@@ -265,34 +244,28 @@ body {
     align-items: center;
 
     padding: 40px 55px;
-
-    overflow-y: auto;
 }
 
 
 /* =========================================================
-   REGISTER CARD
+   REGISTER CARD  (frosted navy glass)
 ========================================================= */
 
 .register-card {
     width: 100%;
     max-width: 650px;
 
-    background: var(--white);
-
-    border: 1px solid var(--border);
-
+    background: rgba(23, 32, 51, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 18px;
 
     padding: 40px 45px;
 
-    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+    box-shadow: 0 24px 60px rgba(8, 13, 25, 0.45);
 }
-
-
-/* =========================================================
-   MOBILE LOGO
-========================================================= */
 
 .mobile-logo {
     display: none;
@@ -307,52 +280,34 @@ body {
     margin-bottom: 28px;
 }
 
-.register-eyebrow {
-    display: block;
-
-    color: var(--blue);
-
-    font-size: 11px;
-    font-weight: 700;
-
-    letter-spacing: 1.8px;
-
-    margin-bottom: 9px;
-}
-
 .register-header h2 {
-    color: var(--navy);
-
+    font-family: var(--font-display);
     font-size: 30px;
+    letter-spacing: -0.01em;
+
+    color: var(--white);
 
     margin-bottom: 8px;
 }
 
 .register-header p {
-    color: var(--muted);
+    color: var(--text-soft);
 
-    font-size: 13px;
-
+    font-size: 14px;
     line-height: 1.6;
 }
 
 
 /* =========================================================
-   FORM ROW
+   FORM
 ========================================================= */
 
 .form-row {
     display: grid;
-
     grid-template-columns: 1fr 1fr;
 
     gap: 18px;
 }
-
-
-/* =========================================================
-   FORM GROUP
-========================================================= */
 
 .form-group {
     margin-bottom: 17px;
@@ -361,12 +316,79 @@ body {
 .form-group label {
     display: block;
 
-    color: var(--text);
+    color: #e2e8f0;
 
     font-size: 13px;
     font-weight: 600;
 
     margin-bottom: 7px;
+}
+
+
+/* =========================================================
+   ACCOUNT TYPE (STUDENT / STAFF)
+========================================================= */
+
+.account-type-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.form-group .account-type-option {
+    margin-bottom: 0;
+
+    cursor: pointer;
+}
+
+.account-type-option input {
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.account-type-option span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    height: 46px;
+
+    border: 1px solid var(--field-border);
+    border-radius: 8px;
+
+    background: var(--field-bg);
+
+    color: var(--text-soft);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.account-type-option:hover span {
+    border-color: #60a5fa;
+}
+
+.account-type-option input:checked + span {
+    border-color: #60a5fa;
+
+    background: rgba(59, 130, 246, 0.24);
+
+    color: var(--white);
+
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.account-type-option input:focus-visible + span {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
 }
 
 
@@ -386,7 +408,7 @@ body {
 
     transform: translateY(-50%);
 
-    color: #9aa6b2;
+    color: var(--text-faint);
 
     font-size: 13px;
 
@@ -396,17 +418,16 @@ body {
 .input-wrapper input,
 .input-wrapper select {
     width: 100%;
-
     height: 46px;
 
-    border: 1px solid var(--border);
-
+    border: 1px solid var(--field-border);
     border-radius: 8px;
 
-    background: var(--white);
+    background: var(--field-bg);
 
-    color: var(--text);
+    color: var(--white);
 
+    font-family: inherit;
     font-size: 13px;
 
     padding: 0 40px;
@@ -418,15 +439,24 @@ body {
 
 .input-wrapper input:focus,
 .input-wrapper select:focus {
-    border-color: var(--blue);
+    border-color: #60a5fa;
 
-    background: var(--white);
+    background: var(--field-bg-focus);
 
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
 }
 
 .input-wrapper input::placeholder {
-    color: #a5adb7;
+    color: var(--text-faint);
+}
+
+/* Stop the browser's white/yellow autofill colour from clashing */
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--white);
+    caret-color: var(--white);
+    transition: background-color 9999s ease-in-out 0s;
+    box-shadow: 0 0 0 100px #263250 inset;
 }
 
 
@@ -440,11 +470,16 @@ body {
     cursor: pointer;
 }
 
+/* The open dropdown list is drawn by the browser, so give it a dark background too */
+.select-wrapper select option {
+    background: #1e293b;
+    color: var(--white);
+}
+
 .select-wrapper::after {
     content: "\f078";
 
     font-family: "Font Awesome 6 Free";
-
     font-weight: 900;
 
     position: absolute;
@@ -454,7 +489,7 @@ body {
 
     transform: translateY(-50%);
 
-    color: #8d99a6;
+    color: var(--text-faint);
 
     pointer-events: none;
 
@@ -475,10 +510,9 @@ body {
     transform: translateY(-50%);
 
     border: none;
-
     background: transparent;
 
-    color: #8c98a5;
+    color: var(--text-faint);
 
     cursor: pointer;
 
@@ -486,7 +520,7 @@ body {
 }
 
 .password-toggle:hover {
-    color: var(--blue);
+    color: var(--link);
 }
 
 
@@ -501,7 +535,7 @@ body {
 
     color: var(--danger);
 
-    font-size: 10px;
+    font-size: 11px;
 
     margin-top: 4px;
 }
@@ -512,9 +546,9 @@ body {
 ========================================================= */
 
 .password-requirements {
-    background: var(--light-gray);
+    background: rgba(255, 255, 255, 0.06);
 
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.14);
 
     border-radius: 8px;
 
@@ -526,9 +560,9 @@ body {
 .password-requirements > span {
     display: block;
 
-    color: var(--muted);
+    color: var(--text-soft);
 
-    font-size: 11px;
+    font-size: 12px;
 
     margin-bottom: 7px;
 }
@@ -540,9 +574,9 @@ body {
 }
 
 .password-requirements div span {
-    color: #8b96a3;
+    color: var(--text-faint);
 
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .password-requirements i {
@@ -568,15 +602,13 @@ body {
 
 .terms-label {
     display: flex;
-
     align-items: flex-start;
 
     gap: 9px;
 
-    color: var(--muted);
+    color: var(--text-soft);
 
-    font-size: 11px;
-
+    font-size: 12px;
     line-height: 1.5;
 
     cursor: pointer;
@@ -594,7 +626,7 @@ body {
 }
 
 .terms-label a {
-    color: var(--blue);
+    color: var(--link);
 
     text-decoration: none;
 
@@ -617,17 +649,15 @@ body {
 
     gap: 9px;
 
-    background: var(--danger-light);
-
-    border: 1px solid #fecaca;
-
-    color: var(--danger);
+    background: rgba(220, 38, 38, 0.18);
+    border: 1px solid rgba(252, 165, 165, 0.45);
+    color: #fecaca;
 
     border-radius: 8px;
 
     padding: 10px 12px;
 
-    font-size: 11px;
+    font-size: 12px;
 
     margin-bottom: 16px;
 }
@@ -643,27 +673,22 @@ body {
 
 .register-button {
     width: 100%;
-
     height: 50px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     gap: 11px;
 
     border: none;
-
     border-radius: 9px;
 
     background: var(--blue);
-
     color: var(--white);
 
-    font-size: 13px;
-
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 600;
 
     cursor: pointer;
@@ -703,17 +728,17 @@ body {
 
     padding-top: 20px;
 
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .login-option p {
-    color: var(--muted);
+    color: var(--text-soft);
 
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .login-option a {
-    color: var(--blue);
+    color: var(--link);
 
     font-weight: 600;
 
@@ -735,20 +760,23 @@ body {
     text-align: center;
 
     margin-top: 22px;
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .register-footer p {
-    color: #8a95a1;
+    color: var(--text-faint);
 
-    font-size: 10px;
+    font-size: 11px;
 
     margin-bottom: 5px;
 }
 
 .register-footer span {
-    color: #a4adb7;
+    color: #8195aa;
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 
@@ -761,7 +789,7 @@ body {
     .register-branding {
         width: 42%;
 
-        padding: 45px;
+        padding: 36px 36px 32px;
     }
 
     .register-section {
@@ -774,8 +802,8 @@ body {
         padding: 35px;
     }
 
-    .branding-content h1 {
-        font-size: 40px;
+    .branding-features {
+        display: none;
     }
 }
 
@@ -792,8 +820,6 @@ body {
 
     .register-section {
         width: 100%;
-
-        min-height: 100vh;
 
         padding: 25px 18px;
     }
@@ -813,13 +839,18 @@ body {
     }
 
     .mobile-logo .logo {
-        margin-bottom: 0;
+        width: 56px;
+        height: 56px;
 
-        background: var(--navy);
+        background: rgba(255, 255, 255, 0.12);
     }
 
     .register-header {
         text-align: center;
+    }
+
+    .register-header h2 {
+        font-size: 26px;
     }
 }
 
@@ -847,6 +878,17 @@ body {
     }
 
     .register-header h2 {
-        font-size: 26px;
+        font-size: 24px;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .register-button,
+    .account-type-option span,
+    .input-wrapper input,
+    .input-wrapper select {
+        transition: none;
     }
 }

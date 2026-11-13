@@ -32,13 +32,21 @@
 
     --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
     --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+    --font-body: "DM Sans", Arial, Helvetica, sans-serif;
+    --font-display: "Sora", "DM Sans", Arial, Helvetica, sans-serif;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-body);
     background: var(--ivory);
     color: var(--text);
     min-height: 100vh;
+}
+
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
 }
 
 
@@ -53,202 +61,169 @@ body {
 
 
 /* =========================================================
-   LEFT BRANDING SECTION
+   LEFT BRANDING SECTION  (full-bleed campus photo)
+   Save your photo as images/campus.jpg
 ========================================================= */
 
 .login-branding {
     width: 52%;
     min-height: 100vh;
-    background: var(--navy);
+
     color: var(--white);
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-    padding: 55px 70px;
+    padding: 44px 64px 40px;
     position: relative;
     overflow: hidden;
+
+    /* Photo, with navy as the fallback if the file is missing */
+    background: var(--navy) url("images/campus.jpg") center / cover no-repeat;
 }
 
-
-/* Decorative circles */
-
+/* Navy tint: light in the middle so the photo shows, darker top and bottom for text */
 .login-branding::before {
     content: "";
     position: absolute;
+    inset: 0;
 
-    width: 420px;
-    height: 420px;
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-
-    right: -170px;
-    top: -130px;
+    background: linear-gradient(
+        180deg,
+        rgba(23, 32, 51, 0.70) 0%,
+        rgba(23, 32, 51, 0.10) 26%,
+        rgba(23, 32, 51, 0.62) 52%,
+        rgba(23, 32, 51, 0.94) 100%
+    );
 }
 
-.login-branding::after {
-    content: "";
-    position: absolute;
-
-    width: 500px;
-    height: 500px;
-
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-
-    left: -300px;
-    bottom: -250px;
-}
-
-
-/* Branding content */
-
-.branding-content {
+.login-branding > * {
     position: relative;
-    z-index: 2;
-
-    max-width: 620px;
-    margin: auto 0;
+    z-index: 1;
 }
 
 
-/* Logo */
+/* Brand chip (top) */
+
+.brand-row {
+    align-self: flex-start;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 8px 18px 8px 8px;
+
+    background: rgba(23, 32, 51, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
 
 .logo {
-    width: 64px;
-    height: 64px;
+    width: 40px;
+    height: 40px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: rgba(255, 255, 255, 0.1);
-
-    border: 1px solid rgba(255, 255, 255, 0.15);
-
-    border-radius: 16px;
-
-    margin-bottom: 32px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
 }
 
 .logo i {
-    font-size: 30px;
+    font-size: 19px;
     color: #60a5fa;
 }
 
-
-/* Eyebrow */
-
-.eyebrow {
-    display: inline-block;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    color: #9db8d4;
-
-    margin-bottom: 18px;
+.brand-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
 }
 
 
-/* Main heading */
+/* Headline block (bottom) */
+
+.branding-content {
+    max-width: 600px;
+}
 
 .branding-content h1 {
-    font-size: clamp(42px, 4vw, 64px);
-    line-height: 1.08;
-
+    font-family: var(--font-display);
+    font-size: clamp(34px, 3.6vw, 52px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
     font-weight: 700;
 
-    margin-bottom: 25px;
+    margin-bottom: 16px;
 }
 
 .branding-content h1 span {
     display: block;
-    color: #9db8d4;
+    color: #bfdbfe;
 }
-
-
-/* Description */
 
 .branding-content > p {
-    max-width: 540px;
+    max-width: 460px;
 
     font-size: 16px;
-    line-height: 1.8;
+    line-height: 1.7;
 
-    color: #c5d2df;
+    color: #dbe5f0;
 
-    margin-bottom: 42px;
+    margin-bottom: 28px;
 }
 
 
-/* =========================================================
-   FEATURES
-========================================================= */
+/* Feature pills */
 
 .branding-features {
+    list-style: none;
+
     display: flex;
-    flex-direction: column;
-    gap: 23px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.feature {
-    display: flex;
-    align-items: center;
-    gap: 17px;
-}
-
-.feature-icon {
-    width: 46px;
-    height: 46px;
-
-    flex-shrink: 0;
-
+.branding-features li {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 9px;
 
-    background: rgba(255, 255, 255, 0.08);
-
-    border-radius: 12px;
-}
-
-.feature-icon i {
-    font-size: 18px;
-    color: #b9cee1;
-}
-
-.feature strong {
-    display: block;
-
-    font-size: 14px;
-
-    margin-bottom: 4px;
-}
-
-.feature span {
-    display: block;
-
-    color: #aebdcd;
+    padding: 9px 15px;
 
     font-size: 13px;
+    color: var(--white);
+
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.branding-features i {
+    font-size: 13px;
+    color: #93c5fd;
 }
 
 
-/* Branding footer */
+/* Footer */
 
 .branding-footer {
-    position: relative;
-    z-index: 2;
+    margin-top: 28px;
+    padding-top: 18px;
 
-    color: #8195aa;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
 
+    color: #b3c2d3;
     font-size: 12px;
-
     letter-spacing: 0.3px;
 }
 
@@ -270,26 +245,18 @@ body {
     padding: 50px;
 }
 
-
-/* Login card */
-
 .login-card {
     width: 100%;
     max-width: 460px;
 
     background: var(--white);
-
     border: 1px solid var(--border);
-
     border-radius: 18px;
 
     padding: 45px;
 
     box-shadow: var(--shadow-sm);
 }
-
-
-/* Mobile logo */
 
 .mobile-logo {
     display: none;
@@ -304,21 +271,10 @@ body {
     margin-bottom: 32px;
 }
 
-.login-eyebrow {
-    display: block;
-
-    color: var(--blue);
-
-    font-size: 11px;
-    font-weight: 700;
-
-    letter-spacing: 1.8px;
-
-    margin-bottom: 10px;
-}
-
 .login-header h2 {
-    font-size: 32px;
+    font-family: var(--font-display);
+    font-size: 30px;
+    letter-spacing: -0.01em;
 
     color: var(--navy);
 
@@ -327,9 +283,7 @@ body {
 
 .login-header p {
     color: var(--muted);
-
     font-size: 14px;
-
     line-height: 1.6;
 }
 
@@ -353,9 +307,6 @@ body {
     margin-bottom: 8px;
 }
 
-
-/* Password label */
-
 .password-label {
     display: flex;
     justify-content: space-between;
@@ -370,18 +321,13 @@ body {
 
 .password-label a {
     font-size: 12px;
-
     color: var(--blue);
-
     text-decoration: none;
 }
 
 .password-label a:hover {
     text-decoration: underline;
 }
-
-
-/* Input wrapper */
 
 .input-wrapper {
     position: relative;
@@ -396,7 +342,6 @@ body {
     transform: translateY(-50%);
 
     color: #9aa6b2;
-
     font-size: 14px;
 
     pointer-events: none;
@@ -404,19 +349,17 @@ body {
 
 .input-wrapper input {
     width: 100%;
-
     height: 50px;
 
     border: 1px solid var(--border);
-
     border-radius: 9px;
 
     background: var(--white);
 
     padding: 0 45px;
 
+    font-family: inherit;
     font-size: 14px;
-
     color: var(--text);
 
     outline: none;
@@ -426,18 +369,13 @@ body {
 
 .input-wrapper input:focus {
     border-color: var(--blue);
-
     background: var(--white);
-
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .input-wrapper input::placeholder {
     color: #a5adb7;
 }
-
-
-/* Password toggle */
 
 .password-toggle {
     position: absolute;
@@ -451,7 +389,6 @@ body {
     background: transparent;
 
     color: #8c98a5;
-
     cursor: pointer;
 
     padding: 5px;
@@ -461,16 +398,12 @@ body {
     color: var(--blue);
 }
 
-
-/* Error messages */
-
 .error-message {
     display: block;
 
     min-height: 16px;
 
     color: var(--danger);
-
     font-size: 11px;
 
     margin-top: 5px;
@@ -495,7 +428,6 @@ body {
     gap: 8px;
 
     color: var(--muted);
-
     font-size: 12px;
 
     cursor: pointer;
@@ -506,7 +438,6 @@ body {
     height: 15px;
 
     accent-color: var(--blue);
-
     cursor: pointer;
 }
 
@@ -522,15 +453,12 @@ body {
     gap: 9px;
 
     background: var(--danger-light);
-
     border: 1px solid #fecaca;
-
     color: var(--danger);
 
     border-radius: 8px;
 
     padding: 11px 13px;
-
     font-size: 12px;
 
     margin-bottom: 18px;
@@ -556,13 +484,12 @@ body {
     gap: 12px;
 
     border: none;
-
     border-radius: 9px;
 
     background: var(--blue);
-
     color: var(--white);
 
+    font-family: inherit;
     font-size: 14px;
     font-weight: 600;
 
@@ -573,9 +500,7 @@ body {
 
 .login-button:hover {
     background: var(--blue-dark);
-
     transform: translateY(-1px);
-
     box-shadow: var(--shadow-sm);
 }
 
@@ -585,9 +510,7 @@ body {
 
 .login-button:disabled {
     opacity: 0.7;
-
     cursor: not-allowed;
-
     transform: none;
 }
 
@@ -600,27 +523,18 @@ body {
     text-align: center;
 
     margin-top: 24px;
-
     padding-top: 23px;
 
     border-top: 1px solid var(--border);
-}
-
-.register-option p {
-    color: var(--muted);
 
     font-size: 13px;
-
-    margin: 0;
+    color: var(--muted);
 }
 
 .register-option a {
     color: var(--blue);
-
     font-weight: 600;
-
     text-decoration: none;
-
     margin-left: 4px;
 }
 
@@ -637,7 +551,6 @@ body {
     text-align: center;
 
     margin-top: 30px;
-
     padding-top: 20px;
 
     border-top: 1px solid var(--border);
@@ -645,15 +558,12 @@ body {
 
 .login-footer p {
     color: #8a95a1;
-
     font-size: 11px;
-
     margin-bottom: 6px;
 }
 
 .login-footer span {
     color: #a4adb7;
-
     font-size: 10px;
 }
 
@@ -666,7 +576,7 @@ body {
 
     .login-branding {
         width: 48%;
-        padding: 45px;
+        padding: 36px 36px 32px;
     }
 
     .login-section {
@@ -678,8 +588,8 @@ body {
         padding: 35px;
     }
 
-    .branding-content h1 {
-        font-size: 42px;
+    .branding-features {
+        display: none;
     }
 }
 
@@ -711,14 +621,13 @@ body {
 
     .mobile-logo {
         display: flex;
-
         justify-content: center;
-
         margin-bottom: 25px;
     }
 
     .mobile-logo .logo {
-        margin-bottom: 0;
+        width: 56px;
+        height: 56px;
 
         background: var(--navy);
     }
@@ -728,7 +637,7 @@ body {
     }
 
     .login-header h2 {
-        font-size: 28px;
+        font-size: 26px;
     }
 }
 
@@ -744,11 +653,161 @@ body {
     }
 
     .login-header h2 {
-        font-size: 26px;
+        font-size: 24px;
     }
 
     .password-label {
         align-items: flex-start;
         gap: 10px;
     }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .login-button,
+    .input-wrapper input {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   FULL-PAGE PHOTO THEME
+   The photo now sits behind the whole page, and the login
+   card is frosted navy glass so it takes on the photo's tones.
+   Photo: images/campus.jpg
+========================================================= */
+
+.login-page {
+    position: relative;
+    background: var(--navy) url("images/campus.jpg") center / cover no-repeat fixed;
+}
+
+/* One navy tint over the whole page */
+.login-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background: linear-gradient(
+        180deg,
+        rgba(23, 32, 51, 0.70) 0%,
+        rgba(23, 32, 51, 0.28) 30%,
+        rgba(23, 32, 51, 0.58) 55%,
+        rgba(23, 32, 51, 0.92) 100%
+    );
+
+    pointer-events: none;
+}
+
+.login-branding,
+.login-section {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+}
+
+/* The photo now lives on .login-page, so the left panel needs no tint of its own */
+.login-branding::before {
+    display: none;
+}
+
+
+/* ---------- Frosted login card ---------- */
+
+.login-card {
+    background: rgba(23, 32, 51, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+    box-shadow: 0 24px 60px rgba(8, 13, 25, 0.45);
+}
+
+.login-header h2 {
+    color: var(--white);
+}
+
+.login-header p {
+    color: #c5d2df;
+}
+
+.form-group label {
+    color: #e2e8f0;
+}
+
+.password-label a,
+.register-option a {
+    color: #93c5fd;
+}
+
+.input-wrapper > i,
+.password-toggle {
+    color: #9fb0c4;
+}
+
+.password-toggle:hover {
+    color: #93c5fd;
+}
+
+.input-wrapper input {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--white);
+}
+
+.input-wrapper input::placeholder {
+    color: #9fb0c4;
+}
+
+.input-wrapper input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+/* Stop the browser's white/yellow autofill colour from clashing */
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--white);
+    caret-color: var(--white);
+    transition: background-color 9999s ease-in-out 0s;
+    box-shadow: 0 0 0 100px #263250 inset;
+}
+
+.remember-me {
+    color: #c5d2df;
+}
+
+.error-message {
+    color: #fca5a5;
+}
+
+.login-error {
+    background: rgba(220, 38, 38, 0.18);
+    border-color: rgba(252, 165, 165, 0.45);
+    color: #fecaca;
+}
+
+.register-option {
+    border-top-color: rgba(255, 255, 255, 0.14);
+    color: #c5d2df;
+}
+
+.login-footer {
+    border-top-color: rgba(255, 255, 255, 0.14);
+}
+
+.login-footer p {
+    color: #9fb0c4;
+}
+
+.login-footer span {
+    color: #8195aa;
+}
+
+.mobile-logo .logo {
+    background: rgba(255, 255, 255, 0.12);
 }

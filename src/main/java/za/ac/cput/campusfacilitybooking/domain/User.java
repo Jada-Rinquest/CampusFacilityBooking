@@ -1,7 +1,7 @@
+
 package za.ac.cput.campusfacilitybooking.domain;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -9,18 +9,28 @@ import java.time.LocalDate;
 public class User {
 
     @Id
+    @Column(name = "user_id", nullable = false)
     private String userId;
+
     private String firstName;
     private String lastName;
+
+    @Column(name = "email", nullable = false, length = 255)
     private String email;
+
     private LocalDate dateOfBirth;
     private String departmentId;
 
     protected User() {
     }
 
-    public User(String userId, String firstName, String lastName,
-                String email, LocalDate dateOfBirth, String departmentId) {
+    public User(String userId,
+                String firstName,
+                String lastName,
+                String email,
+                LocalDate dateOfBirth,
+                String departmentId) {
+
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -75,6 +85,7 @@ public class User {
     }
 
     public static class Builder {
+
         private String userId;
         private String firstName;
         private String lastName;

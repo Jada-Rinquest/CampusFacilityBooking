@@ -1,3 +1,4 @@
+
 package za.ac.cput.campusfacilitybooking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByEmail(String email);
+
+    // Check if an email already exists
+    boolean existsByEmail(String email);
 
     List<User> findByDepartmentId(String departmentId);
 

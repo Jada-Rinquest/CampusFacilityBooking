@@ -1,12 +1,13 @@
+
 package za.ac.cput.campusfacilitybooking.service.impl;
 
 import org.springframework.stereotype.Service;
+
 import za.ac.cput.campusfacilitybooking.domain.UserRole;
 import za.ac.cput.campusfacilitybooking.repository.UserRoleRepository;
 import za.ac.cput.campusfacilitybooking.service.UserRoleService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
@@ -19,31 +20,83 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRole create(UserRole userRole) {
+
+        validateUserRole(userRole);
+
+        if (repository.existsById(userRole.getUserRoleId())) {
+            throw new IllegalArgumentException(
+                    "User role ID already exists"
+            );
+        }
+
         return repository.save(userRole);
     }
 
     @Override
     public UserRole read(String id) {
-        Optional<UserRole> userRole = repository.findById(id);
-        return userRole.orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public UserRole update(UserRole userRole) {
+
+        validateUserRole(userRole);
+
+        if (!repository.existsById(userRole.getUserRoleId())) {
+            throw new IllegalArgumentException(
+                    "User role record not found"
+            );
+        }
+
         return repository.save(userRole);
     }
 
     @Override
     public boolean delete(String id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
+
+        if (id == null || id.isBlank()) {
+            return false;
         }
-        return false;
+
+        if (!repository.existsById(id)) {
+            return false;
+        }
+
+        repository.deleteById(id);
+        return true;
     }
 
     @Override
     public List<UserRole> getAll() {
         return repository.findAll();
+    }
+
+    private void validateUserRole(UserRole userRole) {
+
+        if (userRole == null) {
+            throw new IllegalArgumentException(
+                    "User role details are required"
+            );
+        }
+
+        if (userRole.getUserRoleId() == null ||
+                userRole.getUserRoleId().isBlank()) {
+            throw new IllegalArgumentException(
+                    "User role ID is required"
+            );
+        }
+
+        if (userRole.getUserId() == null ||
+                userRole.getUserId().isBlank()) {
+            throw new IllegalArgumentException(
+                    "User ID is required"
+            );
+        }
+
+        if (userRole.getRole() == null) {
+            throw new IllegalArgumentException(
+                    "User role is required"
+            );
+        }
     }
 }

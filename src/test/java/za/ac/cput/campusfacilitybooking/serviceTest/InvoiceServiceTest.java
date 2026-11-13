@@ -73,6 +73,8 @@ public class InvoiceServiceTest {
 
     @Test
     void testUpdate() {
+        // update() only saves invoices that already exist
+        when(repository.existsById("INV001")).thenReturn(true);
         when(repository.save(invoice)).thenReturn(invoice);
 
         Invoice updated = service.update(invoice);

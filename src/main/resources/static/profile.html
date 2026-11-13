@@ -13,6 +13,9 @@
 
     <!-- Profile CSS -->
     <link rel="stylesheet" href="profile.css">
+    <!-- Sign-in check + student/staff permissions -->
+    <script src="auth.js"></script>
+
 </head>
 
 <body>
@@ -91,7 +94,7 @@
             <span>Profile</span>
         </a>
 
-        <a href="index.html" class="logout">
+        <a href="login.html" class="logout">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Logout</span>
         </a>
@@ -142,20 +145,26 @@
 
         <!-- Topbar Actions -->
 
-        <div class="topbar-actions">
 
-            <button
-                    class="notification-icon"
-                    type="button"
-                    title="Notifications">
+        <!-- DYNAMIC NOTIFICATION BELL -->
 
-                <i class="fa-solid fa-bell"></i>
+        <button
+                class="notification-icon"
+                type="button"
+                title="Notifications"
+                aria-label="Open notifications"
+                onclick="window.location.href='notification.html'">
 
-                <span class="notification-count">
-                    3
-                </span>
+            <i class="fa-solid fa-bell"></i>
 
-            </button>
+            <span
+                    class="notification-count"
+                    style="display: none;"
+                    hidden
+                    aria-live="polite">
+    </span>
+
+        </button>
 
 
             <!-- Logged-in user -->
@@ -333,27 +342,41 @@
                      PERSONAL INFORMATION
                 ================================================== -->
 
-                <div class="profile-section">
 
-                    <div class="section-heading">
-
-                        <div>
-
-                            <h3>
-                                Personal Information
-                            </h3>
-
-                            <p>
-                                Your basic account information.
-                            </p>
-
-                        </div>
-
+                <div class="section-heading">
+                    <div>
+                        <h3>Personal Information</h3>
+                        <p>Your basic account information.</p>
                     </div>
 
+                    <div class="profile-edit-actions">
+                        <button type="button"
+                                class="secondary-btn"
+                                id="editProfileBtn">
+                            <i class="fa-solid fa-pen"></i>
+                            Edit Profile
+                        </button>
+
+                        <button type="button"
+                                class="secondary-btn"
+                                id="cancelProfileBtn"
+                                hidden>
+                            Cancel
+                        </button>
+
+                        <button type="button"
+                                class="primary-btn"
+                                id="saveProfileBtn"
+                                hidden>
+                            <i class="fa-solid fa-check"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
 
 
-                    <div class="form-grid">
+
+                <div class="form-grid">
 
 
                         <!-- First Name -->
@@ -755,7 +778,13 @@
      JAVASCRIPT
 ========================================================= -->
 
+
+<!-- SHARED NOTIFICATION COUNTER -->
+<script src="notification-badge.js"></script>
+
+<!-- EXISTING PROFILE FUNCTIONALITY -->
 <script src="profile.js"></script>
+
 
 </body>
 
